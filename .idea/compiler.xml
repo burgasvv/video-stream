@@ -2,15 +2,15 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Annotation profile for video-service" enabled="true">
+      <profile name="Annotation profile for identity-server" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/springframework/boot/spring-boot-configuration-processor/3.4.3/spring-boot-configuration-processor-3.4.3.jar" />
         </processorPath>
-        <module name="video-service" />
         <module name="identity-server" />
+        <module name="video-service" />
         <module name="database-server" />
       </profile>
     </annotationProcessing>

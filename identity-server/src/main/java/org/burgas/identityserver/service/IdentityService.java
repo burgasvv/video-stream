@@ -7,6 +7,8 @@ import org.burgas.identityserver.repository.IdentityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -20,6 +22,14 @@ public class IdentityService {
     public IdentityService(IdentityRepository identityRepository, IdentityMapper identityMapper) {
         this.identityRepository = identityRepository;
         this.identityMapper = identityMapper;
+    }
+
+    public List<IdentityResponse> findAll() {
+        return this.identityRepository
+                .findAll()
+                .stream()
+                .map(identityMapper::toIdentityResponse)
+                .toList();
     }
 
     public IdentityResponse findById(Long identityId) {

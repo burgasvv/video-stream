@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Optional;
-
+import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -27,7 +26,7 @@ public class AuthenticationController {
 
     @GetMapping(value = "/principal")
     public @ResponseBody ResponseEntity<IdentityPrincipal> getIdentityPrincipal(Authentication authentication) {
-        return Optional.ofNullable(authentication)
+        return ofNullable(authentication)
                 .filter(Authentication::isAuthenticated)
                 .map(
                         _ -> ResponseEntity

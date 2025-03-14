@@ -42,8 +42,8 @@ public class SecurityConfig {
                                 .permitAll()
 
                                 .requestMatchers(
-                                        "/identities/by-id", "/identities/update",
-                                        "/videos/upload","/videos/update", "/videos/delete"
+                                        "/identities","/identities/by-id","/identities/update",
+                                        "/videos/upload","/videos/update","/videos/delete"
                                 )
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                 )

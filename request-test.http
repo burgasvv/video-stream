@@ -1,5 +1,10 @@
 
 ###
-GET /identities/by-id?identityId=1
+GET /identities
 Host: localhost:8888
 Authorization: Basic admin@gmail.com admin
+
+###
+GET /identities/by-id?identityId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
