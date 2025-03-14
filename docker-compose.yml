@@ -1,0 +1,11 @@
+
+services:
+  postgres:
+    image: postgres
+    container_name: video_stream_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/data/postgresql
