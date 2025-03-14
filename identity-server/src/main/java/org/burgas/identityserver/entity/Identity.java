@@ -1,12 +1,19 @@
 package org.burgas.identityserver.entity;
 
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 
-public final class Identity implements Persistable<Long> {
+import static jakarta.persistence.GenerationType.*;
+
+@Entity
+public final class Identity {
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String nickname;
     private String password;
@@ -14,10 +21,6 @@ public final class Identity implements Persistable<Long> {
     private Boolean enabled;
     private Long authorityId;
 
-    @Transient
-    private Boolean isNew;
-
-    @Override
     public Long getId() {
         return id;
     }
@@ -77,21 +80,6 @@ public final class Identity implements Persistable<Long> {
         this.authorityId = authorityId;
     }
 
-    @Override
-    public boolean isNew() {
-        return isNew || id == null;
-    }
-
-    @SuppressWarnings("unused")
-    public Boolean getNew() {
-        return isNew || id == null;
-    }
-
-    @SuppressWarnings("unused")
-    public void setNew(Boolean aNew) {
-        isNew = aNew;
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -131,11 +119,6 @@ public final class Identity implements Persistable<Long> {
 
         public Builder authorityId(Long authorityId) {
             this.identity.authorityId = authorityId;
-            return this;
-        }
-
-        public Builder isNew(Boolean isNew) {
-            this.identity.isNew = isNew;
             return this;
         }
 

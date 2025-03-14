@@ -6,7 +6,6 @@ import org.burgas.identityserver.mapper.IdentityMapper;
 import org.burgas.identityserver.repository.IdentityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
 
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
@@ -23,27 +22,22 @@ public class IdentityService {
         this.identityMapper = identityMapper;
     }
 
-    public Mono<IdentityResponse> findById(Long identityId) {
+    public IdentityResponse findById(Long identityId) {
         return this.identityRepository
                 .findById(identityId)
-                .flatMap(identity -> identityMapper.toIdentityResponse(
-                        Mono.fromCallable(() -> identity)
-                ));
+                .map(identityMapper::toIdentityResponse)
+                .orElseGet(IdentityResponse::new);
+
     }
 
     @Transactional(
             isolation = SERIALIZABLE, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
-    public Mono<IdentityResponse> createOrUpdate(Mono<IdentityRequest> identityRequestMono) {
-        return identityRequestMono
-                .flatMap(
-                        identityRequest -> identityMapper
-                                .toIdentity(Mono.fromCallable(() -> identityRequest))
-                                .flatMap(identityRepository::save)
-                                .flatMap(identity -> identityMapper.toIdentityResponse(
-                                        Mono.fromCallable(() -> identity)
-                                ))
+    public IdentityResponse createOrUpdate(IdentityRequest identityRequest) {
+        return identityMapper
+                .toIdentityResponse(
+                        identityRepository.save(identityMapper.toIdentity(identityRequest))
                 );
     }
 }
