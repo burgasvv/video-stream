@@ -33,6 +33,7 @@ public final class Authority {
         this.name = name;
     }
 
+    @SuppressWarnings("unused")
     public static Builder builder() {
         return new Builder();
     }
