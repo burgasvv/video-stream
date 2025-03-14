@@ -3,20 +3,21 @@ package org.burgas.identityserver.config;
 import org.burgas.identityserver.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.List;
+import static org.springframework.security.config.Customizer.*;
 
 @Configuration
-@EnableWebFluxSecurity
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -28,45 +29,33 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity serverHttpSecurity) {
-        return serverHttpSecurity
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .cors(corsSpec -> corsSpec.configurationSource(corsConfigurationSource()))
-                .authenticationManager(reactiveAuthenticationManager())
-                .authorizeExchange(
-                        authorizeExchangeSpec -> authorizeExchangeSpec
-
-                                .pathMatchers(
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(withDefaults())
+                .authenticationManager(authenticationManager())
+                .httpBasic(withDefaults())
+                .authorizeHttpRequests(
+                        requests -> requests
+                                .requestMatchers(
                                         "/identities/create","/authentication/principal",
                                         "/videos/by-id","/videos/by-name","/videos/stream/by-id","/videos/stream/by-name"
                                 )
                                 .permitAll()
 
-                                .pathMatchers(
+                                .requestMatchers(
                                         "/identities/by-id", "/identities/update",
                                         "/videos/upload","/videos/update", "/videos/delete"
                                 )
-                                .hasAnyAuthority("ROLE_ADMIN","ROLE_USER")
+                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                 )
                 .build();
     }
 
     @Bean
-    public ReactiveAuthenticationManager reactiveAuthenticationManager() {
-        UserDetailsRepositoryReactiveAuthenticationManager manager =
-                new UserDetailsRepositoryReactiveAuthenticationManager(customUserDetailsService);
-        manager.setPasswordEncoder(passwordEncoder);
-        return manager;
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedHeaders(List.of("*"));
-        corsConfiguration.setAllowedMethods(List.of("*"));
-        corsConfiguration.setAllowedOrigins(List.of("*"));
-        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-        return urlBasedCorsConfigurationSource;
+    public AuthenticationManager authenticationManager() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(passwordEncoder);
+        daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
+        return new ProviderManager(daoAuthenticationProvider);
     }
 }

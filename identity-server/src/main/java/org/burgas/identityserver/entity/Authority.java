@@ -1,19 +1,19 @@
 package org.burgas.identityserver.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.domain.Persistable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
-public final class Authority implements Persistable<Long>{
+import static jakarta.persistence.GenerationType.IDENTITY;
+
+@Entity
+public final class Authority {
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String name;
 
-    @Transient
-    private Boolean isNew;
-
-    @Override
     public Long getId() {
         return id;
     }
@@ -31,21 +31,6 @@ public final class Authority implements Persistable<Long>{
     @SuppressWarnings("unused")
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public boolean isNew() {
-        return isNew || id == null;
-    }
-
-    @SuppressWarnings("unused")
-    public Boolean getNew() {
-        return isNew || id == null;
-    }
-
-    @SuppressWarnings("unused")
-    public void setNew(Boolean aNew) {
-        isNew = aNew;
     }
 
     public static Builder builder() {
@@ -67,11 +52,6 @@ public final class Authority implements Persistable<Long>{
 
         public Builder name(String name) {
             this.authority.name = name;
-            return this;
-        }
-
-        public Builder isNew(Boolean isNew) {
-            this.authority.isNew = isNew;
             return this;
         }
 

@@ -1,14 +1,15 @@
 package org.burgas.identityserver.service;
 
+import org.burgas.identityserver.dto.IdentityResponse;
 import org.burgas.identityserver.mapper.IdentityMapper;
 import org.burgas.identityserver.repository.IdentityRepository;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 @Service
-public class CustomUserDetailsService implements ReactiveUserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final IdentityRepository identityRepository;
     private final IdentityMapper identityMapper;
@@ -19,11 +20,10 @@ public class CustomUserDetailsService implements ReactiveUserDetailsService {
     }
 
     @Override
-    public Mono<UserDetails> findByUsername(String username) {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return identityRepository
                 .findIdentityByEmail(username)
-                .flatMap(identity -> identityMapper
-                        .toIdentityResponse(Mono.fromCallable(() -> identity))
-                );
+                .map(identityMapper::toIdentityResponse)
+                .orElseGet(IdentityResponse::new);
     }
 }
