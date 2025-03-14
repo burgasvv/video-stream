@@ -15,6 +15,8 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
@@ -33,6 +35,7 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(corsSpec -> corsSpec.configurationSource(corsConfigurationSource()))
                 .authenticationManager(reactiveAuthenticationManager())
+                .httpBasic(withDefaults())
                 .authorizeExchange(
                         authorizeExchangeSpec -> authorizeExchangeSpec
 
