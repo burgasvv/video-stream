@@ -13,7 +13,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static java.lang.System.*;
 import static org.burgas.identityserver.entity.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
