@@ -18,6 +18,10 @@ public class ProxyConfig {
         return RouterFunctions
                 .route()
 
+                .GET("/categories/**", http(VIDEO_SERVICE_URL))
+                .POST("/categories/**", http(VIDEO_SERVICE_URL))
+                .PUT("/categories/**", http(VIDEO_SERVICE_URL))
+                .DELETE("/categories/**", http(VIDEO_SERVICE_URL))
                 .GET("/videos/**", http(VIDEO_SERVICE_URL))
                 .POST("/videos/**", http(VIDEO_SERVICE_URL))
                 .PUT("/videos/**", http(VIDEO_SERVICE_URL))

@@ -1,4 +1,6 @@
 
+### Identity-Server Requests
+
 ###
 GET /authentication/token
 Host: localhost:8888
@@ -17,7 +19,7 @@ Authorization: Basic streamer@gmail.com streamer
 POST /identities/create
 Host: localhost:8888
 Content-Type: application/json
-X-Csrf-Token: UdYDhZFtQG9wwNU8aQLPaee96sxMOQ-b10X2mRj01oL8YS7laLc0taEMeV5doe1eXi_7WtGNx_UuDGm253HGqnvM5OPEUUvR
+X-Csrf-Token: Lh-jBEfm2oXxWrpRvhNyCY4F-Z5-BZdIgX7v_GMa5l6xbgc5F36UNHeH47TcO4IziT5GOrg11KccMPFlsUrfzwAi1D-JXmIN
 
 {
   "nickname": "burgvv",
@@ -31,9 +33,44 @@ PUT /identities/update?identityId=4
 Host: localhost:8888
 Authorization: Basic burgvv@gmail.com cg3audio
 Content-Type: application/json
-X-Csrf-Token: UdYDhZFtQG9wwNU8aQLPaee96sxMOQ-b10X2mRj01oL8YS7laLc0taEMeV5doe1eXi_7WtGNx_UuDGm253HGqnvM5OPEUUvR
+X-Csrf-Token: Lh-jBEfm2oXxWrpRvhNyCY4F-Z5-BZdIgX7v_GMa5l6xbgc5F36UNHeH47TcO4IziT5GOrg11KccMPFlsUrfzwAi1D-JXmIN
 
 {
   "nickname": "burgasvv",
   "email": "burgasvv@gmail.com"
+}
+
+### Video-Service Reqiests
+
+###
+GET /categories
+Host: localhost:8888
+
+###
+GET /categories/by-id?categoryId=5
+Host: localhost:8888
+
+###
+POST /categories/create
+Host: localhost:8888
+X-Csrf-Token: Lh-jBEfm2oXxWrpRvhNyCY4F-Z5-BZdIgX7v_GMa5l6xbgc5F36UNHeH47TcO4IziT5GOrg11KccMPFlsUrfzwAi1D-JXmIN
+Authorization: Basic admin@gmail.com admin
+Content-Type: application/json
+
+{
+  "name": "New Description",
+  "description": "New Description for Category"
+}
+
+###
+POST /categories/update
+Host: localhost:8888
+X-Csrf-Token: Lh-jBEfm2oXxWrpRvhNyCY4F-Z5-BZdIgX7v_GMa5l6xbgc5F36UNHeH47TcO4IziT5GOrg11KccMPFlsUrfzwAi1D-JXmIN
+Authorization: Basic admin@gmail.com admin
+Content-Type: application/json
+
+{
+  "id": 8,
+  "name": "New Description EDITED",
+  "description": "New Description for Category EDITED"
 }

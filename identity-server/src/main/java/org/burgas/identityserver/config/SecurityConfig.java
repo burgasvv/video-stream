@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/authentication/principal", "/authentication/token",
                                         "/identities/create",
+                                        "/categories", "/categories/by-id",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
                                         "/videos/stream/by-id", "/videos/stream/by-name"
                                 )
@@ -59,7 +60,8 @@ public class SecurityConfig {
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")
 
                                 .requestMatchers(
-                                        "/identities"
+                                        "/identities",
+                                        "/categories/create", "/categories/update"
                                 )
                                 .hasAnyAuthority("ROLE_ADMIN")
                 )
