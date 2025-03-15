@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -19,6 +21,14 @@ public class IdentityController {
 
     public IdentityController(IdentityService identityService) {
         this.identityService = identityService;
+    }
+
+    @GetMapping
+    public @ResponseBody ResponseEntity<List<IdentityResponse>> getAllIdentities() {
+        return ResponseEntity
+                .status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(identityService.findAll());
     }
 
     @GetMapping(value = "/by-id", produces = APPLICATION_JSON_VALUE)
@@ -38,7 +48,10 @@ public class IdentityController {
     }
 
     @PutMapping(value = "/update")
-    public @ResponseBody ResponseEntity<IdentityResponse> updateIdentity(@RequestBody IdentityRequest identityRequest) {
+    public @ResponseBody ResponseEntity<IdentityResponse> updateIdentity(
+            @RequestBody IdentityRequest identityRequest, @RequestParam Long identityId
+    ) {
+        identityRequest.setId(identityId);
         return ResponseEntity
                 .status(OK)
                 .contentType(APPLICATION_JSON)

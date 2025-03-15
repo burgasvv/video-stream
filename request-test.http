@@ -17,7 +17,7 @@ Authorization: Basic streamer@gmail.com streamer
 POST /identities/create
 Host: localhost:8888
 Content-Type: application/json
-X-Csrf-Token: Iv9E6tanh2RwFmY89_8vHnI65q9m1hpDMK-3F2Eg3W0wXWuWEM99jO_F5VxddVBaxdIbexQOy5Zf7yhuCZuOdVgX7FUAaFj0
+X-Csrf-Token: UdYDhZFtQG9wwNU8aQLPaee96sxMOQ-b10X2mRj01oL8YS7laLc0taEMeV5doe1eXi_7WtGNx_UuDGm253HGqnvM5OPEUUvR
 
 {
   "nickname": "burgvv",
@@ -31,7 +31,7 @@ PUT /identities/update?identityId=4
 Host: localhost:8888
 Authorization: Basic burgvv@gmail.com cg3audio
 Content-Type: application/json
-X-Csrf-Token: Iv9E6tanh2RwFmY89_8vHnI65q9m1hpDMK-3F2Eg3W0wXWuWEM99jO_F5VxddVBaxdIbexQOy5Zf7yhuCZuOdVgX7FUAaFj0
+X-Csrf-Token: UdYDhZFtQG9wwNU8aQLPaee96sxMOQ-b10X2mRj01oL8YS7laLc0taEMeV5doe1eXi_7WtGNx_UuDGm253HGqnvM5OPEUUvR
 
 {
   "nickname": "burgasvv",
