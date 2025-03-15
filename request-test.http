@@ -8,3 +8,26 @@ Authorization: Basic admin@gmail.com admin
 GET /identities/by-id?identityId=2
 Host: localhost:8888
 Authorization: Basic user@gmail.com user
+
+###
+POST /identities/create
+Host: localhost:8888
+Content-Type: application/json
+
+{
+  "nickname": "burgvv",
+  "password": "cg3audio",
+  "email": "burgvv@gmail.com",
+  "authorityId": 2
+}
+
+###
+PUT /identities/update?identityId=3
+Host: localhost:8888
+Authorization: Basic burgvv@gmail.com cg3audio
+Content-Type: application/json
+
+{
+  "nickname": "burgasvv",
+  "email": "burgasvv@gmail.com"
+}

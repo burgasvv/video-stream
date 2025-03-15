@@ -48,7 +48,10 @@ public class IdentityController {
     }
 
     @PutMapping(value = "/update")
-    public @ResponseBody ResponseEntity<IdentityResponse> updateIdentity(@RequestBody IdentityRequest identityRequest) {
+    public @ResponseBody ResponseEntity<IdentityResponse> updateIdentity(
+            @RequestBody IdentityRequest identityRequest, @RequestParam(required = false) Long identityId
+    ) {
+        identityRequest.setId(identityId);
         return ResponseEntity
                 .status(OK)
                 .contentType(APPLICATION_JSON)

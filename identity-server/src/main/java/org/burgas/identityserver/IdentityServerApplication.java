@@ -2,6 +2,7 @@ package org.burgas.identityserver;
 
 import org.burgas.identityserver.filter.GetIdentitiesFilter;
 import org.burgas.identityserver.filter.GetIdentityByIdFilter;
+import org.burgas.identityserver.filter.UpdateIdentityFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -14,7 +15,8 @@ import org.springframework.web.client.RestClient;
 @ServletComponentScan(
         basePackageClasses = {
                 GetIdentityByIdFilter.class,
-                GetIdentitiesFilter.class
+                GetIdentitiesFilter.class,
+                UpdateIdentityFilter.class
         }
 )
 public class IdentityServerApplication {

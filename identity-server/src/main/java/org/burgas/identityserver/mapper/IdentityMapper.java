@@ -32,28 +32,28 @@ public class IdentityMapper {
     }
 
     public Identity toIdentity(IdentityRequest identityRequest) {
-        Long identityId = getData(identityRequest.id(), 0L);
+        Long identityId = getData(identityRequest.getId(), 0L);
         return identityRepository
                 .findById(identityId)
                 .map(
                         identity -> {
-                            String password = identityRequest.password() == null ? "" : identityRequest.password();
+                            String password = identityRequest.getPassword() == null ? "" : identityRequest.getPassword();
                             return Identity.builder()
                                     .id(identity.getId())
-                                    .nickname(getData(identityRequest.nickname(), identity.getNickname()))
+                                    .nickname(getData(identityRequest.getNickname(), identity.getNickname()))
                                     .password(getData(passwordEncoder.encode(password), identity.getPassword()))
-                                    .email(getData(identityRequest.email(), identity.getEmail()))
-                                    .authorityId(getData(identityRequest.authorityId(), identity.getAuthorityId()))
-                                    .enabled(getData(identityRequest.enabled(), identity.getEnabled()))
+                                    .email(getData(identityRequest.getEmail(), identity.getEmail()))
+                                    .authorityId(getData(identityRequest.getAuthorityId(), identity.getAuthorityId()))
+                                    .enabled(getData(identityRequest.getEnabled(), identity.getEnabled()))
                                     .build();
                         }
                 )
                 .orElseGet(
                         () -> Identity.builder()
-                                .nickname(identityRequest.nickname())
-                                .password(passwordEncoder.encode(identityRequest.password()))
-                                .email(identityRequest.email())
-                                .authorityId(identityRequest.authorityId())
+                                .nickname(identityRequest.getNickname())
+                                .password(passwordEncoder.encode(identityRequest.getPassword()))
+                                .email(identityRequest.getEmail())
+                                .authorityId(2L)
                                 .enabled(true)
                                 .build()
                 );
