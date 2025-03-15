@@ -1,18 +1,23 @@
 
 ###
+GET /authentication/token
+Host: localhost:8888
+
+###
 GET /identities
 Host: localhost:8888
 Authorization: Basic admin@gmail.com admin
 
 ###
-GET /identities/by-id?identityId=2
+GET /identities/by-id?identityId=3
 Host: localhost:8888
-Authorization: Basic user@gmail.com user
+Authorization: Basic streamer@gmail.com streamer
 
 ###
 POST /identities/create
 Host: localhost:8888
 Content-Type: application/json
+X-Csrf-Token: Iv9E6tanh2RwFmY89_8vHnI65q9m1hpDMK-3F2Eg3W0wXWuWEM99jO_F5VxddVBaxdIbexQOy5Zf7yhuCZuOdVgX7FUAaFj0
 
 {
   "nickname": "burgvv",
@@ -22,10 +27,11 @@ Content-Type: application/json
 }
 
 ###
-PUT /identities/update?identityId=3
+PUT /identities/update?identityId=4
 Host: localhost:8888
 Authorization: Basic burgvv@gmail.com cg3audio
 Content-Type: application/json
+X-Csrf-Token: Iv9E6tanh2RwFmY89_8vHnI65q9m1hpDMK-3F2Eg3W0wXWuWEM99jO_F5VxddVBaxdIbexQOy5Zf7yhuCZuOdVgX7FUAaFj0
 
 {
   "nickname": "burgasvv",

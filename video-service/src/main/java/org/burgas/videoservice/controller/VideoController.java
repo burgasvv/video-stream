@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.util.List;
 
 import static java.net.URI.create;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -32,6 +33,14 @@ public class VideoController {
 
     public VideoController(VideoService videoService) {
         this.videoService = videoService;
+    }
+
+    @GetMapping
+    public @ResponseBody ResponseEntity<List<VideoResponse>> getAllVideos() {
+        return ResponseEntity
+                .status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(videoService.findAll());
     }
 
     @GetMapping(value = "/by-id")
@@ -81,7 +90,7 @@ public class VideoController {
     @PostMapping(value = "/upload", consumes = MULTIPART_FORM_DATA_VALUE)
     public @ResponseBody ResponseEntity<Long> uploadVideo(
             @RequestPart MultipartFile file, @RequestPart(required = false) String name,
-            @RequestPart String categoryId, @RequestPart String description
+            @RequestPart String streamerId, @RequestPart String categoryId, @RequestPart String description
     ) {
         if (
                 file != null && !file.isEmpty() &&
@@ -89,7 +98,7 @@ public class VideoController {
                         .split("/")[0]
                         .equalsIgnoreCase("video")
         ) {
-            VideoRequest videoRequest = new VideoRequest(null, Long.valueOf(categoryId), name, description);
+            VideoRequest videoRequest = new VideoRequest(null, Long.valueOf(categoryId), Long.valueOf(streamerId), name, description);
             Long videoId = videoService.uploadOrUpdate(videoRequest, file);
             return ResponseEntity
                     .status(FOUND)

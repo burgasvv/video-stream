@@ -7,6 +7,7 @@ public final class VideoResponse {
     private Long id;
     private String name;
     private String category;
+    private Long streamerId;
     private String description;
     private String contentType;
     private Long size;
@@ -42,6 +43,16 @@ public final class VideoResponse {
     @SuppressWarnings("unused")
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    @SuppressWarnings("unused")
+    public Long getStreamerId() {
+        return streamerId;
+    }
+
+    @SuppressWarnings("unused")
+    public void setStreamerId(Long streamerId) {
+        this.streamerId = streamerId;
     }
 
     @SuppressWarnings("unused")
@@ -118,6 +129,11 @@ public final class VideoResponse {
 
         public Builder category(String category) {
             this.videoResponse.category = category;
+            return this;
+        }
+
+        public Builder streamerId(Long streamerId) {
+            this.videoResponse.streamerId = streamerId;
             return this;
         }
 
