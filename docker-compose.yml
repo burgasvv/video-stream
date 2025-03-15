@@ -9,3 +9,28 @@ services:
       POSTGRES_USERNAME: postgres
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/data/postgresql
+
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8070
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: "true"
+      KC_LOG_LEVEL: info
+    ports:
+      - "8070:8070"
+      - "7443:7443"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8070/health/ready" ]
+      interval: 15s
+      timeout: 2s
+      retries: 15
+    command: [ "start-dev", "--http-port", "8070", "--https-port", "7443" ]
+    networks:
+      - local_network
+networks:
+  local_network:
+    driver: bridge
