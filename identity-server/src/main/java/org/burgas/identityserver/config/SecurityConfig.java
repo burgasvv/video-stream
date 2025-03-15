@@ -47,7 +47,7 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/authentication/principal", "/authentication/token",
                                         "/identities/create",
-                                        "/videos", "/videos/by-id", "/videos/by-name",
+                                        "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
                                         "/videos/stream/by-id", "/videos/stream/by-name"
                                 )
                                 .permitAll()

@@ -43,6 +43,14 @@ public class VideoController {
                 .body(videoService.findAll());
     }
 
+    @GetMapping(value = "/by-category")
+    public @ResponseBody ResponseEntity<List<VideoResponse>> getVideosByCategoryId(@RequestParam Long categoryId) {
+        return ResponseEntity
+                .status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(videoService.findByCategoryId(categoryId));
+    }
+
     @GetMapping(value = "/by-id")
     public @ResponseBody ResponseEntity<VideoResponse> getVideoById(@RequestParam Long videoId) {
         return ResponseEntity
