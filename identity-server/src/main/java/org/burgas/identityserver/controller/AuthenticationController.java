@@ -1,20 +1,14 @@
 package org.burgas.identityserver.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.burgas.identityserver.dto.IdentityPrincipal;
 import org.burgas.identityserver.dto.IdentityResponse;
 import org.burgas.identityserver.mapper.IdentityPrincipalMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import static java.util.Optional.ofNullable;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import reactor.core.publisher.Mono;
 
 @Controller
 @RequestMapping("/authentication")
@@ -27,30 +21,19 @@ public class AuthenticationController {
     }
 
     @GetMapping(value = "/principal")
-    public @ResponseBody ResponseEntity<IdentityPrincipal> getIdentityPrincipal(Authentication authentication) {
-        return ofNullable(authentication)
-                .filter(Authentication::isAuthenticated)
-                .map(
-                        _ -> ResponseEntity
-                                .status(OK)
-                                .contentType(APPLICATION_JSON)
-                                .body(identityPrincipalMapper
-                                        .toIdentityPrincipal((IdentityResponse) authentication.getPrincipal(), true))
+    public @ResponseBody Mono<IdentityPrincipal> getIdentityPrincipal(Mono<Authentication> authenticationMono) {
+        return authenticationMono
+                .filter(authentication -> authentication != null && authentication.isAuthenticated())
+                .flatMap(
+                        authentication -> Mono.fromCallable(
+                                () -> identityPrincipalMapper
+                                        .toIdentityPrincipal((IdentityResponse) authentication.getPrincipal(), true)
+                        )
                 )
-                .orElseGet(
-                        () -> ResponseEntity
-                                .status(OK)
-                                .contentType(APPLICATION_JSON)
-                                .body(IdentityPrincipal.builder().authenticated(false).build())
+                .switchIfEmpty(
+                        Mono.fromCallable(
+                                () -> IdentityPrincipal.builder().authenticated(false).build()
+                        )
                 );
-    }
-
-    @GetMapping(value = "/token")
-    public @ResponseBody ResponseEntity<CsrfToken> getCsrfToken(HttpServletRequest httpServletRequest) {
-        CsrfToken csrf = (CsrfToken) httpServletRequest.getAttribute("_csrf");
-        return ResponseEntity
-                .status(OK)
-                .contentType(APPLICATION_JSON)
-                .body(csrf);
     }
 }
