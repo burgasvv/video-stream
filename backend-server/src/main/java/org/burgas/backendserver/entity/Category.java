@@ -66,6 +66,7 @@ public final class Category {
             return this;
         }
 
+        @SuppressWarnings("unused")
         public Builder description(String description) {
             this.category.description = description;
             return this;
