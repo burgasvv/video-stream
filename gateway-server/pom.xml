@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.burgas</groupId>
-    <artifactId>identity-server</artifactId>
+    <artifactId>gateway-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>identity-server</name>
     <description>identity-server</description>

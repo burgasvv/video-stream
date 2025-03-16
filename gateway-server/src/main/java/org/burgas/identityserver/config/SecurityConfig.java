@@ -49,14 +49,15 @@ public class SecurityConfig {
                                         "/identities/create", "/identities/by-identity-streamer-token/{token}",
                                         "/categories", "/categories/by-id",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
-                                        "/videos/stream/by-id", "/videos/stream/by-name"
+                                        "/videos/stream/by-id", "/videos/stream/by-name",
+                                        "/streamers", "/streamers/by-id"
                                 )
                                 .permitAll()
 
                                 .requestMatchers(
                                         "/identities/by-id", "/identities/update",
                                         "/videos/upload", "/videos/update", "/videos/delete",
-                                        "/streamers", "/streamers/by-id","/streamers/create","/streamers/update"
+                                        "/streamers/create","/streamers/update"
                                 )
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")
 

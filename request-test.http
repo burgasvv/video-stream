@@ -80,12 +80,11 @@ Content-Type: application/json
 ###
 GET /streamers
 Host: localhost:8888
-Authorization: Basic user@gmail.com user
 
 ###
 POST /streamers/create
 Host: localhost:8888
-X-Csrf-Token: kJdZidM2UFpr1VTpF42eCr-FVNR6kQBDTYDJAZuXlunH2v5XoqVg7bJUMWtG5GbbIaCqaIe2ebZDqDJufeH-Mqiio4il7cdu
+X-Csrf-Token: ovGS6F7HXAyhFd4Rc0vzLMYbuc6drz7XslsjgDvKGn_sDb0ukcmk3j30aG2MIrt1QGbHGPYulKylygj6h20XuA2vK0raNIVP
 Authorization: Basic user@gmail.com user
 Content-Type: application/json
 
@@ -100,7 +99,7 @@ Content-Type: application/json
 ###
 POST /streamers/update
 Host: localhost:8888
-X-Csrf-Token: kJdZidM2UFpr1VTpF42eCr-FVNR6kQBDTYDJAZuXlunH2v5XoqVg7bJUMWtG5GbbIaCqaIe2ebZDqDJufeH-Mqiio4il7cdu
+X-Csrf-Token: ovGS6F7HXAyhFd4Rc0vzLMYbuc6drz7XslsjgDvKGn_sDb0ukcmk3j30aG2MIrt1QGbHGPYulKylygj6h20XuA2vK0raNIVP
 Authorization: Basic user@gmail.com user
 Content-Type: application/json
 

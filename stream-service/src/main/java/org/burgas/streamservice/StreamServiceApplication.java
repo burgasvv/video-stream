@@ -16,4 +16,5 @@ public class StreamServiceApplication {
     public RestClient restClient() {
         return RestClient.builder().build();
     }
+
 }

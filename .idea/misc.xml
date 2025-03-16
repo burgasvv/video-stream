@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/video-service/pom.xml" />
         <option value="$PROJECT_DIR$/identity-server/pom.xml" />
         <option value="$PROJECT_DIR$/stream-service/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway-server/pom.xml" />
       </list>
     </option>
   </component>
