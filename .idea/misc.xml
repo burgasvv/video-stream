@@ -9,7 +9,14 @@
         <option value="$PROJECT_DIR$/identity-server/pom.xml" />
         <option value="$PROJECT_DIR$/stream-service/pom.xml" />
         <option value="$PROJECT_DIR$/gateway-server/pom.xml" />
+        <option value="$PROJECT_DIR$/backend-server/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/stream-service/pom.xml" />
+        <option value="$PROJECT_DIR$/video-service/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_23" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
