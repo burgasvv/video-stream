@@ -7,6 +7,7 @@
         <option value="$PROJECT_DIR$/database-server/pom.xml" />
         <option value="$PROJECT_DIR$/video-service/pom.xml" />
         <option value="$PROJECT_DIR$/identity-server/pom.xml" />
+        <option value="$PROJECT_DIR$/stream-service/pom.xml" />
       </list>
     </option>
   </component>

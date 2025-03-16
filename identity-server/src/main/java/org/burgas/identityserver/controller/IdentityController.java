@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -37,6 +38,14 @@ public class IdentityController {
                 .status(OK)
                 .contentType(APPLICATION_JSON)
                 .body(identityService.findById(identityId));
+    }
+
+    @GetMapping(value = "/by-identity-streamer-token/{token}")
+    public @ResponseBody ResponseEntity<IdentityResponse> getIdentityByIdentityStreamerToken(@PathVariable UUID token) {
+        return ResponseEntity
+                .status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(identityService.findByIdentityStreamerToken(token));
     }
 
     @PostMapping(value = "/create")

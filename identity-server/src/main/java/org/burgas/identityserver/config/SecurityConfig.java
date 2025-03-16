@@ -46,7 +46,7 @@ public class SecurityConfig {
                         requests -> requests
                                 .requestMatchers(
                                         "/authentication/principal", "/authentication/token",
-                                        "/identities/create",
+                                        "/identities/create", "/identities/by-identity-streamer-token/{token}",
                                         "/categories", "/categories/by-id",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
                                         "/videos/stream/by-id", "/videos/stream/by-name"
@@ -55,7 +55,8 @@ public class SecurityConfig {
 
                                 .requestMatchers(
                                         "/identities/by-id", "/identities/update",
-                                        "/videos/upload", "/videos/update", "/videos/delete"
+                                        "/videos/upload", "/videos/update", "/videos/delete",
+                                        "/streamers", "/streamers/by-id","/streamers/create","/streamers/update"
                                 )
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")
 

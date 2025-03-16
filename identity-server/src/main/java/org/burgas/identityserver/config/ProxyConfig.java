@@ -12,6 +12,7 @@ import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFuncti
 public class ProxyConfig {
 
     private static final String VIDEO_SERVICE_URL = "http://localhost:9000";
+    private static final String STREAM_SERVICE_URL = "http://localhost:9010";
 
     @Bean
     public RouterFunction<ServerResponse> router() {
@@ -26,6 +27,11 @@ public class ProxyConfig {
                 .POST("/videos/**", http(VIDEO_SERVICE_URL))
                 .PUT("/videos/**", http(VIDEO_SERVICE_URL))
                 .DELETE("/videos/**", http(VIDEO_SERVICE_URL))
+
+                .GET("/streamers/**", http(STREAM_SERVICE_URL))
+                .POST("/streamers/**", http(STREAM_SERVICE_URL))
+                .PUT("/streamers/**", http(STREAM_SERVICE_URL))
+                .DELETE("/streamers/**", http(STREAM_SERVICE_URL))
 
                 .build();
     }

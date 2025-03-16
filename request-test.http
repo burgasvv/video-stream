@@ -74,3 +74,39 @@ Content-Type: application/json
   "name": "New Description EDITED",
   "description": "New Description for Category EDITED"
 }
+
+### Stream-Service Requests
+
+###
+GET /streamers
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+POST /streamers/create
+Host: localhost:8888
+X-Csrf-Token: kJdZidM2UFpr1VTpF42eCr-FVNR6kQBDTYDJAZuXlunH2v5XoqVg7bJUMWtG5GbbIaCqaIe2ebZDqDJufeH-Mqiio4il7cdu
+Authorization: Basic user@gmail.com user
+Content-Type: application/json
+
+{
+  "firstname": "Иванов",
+  "lastname": "Родион",
+  "patronymic": "Сергеевич",
+  "about": "Информация о стримере",
+  "identityId": 2
+}
+
+###
+POST /streamers/update
+Host: localhost:8888
+X-Csrf-Token: kJdZidM2UFpr1VTpF42eCr-FVNR6kQBDTYDJAZuXlunH2v5XoqVg7bJUMWtG5GbbIaCqaIe2ebZDqDJufeH-Mqiio4il7cdu
+Authorization: Basic user@gmail.com user
+Content-Type: application/json
+
+{
+  "id": 2,
+  "firstname": "Иванов EDITED",
+  "lastname": "Родион EDITED",
+  "patronymic": "Сергеевич EDITED"
+}

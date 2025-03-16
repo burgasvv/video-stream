@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
@@ -38,6 +39,13 @@ public class IdentityService {
                 .map(identityMapper::toIdentityResponse)
                 .orElseGet(IdentityResponse::new);
 
+    }
+
+    public IdentityResponse findByIdentityStreamerToken(UUID token) {
+        return this.identityRepository
+                .findIdentityByIdentityStreamerToken(token)
+                .map(identityMapper::toIdentityResponse)
+                .orElseGet(IdentityResponse::new);
     }
 
     @Transactional(
