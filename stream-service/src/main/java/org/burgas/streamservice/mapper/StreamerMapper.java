@@ -33,18 +33,18 @@ public class StreamerMapper {
     }
 
     public Streamer toStreamerSave(final StreamerRequest streamerRequest) {
-        Long streamerId = getData(streamerRequest.id(), 0L);
+        Long streamerId = getData(streamerRequest.getId(), 0L);
         return this.streamerRepository
                 .findById(streamerId)
                 .map(
                         streamer -> this.streamerRepository.save(
                                 Streamer.builder()
                                         .id(streamer.getId())
-                                        .identityId(this.getData(streamerRequest.identityId(), streamer.getIdentityId()))
-                                        .firstname(this.getData(streamerRequest.firstname(), streamer.getFirstname()))
-                                        .lastname(this.getData(streamerRequest.lastname(), streamer.getLastname()))
-                                        .patronymic(this.getData(streamerRequest.patronymic(), streamer.getPatronymic()))
-                                        .about(this.getData(streamerRequest.about(), streamer.getAbout()))
+                                        .identityId(this.getData(streamerRequest.getIdentityId(), streamer.getIdentityId()))
+                                        .firstname(this.getData(streamerRequest.getFirstname(), streamer.getFirstname()))
+                                        .lastname(this.getData(streamerRequest.getLastname(), streamer.getLastname()))
+                                        .patronymic(this.getData(streamerRequest.getPatronymic(), streamer.getPatronymic()))
+                                        .about(this.getData(streamerRequest.getAbout(), streamer.getAbout()))
                                         .build()
                         )
                 )
@@ -52,11 +52,11 @@ public class StreamerMapper {
                         () -> {
                             Streamer streamer = this.streamerRepository.save(
                                     Streamer.builder()
-                                            .identityId(streamerRequest.identityId())
-                                            .firstname(streamerRequest.firstname())
-                                            .lastname(streamerRequest.lastname())
-                                            .patronymic(streamerRequest.patronymic())
-                                            .about(streamerRequest.about())
+                                            .identityId(streamerRequest.getIdentityId())
+                                            .firstname(streamerRequest.getFirstname())
+                                            .lastname(streamerRequest.getLastname())
+                                            .patronymic(streamerRequest.getPatronymic())
+                                            .about(streamerRequest.getAbout())
                                             .build()
                             );
                             this.identityStreamerTokenRepository.save(

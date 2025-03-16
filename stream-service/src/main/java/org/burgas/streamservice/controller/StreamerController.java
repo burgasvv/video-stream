@@ -41,7 +41,10 @@ public class StreamerController {
     }
 
     @PostMapping(value = "/create")
-    public @ResponseBody ResponseEntity<Long> createStreamer(@RequestBody StreamerRequest streamerRequest) {
+    public @ResponseBody ResponseEntity<Long> createStreamer(
+            @RequestBody StreamerRequest streamerRequest, @RequestParam Long identityId
+    ) {
+        streamerRequest.setIdentityId(identityId);
         Long streamerId = streamerService.createOrUpdate(streamerRequest);
         return ResponseEntity
                 .status(FOUND)
@@ -50,11 +53,14 @@ public class StreamerController {
     }
 
     @PostMapping(value = "/update")
-    public @ResponseBody ResponseEntity<Long> updateStreamer(@RequestBody StreamerRequest streamerRequest) {
-        Long streamerId = streamerService.createOrUpdate(streamerRequest);
+    public @ResponseBody ResponseEntity<Long> updateStreamer(
+            @RequestBody StreamerRequest streamerRequest, @RequestParam Long streamerId
+    ) {
+        streamerRequest.setId(streamerId);
+        Long id = streamerService.createOrUpdate(streamerRequest);
         return ResponseEntity
                 .status(FOUND)
-                .location(create("/streamers/by-id?streamerId=" + streamerId))
-                .body(streamerId);
+                .location(create("/streamers/by-id?streamerId=" + id))
+                .body(id);
     }
 }
