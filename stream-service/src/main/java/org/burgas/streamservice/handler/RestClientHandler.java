@@ -1,5 +1,6 @@
 package org.burgas.streamservice.handler;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.burgas.streamservice.dto.IdentityResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,10 @@ public class RestClientHandler {
         this.restClient = restClient;
     }
 
+    @CircuitBreaker(
+            name = "getIdentityResponseByIdentityStreamerToken",
+            fallbackMethod = "fallBackGetIdentityResponseByIdentityStreamerToken"
+    )
     public ResponseEntity<IdentityResponse> getIdentityResponseByIdentityStreamerToken(UUID token) {
         return restClient
                 .get()
@@ -25,5 +30,10 @@ public class RestClientHandler {
                 .accept(APPLICATION_JSON)
                 .retrieve()
                 .toEntity(IdentityResponse.class);
+    }
+
+    @SuppressWarnings("unused")
+    public ResponseEntity<IdentityResponse> fallBackGetIdentityResponseByIdentityStreamerToken(Throwable throwable) {
+        return ResponseEntity.ok(IdentityResponse.builder().build());
     }
 }

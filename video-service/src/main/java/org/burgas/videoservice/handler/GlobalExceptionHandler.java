@@ -1,4 +1,4 @@
-package org.burgas.videoservice.handle;
+package org.burgas.videoservice.handler;
 
 import org.burgas.videoservice.exception.VideoNotFoundException;
 import org.burgas.videoservice.exception.WrongFileFormatException;

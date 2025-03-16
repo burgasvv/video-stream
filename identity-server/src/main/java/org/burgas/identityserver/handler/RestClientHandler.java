@@ -1,5 +1,6 @@
 package org.burgas.identityserver.handler;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.burgas.identityserver.dto.IdentityPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ public class RestClientHandler {
         this.restClient = restClient;
     }
 
+    @CircuitBreaker(name = "getIdentityPrincipal", fallbackMethod = "fallBackGetIdentityPrincipal")
     public ResponseEntity<IdentityPrincipal> getIdentityPrincipal(String authentication) {
         return restClient
                 .get()
@@ -25,5 +27,10 @@ public class RestClientHandler {
                 .header(AUTHORIZATION, authentication)
                 .retrieve()
                 .toEntity(IdentityPrincipal.class);
+    }
+
+    @SuppressWarnings("unused")
+    public ResponseEntity<IdentityPrincipal> fallBackGetIdentityPrincipal(Throwable throwable) {
+        return ResponseEntity.ok(IdentityPrincipal.builder().authenticated(false).build());
     }
 }
