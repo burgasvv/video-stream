@@ -16,7 +16,9 @@ import java.io.IOException;
 import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@WebFilter(urlPatterns = "/identities/by-id")
+@WebFilter(
+        urlPatterns = {"/identities/by-id", "/identities/by-id/async"}
+)
 public class GetIdentityByIdFilter extends OncePerRequestFilter {
 
     private final RestClientHandler restClientHandler;
