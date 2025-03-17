@@ -8,13 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StreamerRepository extends JpaRepository<Streamer, Long> {
-
-    @Modifying
-    @Query(
-            nativeQuery = true,
-            value = """
-                    update identity set authority_id = :authorityId where id = :identityId
-                    """
-    )
-    void updateIdentitySetIdentityAuthorityId(Long identityId, Long authorityId);
 }

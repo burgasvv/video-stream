@@ -3,29 +3,23 @@ package org.burgas.backendserver.mapper;
 import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.dto.StreamerRequest;
 import org.burgas.backendserver.dto.StreamerResponse;
-import org.burgas.backendserver.entity.IdentityStreamerToken;
 import org.burgas.backendserver.entity.Streamer;
 import org.burgas.backendserver.repository.IdentityRepository;
-import org.burgas.backendserver.repository.IdentityStreamerTokenRepository;
 import org.burgas.backendserver.repository.StreamerRepository;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 public class StreamerMapper {
 
     private final StreamerRepository streamerRepository;
-    private final IdentityStreamerTokenRepository identityStreamerTokenRepository;
     private final IdentityRepository identityRepository;
     private final IdentityMapper identityMapper;
 
     public StreamerMapper(
             StreamerRepository streamerRepository,
-            IdentityStreamerTokenRepository identityStreamerTokenRepository, IdentityRepository identityRepository, IdentityMapper identityMapper
+            IdentityRepository identityRepository, IdentityMapper identityMapper
     ) {
         this.streamerRepository = streamerRepository;
-        this.identityStreamerTokenRepository = identityStreamerTokenRepository;
         this.identityRepository = identityRepository;
         this.identityMapper = identityMapper;
     }
@@ -61,14 +55,7 @@ public class StreamerMapper {
                                             .about(streamerRequest.getAbout())
                                             .build()
                             );
-                            this.identityStreamerTokenRepository.save(
-                                    IdentityStreamerToken.builder()
-                                            .identityId(streamer.getIdentityId())
-                                            .streamerId(streamer.getId())
-                                            .token(UUID.randomUUID())
-                                            .build()
-                            );
-                            this.streamerRepository
+                            this.identityRepository
                                     .updateIdentitySetIdentityAuthorityId(
                                             streamer.getIdentityId(), 3L
                                     );
@@ -78,20 +65,18 @@ public class StreamerMapper {
     }
 
     public StreamerResponse toStreamerResponse(final Streamer streamer) {
-        IdentityStreamerToken identityStreamerToken = this.identityStreamerTokenRepository
-                .findIdentityStreamerTokenByIdentityIdAndStreamerId(streamer.getIdentityId(), streamer.getId())
-                .orElse(null);
-        IdentityResponse identityResponse = this.identityRepository
-                .findIdentityByIdentityStreamerToken(identityStreamerToken != null ? identityStreamerToken.getToken() : null)
-                .map(identityMapper::toIdentityResponse)
-                .orElseGet(IdentityResponse::new);
         return StreamerResponse.builder()
                 .id(streamer.getId())
                 .firstname(streamer.getFirstname())
                 .lastname(streamer.getLastname())
                 .patronymic(streamer.getPatronymic())
                 .about(streamer.getAbout())
-                .identity(identityResponse)
+                .identity(
+                        this.identityRepository
+                                .findById(streamer.getIdentityId())
+                                .map(identityMapper::toIdentityResponse)
+                                .orElseGet(IdentityResponse::new)
+                )
                 .build();
     }
 }

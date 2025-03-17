@@ -2,6 +2,7 @@ package org.burgas.backendserver.repository;
 
 import org.burgas.backendserver.entity.Identity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -13,12 +14,12 @@ public interface IdentityRepository extends JpaRepository<Identity, Long> {
 
     Optional<Identity> findIdentityByEmail(String email);
 
+    @Modifying
     @Query(
             nativeQuery = true,
             value = """
-                    select i.* from identity i join identity_streamer_token ist on i.id = ist.identity_id
-                                        where ist.token = :token
+                    update identity set authority_id = :authorityId where id = :identityId
                     """
     )
-    Optional<Identity> findIdentityByIdentityStreamerToken(UUID token);
+    void updateIdentitySetIdentityAuthorityId(Long identityId, Long authorityId);
 }

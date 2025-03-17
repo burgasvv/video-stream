@@ -26,12 +26,6 @@ create table if not exists streamer (
     identity_id bigint references identity(id) on delete cascade on update cascade
 );
 
-create table if not exists identity_streamer_token (
-    identity_id bigint references identity(id) on delete cascade on update cascade ,
-    streamer_id bigint references streamer(id) on delete cascade on update cascade ,
-    token uuid not null unique
-);
-
 -- video-service
 
 create table if not exists category (
@@ -75,9 +69,6 @@ values ('streamer','$2a$10$EL/JBpK2PaSDdBi1ELg0/e1wtfnVYgm.0yZrOXWnxPFvdanKlHnry
 
 insert into streamer(firstname, lastname, patronymic, about, identity_id)
 values ('Бутелёв', 'Владимир', 'Олегович', 'Информация о стримере', 3);
-
-insert into identity_streamer_token(identity_id, streamer_id, token)
-values (3, 1, gen_random_uuid());
 
 -- video-service
 
