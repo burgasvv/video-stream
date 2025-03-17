@@ -4,7 +4,7 @@ import {IdentityCardComponent} from './cards/identity-card/identity-card.compone
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, IdentityCardComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
