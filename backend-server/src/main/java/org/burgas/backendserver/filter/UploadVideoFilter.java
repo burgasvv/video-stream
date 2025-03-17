@@ -15,17 +15,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHENTICATED;
 import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@WebFilter(urlPatterns = "/streamers/update")
-public class UpdateStreamerFilter extends OncePerRequestFilter {
+@WebFilter(
+        urlPatterns = "/videos/upload"
+)
+public class UploadVideoFilter extends OncePerRequestFilter {
 
     private final RestClientHandler restClientHandler;
     private final StreamerRepository streamerRepository;
 
-    public UpdateStreamerFilter(RestClientHandler restClientHandler, StreamerRepository streamerRepository) {
+    public UploadVideoFilter(RestClientHandler restClientHandler, StreamerRepository streamerRepository) {
         this.restClientHandler = restClientHandler;
         this.streamerRepository = streamerRepository;
     }
@@ -36,16 +39,18 @@ public class UpdateStreamerFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String authentication = request.getHeader(AUTHORIZATION);
-        String streamerId = request.getParameter("streamerId");
-        IdentityPrincipal identityPrincipal = restClientHandler.getIdentityPrincipal(authentication).getBody();
+        IdentityPrincipal identityPrincipal = this.restClientHandler.getIdentityPrincipal(authentication).getBody();
 
         if (identityPrincipal != null && identityPrincipal.getAuthenticated()) {
+            byte[] streamerIdBytes = request.getPart("streamerId").getInputStream().readAllBytes();
+            String streamerIdString = new String(streamerIdBytes, UTF_8);
+            Long streamerId = Long.parseLong(streamerIdString.isBlank() ? "0" : streamerIdString);
 
-            Long identityId = identityPrincipal.getId();
-            Long obj = Long.parseLong(streamerId == null || streamerId.isBlank() ? "0" : streamerId);
-            Streamer streamer = streamerRepository.findById(obj).orElse(null);
+            Streamer streamer = this.streamerRepository
+                    .findById(streamerId)
+                    .orElse(null);
 
-            if (streamer != null && streamer.getIdentityId().equals(identityId == null ? 0L : identityId)) {
+            if (streamer != null && streamer.getIdentityId().equals(identityPrincipal.getId())) {
                 filterChain.doFilter(request, response);
 
             } else {

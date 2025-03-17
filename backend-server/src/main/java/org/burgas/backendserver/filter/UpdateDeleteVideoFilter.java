@@ -6,25 +6,28 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.burgas.backendserver.dto.IdentityPrincipal;
+import org.burgas.backendserver.entity.Streamer;
 import org.burgas.backendserver.exception.IdentityNotAuthorizedException;
 import org.burgas.backendserver.handler.RestClientHandler;
+import org.burgas.backendserver.repository.StreamerRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHENTICATED;
 import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@WebFilter(
-        urlPatterns = {"/streamers/create"}
-)
-public class CreateStreamerFilter extends OncePerRequestFilter {
+@WebFilter(urlPatterns = {"/videos/update", "/videos/delete"})
+public class UpdateDeleteVideoFilter extends OncePerRequestFilter {
 
     private final RestClientHandler restClientHandler;
+    private final StreamerRepository streamerRepository;
 
-    public CreateStreamerFilter(RestClientHandler restClientHandler) {
+    public UpdateDeleteVideoFilter(RestClientHandler restClientHandler, StreamerRepository streamerRepository) {
         this.restClientHandler = restClientHandler;
+        this.streamerRepository = streamerRepository;
     }
 
     @Override
@@ -33,17 +36,24 @@ public class CreateStreamerFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String authentication = request.getHeader(AUTHORIZATION);
-        String identityId = request.getParameter("identityId");
-        IdentityPrincipal identityPrincipal = restClientHandler.getIdentityPrincipal(authentication).getBody();
+        String streamerId = request.getParameter("streamerId");
+        IdentityPrincipal identityPrincipal = this.restClientHandler.getIdentityPrincipal(authentication).getBody();
 
         if (identityPrincipal != null && identityPrincipal.getAuthenticated()) {
+            Long obj = Long.parseLong(streamerId == null || streamerId.isBlank() ? "0" : streamerId);
+            Streamer streamer = this.streamerRepository
+                    .findById(obj)
+                    .orElse(null);
 
-            if (identityPrincipal.getId().equals(Long.parseLong(identityId == null || identityId.isBlank() ? "0" : identityId))) {
+            if (streamer != null && streamer.getIdentityId().equals(identityPrincipal.getId())) {
                 filterChain.doFilter(request, response);
+
+            } else {
+                throw new IdentityNotAuthorizedException(IDENTITY_NOT_AUTHORIZED.getMessage());
             }
 
         } else {
-            throw new IdentityNotAuthorizedException(IDENTITY_NOT_AUTHORIZED.getMessage());
+            throw new IdentityNotAuthorizedException(IDENTITY_NOT_AUTHENTICATED.getMessage());
         }
     }
 }

@@ -1,8 +1,6 @@
 package org.burgas.backendserver;
 
-import org.burgas.backendserver.filter.GetIdentitiesFilter;
-import org.burgas.backendserver.filter.GetIdentityByIdFilter;
-import org.burgas.backendserver.filter.UpdateIdentityFilter;
+import org.burgas.backendserver.filter.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -16,7 +14,9 @@ import org.springframework.web.client.RestClient;
         basePackageClasses = {
                 GetIdentityByIdFilter.class,
                 GetIdentitiesFilter.class,
-                UpdateIdentityFilter.class
+                UpdateIdentityFilter.class,
+                UploadVideoFilter.class,
+                UpdateDeleteVideoFilter.class
         }
 )
 public class BackendServerApplication {

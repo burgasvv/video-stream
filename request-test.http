@@ -19,7 +19,6 @@ Authorization: Basic streamer@gmail.com streamer
 POST /identities/create
 Host: localhost:8888
 Content-Type: application/json
-X-Csrf-Token: BbUKnKBoDrkTMCIanbKxva_tD2AO3MQi7VQYaf0TTwZhdyipZIRrrpcLaNo-Axp--J-FhJzUIlhq6vcP1WUvD8VxeD8EQBmY
 
 {
   "nickname": "burgvv",
@@ -33,7 +32,6 @@ PUT /identities/update?identityId=4
 Host: localhost:8888
 Authorization: Basic burgvv@gmail.com cg3audio
 Content-Type: application/json
-X-Csrf-Token: BbUKnKBoDrkTMCIanbKxva_tD2AO3MQi7VQYaf0TTwZhdyipZIRrrpcLaNo-Axp--J-FhJzUIlhq6vcP1WUvD8VxeD8EQBmY
 
 {
   "nickname": "burgasvv",
@@ -53,7 +51,6 @@ Host: localhost:8888
 ###
 POST /categories/create
 Host: localhost:8888
-X-Csrf-Token: Lh-jBEfm2oXxWrpRvhNyCY4F-Z5-BZdIgX7v_GMa5l6xbgc5F36UNHeH47TcO4IziT5GOrg11KccMPFlsUrfzwAi1D-JXmIN
 Authorization: Basic admin@gmail.com admin
 Content-Type: application/json
 
@@ -65,7 +62,6 @@ Content-Type: application/json
 ###
 POST /categories/update
 Host: localhost:8888
-X-Csrf-Token: Lh-jBEfm2oXxWrpRvhNyCY4F-Z5-BZdIgX7v_GMa5l6xbgc5F36UNHeH47TcO4IziT5GOrg11KccMPFlsUrfzwAi1D-JXmIN
 Authorization: Basic admin@gmail.com admin
 Content-Type: application/json
 
@@ -84,7 +80,6 @@ Host: localhost:8888
 ###
 POST /streamers/create?identityId=2
 Host: localhost:8888
-X-Csrf-Token: PUWaxvoyZJxudtu2ysjeRTecd9hwJqfsVgYEGBQKlY_oJaxBDCOoo5wLU_5DQLiF-uXqdgD5WrpCEZLBM2M8eyU-oLrcEZ8g
 Authorization: Basic user@gmail.com user
 Content-Type: application/json
 
@@ -99,7 +94,6 @@ Content-Type: application/json
 ###
 POST /streamers/update?streamerId=2
 Host: localhost:8888
-X-Csrf-Token: PUWaxvoyZJxudtu2ysjeRTecd9hwJqfsVgYEGBQKlY_oJaxBDCOoo5wLU_5DQLiF-uXqdgD5WrpCEZLBM2M8eyU-oLrcEZ8g
 Authorization: Basic user@gmail.com user
 Content-Type: application/json
 

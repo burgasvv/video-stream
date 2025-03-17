@@ -16,6 +16,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Controller
 @RequestMapping(value = "/identities")
+@CrossOrigin(value = "http:/localhost:4200")
 public class IdentityController {
 
     private final IdentityService identityService;

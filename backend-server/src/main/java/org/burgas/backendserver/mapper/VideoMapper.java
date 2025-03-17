@@ -31,16 +31,16 @@ public class VideoMapper {
     }
 
     public Video toVideo(final VideoRequest videoRequest, final MultipartFile multipartFile) {
-        Long videoId = getData(videoRequest.id(), 0L);
+        Long videoId = getData(videoRequest.getId(), 0L);
         return videoRepository
                 .findById(videoId)
                 .map(
                         video -> Video.builder()
                                 .id(video.getId())
-                                .name(getData(videoRequest.name(), video.getName()))
-                                .categoryId(getData(videoRequest.categoryId(), video.getCategoryId()))
-                                .streamerId(getData(videoRequest.streamerId(), video.getStreamerId()))
-                                .description(getData(videoRequest.description(), video.getDescription()))
+                                .name(getData(videoRequest.getName(), video.getName()))
+                                .categoryId(getData(videoRequest.getCategoryId(), video.getCategoryId()))
+                                .streamerId(getData(videoRequest.getStreamerId(), video.getStreamerId()))
+                                .description(getData(videoRequest.getDescription(), video.getDescription()))
                                 .contentType(video.getContentType())
                                 .format(video.getFormat())
                                 .size(video.getSize())
@@ -52,10 +52,10 @@ public class VideoMapper {
                             try {
                                 if (multipartFile != null && !multipartFile.isEmpty()) {
                                     return Video.builder()
-                                            .name(getData(videoRequest.name(), multipartFile.getOriginalFilename()))
-                                            .categoryId(videoRequest.categoryId())
-                                            .streamerId(videoRequest.streamerId())
-                                            .description(videoRequest.description())
+                                            .name(getData(videoRequest.getName(), multipartFile.getOriginalFilename()))
+                                            .categoryId(videoRequest.getCategoryId())
+                                            .streamerId(videoRequest.getStreamerId())
+                                            .description(videoRequest.getDescription())
                                             .contentType(multipartFile.getContentType())
                                             .size(multipartFile.getSize())
                                             .format(requireNonNull(multipartFile.getContentType()).split("/")[1])

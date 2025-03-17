@@ -8,10 +8,10 @@ import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -32,15 +32,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(
-                        csrf -> csrf
-                                .csrfTokenRequestHandler(new XorCsrfTokenRequestAttributeHandler())
-                )
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(urlBasedCorsConfigurationSource()))
                 .authenticationManager(authenticationManager())
                 .httpBasic(
-                        basicConfigurer -> basicConfigurer
-                                .securityContextRepository(new HttpSessionSecurityContextRepository())
+                        httpBasic -> httpBasic.securityContextRepository(
+                                new HttpSessionSecurityContextRepository()
+                        )
                 )
                 .authorizeHttpRequests(
                         requests -> requests
@@ -56,10 +54,14 @@ public class SecurityConfig {
 
                                 .requestMatchers(
                                         "/identities/by-id", "/identities/update",
-                                        "/videos/upload", "/videos/update", "/videos/delete",
                                         "/streamers/create","/streamers/update"
                                 )
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")
+
+                                .requestMatchers(
+                                        "/videos/upload", "/videos/update", "/videos/delete"
+                                )
+                                .hasAnyAuthority("ROLE_STREAMER")
 
                                 .requestMatchers(
                                         "/identities",

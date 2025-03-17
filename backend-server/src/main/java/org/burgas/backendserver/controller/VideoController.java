@@ -118,7 +118,10 @@ public class VideoController {
     }
 
     @PostMapping(value = "/update")
-    public @ResponseBody ResponseEntity<Long> updateVideo(@RequestBody VideoRequest videoRequest) {
+    public @ResponseBody ResponseEntity<Long> updateVideo(
+            @RequestBody VideoRequest videoRequest, @RequestParam Long streamerId
+    ) {
+        videoRequest.setStreamerId(streamerId);
         Long videoId = videoService.uploadOrUpdate(videoRequest, null);
         return ResponseEntity
                 .status(FOUND)
