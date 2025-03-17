@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         requests -> requests
                                 .requestMatchers(
-                                        "/authentication/principal", "/authentication/token",
+                                        "/authentication/principal",
                                         "/identities/create", "/identities/by-identity-streamer-token/{token}",
                                         "/categories", "/categories/by-id",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",

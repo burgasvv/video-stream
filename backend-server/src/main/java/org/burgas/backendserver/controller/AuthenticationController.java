@@ -1,12 +1,10 @@
 package org.burgas.backendserver.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.burgas.backendserver.dto.IdentityPrincipal;
 import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.mapper.IdentityPrincipalMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,13 +42,5 @@ public class AuthenticationController {
                                 .contentType(APPLICATION_JSON)
                                 .body(IdentityPrincipal.builder().authenticated(false).build())
                 );
-    }
-
-    @GetMapping("/token")
-    public @ResponseBody ResponseEntity<CsrfToken> getCsrfToken(HttpServletRequest httpServletRequest) {
-        return ResponseEntity
-                .status(OK)
-                .contentType(APPLICATION_JSON)
-                .body((CsrfToken) httpServletRequest.getAttribute("_csrf"));
     }
 }

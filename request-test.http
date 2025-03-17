@@ -2,10 +2,6 @@
 ### Identity-Server Requests
 
 ###
-GET /authentication/token
-Host: localhost:8888
-
-###
 GET /identities
 Host: localhost:8888
 Authorization: Basic admin@gmail.com admin
