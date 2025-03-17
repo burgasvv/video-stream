@@ -4,11 +4,14 @@ import org.burgas.backendserver.dto.IdentityRequest;
 import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.mapper.IdentityMapper;
 import org.burgas.backendserver.repository.IdentityRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -32,12 +35,36 @@ public class IdentityService {
                 .toList();
     }
 
+    @Async
+    public CompletableFuture<List<IdentityResponse>> findAllAsync() {
+        return supplyAsync(this.identityRepository::findAll)
+                .thenApplyAsync(
+                        identities -> identities
+                                .stream()
+                                .map(this.identityMapper::toIdentityResponse)
+                                .toList()
+                );
+    }
+
     public IdentityResponse findById(Long identityId) {
         return this.identityRepository
                 .findById(identityId)
                 .map(identityMapper::toIdentityResponse)
                 .orElseGet(IdentityResponse::new);
 
+    }
+
+    @Async
+    public CompletableFuture<IdentityResponse> findByIdAsync(Long identityId) {
+        return supplyAsync(() -> this.identityRepository.findById(identityId))
+                .thenApplyAsync(
+                        identity -> identity
+                                .map(identityMapper::toIdentityResponse)
+                )
+                .thenApplyAsync(
+                        identityResponse -> identityResponse
+                                .orElseGet(IdentityResponse::new)
+                );
     }
 
     @Transactional(

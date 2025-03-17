@@ -7,9 +7,19 @@ Host: localhost:8888
 Authorization: Basic admin@gmail.com admin
 
 ###
+GET /identities/async
+Host: localhost:8888
+Authorization: Basic admin@gmail.com admin
+
+###
 GET /identities/by-id?identityId=3
 Host: localhost:8888
 Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /identities/by-id/async?identityId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
 
 ###
 POST /identities/create

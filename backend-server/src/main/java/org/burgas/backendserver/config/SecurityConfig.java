@@ -53,8 +53,8 @@ public class SecurityConfig {
                                 .permitAll()
 
                                 .requestMatchers(
-                                        "/identities/by-id", "/identities/update",
-                                        "/streamers/create","/streamers/update"
+                                        "/identities/by-id", "/identities/by-id/async", "/identities/update",
+                                        "/streamers/create", "/streamers/update"
                                 )
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")
 
@@ -64,7 +64,7 @@ public class SecurityConfig {
                                 .hasAnyAuthority("ROLE_STREAMER")
 
                                 .requestMatchers(
-                                        "/identities",
+                                        "/identities", "/identities/async",
                                         "/categories/create", "/categories/update"
                                 )
                                 .hasAnyAuthority("ROLE_ADMIN")
