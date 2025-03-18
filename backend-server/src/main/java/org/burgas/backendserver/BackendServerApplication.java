@@ -18,7 +18,9 @@ import org.springframework.web.client.RestClient;
                 GetIdentitiesFilter.class,
                 UpdateIdentityFilter.class,
                 UploadVideoFilter.class,
-                UpdateDeleteVideoFilter.class
+                UpdateDeleteVideoFilter.class,
+                GetAndUpdateStreamerFilter.class,
+                CreateStreamerFilter.class
         }
 )
 public class BackendServerApplication {

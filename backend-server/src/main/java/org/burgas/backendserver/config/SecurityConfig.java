@@ -48,7 +48,7 @@ public class SecurityConfig {
                                         "/categories", "/categories/by-id",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
                                         "/videos/stream/by-id", "/videos/stream/by-name",
-                                        "/streamers", "/streamers/by-id"
+                                        "/streamers"
                                 )
                                 .permitAll()
 
@@ -59,7 +59,7 @@ public class SecurityConfig {
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")
 
                                 .requestMatchers(
-                                        "/videos/upload", "/videos/update", "/videos/delete"
+                                        "/videos/upload", "/videos/update", "/videos/delete", "/streamers/by-id"
                                 )
                                 .hasAnyAuthority("ROLE_STREAMER")
 

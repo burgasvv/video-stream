@@ -16,6 +16,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Controller
 @RequestMapping("/streamers")
+@CrossOrigin(value = "http://localhost:4200")
 public class StreamerController {
 
     private final StreamerService streamerService;

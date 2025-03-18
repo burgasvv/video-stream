@@ -19,13 +19,15 @@ import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHE
 import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@WebFilter(urlPatterns = "/streamers/update")
-public class UpdateStreamerFilter extends OncePerRequestFilter {
+@WebFilter(
+        urlPatterns = {"/streamers/by-id","/streamers/update"}
+)
+public class GetAndUpdateStreamerFilter extends OncePerRequestFilter {
 
     private final RestClientHandler restClientHandler;
     private final StreamerRepository streamerRepository;
 
-    public UpdateStreamerFilter(RestClientHandler restClientHandler, StreamerRepository streamerRepository) {
+    public GetAndUpdateStreamerFilter(RestClientHandler restClientHandler, StreamerRepository streamerRepository) {
         this.restClientHandler = restClientHandler;
         this.streamerRepository = streamerRepository;
     }
@@ -37,13 +39,13 @@ public class UpdateStreamerFilter extends OncePerRequestFilter {
 
         String authentication = request.getHeader(AUTHORIZATION);
         String streamerId = request.getParameter("streamerId");
-        IdentityPrincipal identityPrincipal = restClientHandler.getIdentityPrincipal(authentication).getBody();
+        IdentityPrincipal identityPrincipal = this.restClientHandler.getIdentityPrincipal(authentication).getBody();
 
         if (identityPrincipal != null && identityPrincipal.getAuthenticated()) {
 
             Long identityId = identityPrincipal.getId();
             Long obj = Long.parseLong(streamerId == null || streamerId.isBlank() ? "0" : streamerId);
-            Streamer streamer = streamerRepository.findById(obj).orElse(null);
+            Streamer streamer = this.streamerRepository.findById(obj).orElse(null);
 
             if (streamer != null && streamer.getIdentityId().equals(identityId == null ? 0L : identityId)) {
                 filterChain.doFilter(request, response);

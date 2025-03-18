@@ -1,0 +1,29 @@
+
+.streamer-card {
+    border: 1px solid; color: #acacac;
+    padding: 32px 24px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 32px;
+    display: flex;
+    margin: 25px;
+    border-radius: 10px;
+}
+
+.image-name {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    grid-gap: 20px;
+}
+
+.streamer-card__image {
+    width: 70px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.streamer-card__name {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
