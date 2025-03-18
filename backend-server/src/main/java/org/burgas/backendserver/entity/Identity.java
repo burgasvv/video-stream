@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
+@SuppressWarnings("unused")
 public final class Identity {
 
     @Id
@@ -17,64 +18,62 @@ public final class Identity {
     private String email;
     private Boolean enabled;
     private Long authorityId;
+    private Long imageId;
 
     public Long getId() {
         return id;
     }
 
-    @SuppressWarnings("unused")
     public void setId(Long id) {
         this.id = id;
     }
 
-    @SuppressWarnings("unused")
     public String getNickname() {
         return nickname;
     }
 
-    @SuppressWarnings("unused")
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    @SuppressWarnings("unused")
     public String getPassword() {
         return password;
     }
 
-    @SuppressWarnings("unused")
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @SuppressWarnings("unused")
     public String getEmail() {
         return email;
     }
 
-    @SuppressWarnings("unused")
     public void setEmail(String email) {
         this.email = email;
     }
 
-    @SuppressWarnings("unused")
     public Boolean getEnabled() {
         return enabled;
     }
 
-    @SuppressWarnings("unused")
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
-    @SuppressWarnings("unused")
     public Long getAuthorityId() {
         return authorityId;
     }
 
-    @SuppressWarnings("unused")
     public void setAuthorityId(Long authorityId) {
         this.authorityId = authorityId;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
     }
 
     public static Builder builder() {
@@ -116,6 +115,11 @@ public final class Identity {
 
         public Builder authorityId(Long authorityId) {
             this.identity.authorityId = authorityId;
+            return this;
+        }
+
+        public Builder imageId(Long imageId) {
+            this.identity.imageId = imageId;
             return this;
         }
 

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public final class IdentityResponse implements UserDetails {
 
     private Long id;
@@ -15,25 +16,14 @@ public final class IdentityResponse implements UserDetails {
     private String email;
     private Boolean enabled;
     private AuthorityResponse authority;
+    private Long imageId;
 
-    @SuppressWarnings("unused")
     public Long getId() {
         return id;
     }
 
-    @SuppressWarnings("unused")
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @SuppressWarnings("unused")
     public String getNickname() {
         return nickname;
-    }
-
-    @SuppressWarnings("unused")
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     @Override
@@ -43,7 +33,6 @@ public final class IdentityResponse implements UserDetails {
         );
     }
 
-    @SuppressWarnings("unused")
     public String getPassword() {
         return password;
     }
@@ -73,51 +62,20 @@ public final class IdentityResponse implements UserDetails {
         return enabled || UserDetails.super.isEnabled();
     }
 
-    @SuppressWarnings("unused")
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @SuppressWarnings("unused")
     public String getEmail() {
         return email;
     }
 
-    @SuppressWarnings("unused")
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @SuppressWarnings("unused")
     public Boolean getEnabled() {
         return enabled;
     }
 
-    @SuppressWarnings("unused")
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @SuppressWarnings("unused")
     public AuthorityResponse getAuthority() {
         return authority;
     }
 
-    @SuppressWarnings("unused")
-    public void setAuthority(AuthorityResponse authority) {
-        this.authority = authority;
-    }
-
-    @Override
-    public String toString() {
-        return "IdentityResponse{" +
-               "id=" + id +
-               ", nickname='" + nickname + '\'' +
-               ", password='" + password + '\'' +
-               ", email='" + email + '\'' +
-               ", enabled=" + enabled +
-               ", authority=" + authority +
-               '}';
+    public Long getImageId() {
+        return imageId;
     }
 
     public static Builder builder() {
@@ -159,6 +117,11 @@ public final class IdentityResponse implements UserDetails {
 
         public Builder authority(AuthorityResponse authority) {
             this.identityResponse.authority = authority;
+            return this;
+        }
+
+        public Builder imageId(Long imageId) {
+            this.identityResponse.imageId = imageId;
             return this;
         }
 

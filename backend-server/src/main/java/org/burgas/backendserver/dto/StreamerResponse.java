@@ -9,53 +9,34 @@ public final class StreamerResponse {
     private String lastname;
     private String patronymic;
     private String about;
+    private Long imageId;
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public IdentityResponse getIdentity() {
         return identity;
     }
 
-    public void setIdentity(IdentityResponse identity) {
-        this.identity = identity;
-    }
-
     public String getFirstname() {
         return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
     }
 
     public String getLastname() {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
     public String getPatronymic() {
         return patronymic;
-    }
-
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
     }
 
     public String getAbout() {
         return about;
     }
 
-    public void setAbout(String about) {
-        this.about = about;
+    public Long getImageId() {
+        return imageId;
     }
 
     public static Builder builder() {
@@ -97,6 +78,11 @@ public final class StreamerResponse {
 
         public Builder about(String about) {
             this.streamerResponse.about = about;
+            return this;
+        }
+
+        public Builder imageId(Long imageId) {
+            this.streamerResponse.imageId = imageId;
             return this;
         }
 

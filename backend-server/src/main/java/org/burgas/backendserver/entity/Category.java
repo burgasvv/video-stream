@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
+@SuppressWarnings("unused")
 public final class Category {
 
     @Id
@@ -14,13 +15,12 @@ public final class Category {
     private Long id;
     private String name;
     private String description;
+    private Long imageId;
 
-    @SuppressWarnings("unused")
     public Long getId() {
         return id;
     }
 
-    @SuppressWarnings("unused")
     public void setId(Long id) {
         this.id = id;
     }
@@ -29,19 +29,34 @@ public final class Category {
         return name;
     }
 
-    @SuppressWarnings("unused")
     public void setName(String name) {
         this.name = name;
     }
 
-    @SuppressWarnings("unused")
     public String getDescription() {
         return description;
     }
 
-    @SuppressWarnings("unused")
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", description='" + description + '\'' +
+               ", imageId=" + imageId +
+               '}';
     }
 
     public static Builder builder() {
@@ -66,9 +81,13 @@ public final class Category {
             return this;
         }
 
-        @SuppressWarnings("unused")
         public Builder description(String description) {
             this.category.description = description;
+            return this;
+        }
+
+        public Builder imageId(Long imageId) {
+            this.category.imageId = imageId;
             return this;
         }
 

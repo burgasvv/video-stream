@@ -1,12 +1,17 @@
 package org.burgas.backendserver.service;
 
 import org.burgas.backendserver.entity.Category;
+import org.burgas.backendserver.entity.Image;
 import org.burgas.backendserver.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
+import static org.burgas.backendserver.entity.CategoryMessage.CATEGORY_IMAGE_DELETED;
+import static org.burgas.backendserver.entity.CategoryMessage.CATEGORY_OR_IMAGE_UNDEFINED;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -15,9 +20,11 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ImageService imageService;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ImageService imageService) {
         this.categoryRepository = categoryRepository;
+        this.imageService = imageService;
     }
 
     public List<Category> findAll() {
@@ -38,5 +45,59 @@ public class CategoryService {
         return this.categoryRepository
                 .save(category)
                 .getId();
+    }
+
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public Category uploadAndSetImage(Long categoryId, final MultipartFile multipartFile) throws IOException {
+        Image image = this.imageService.uploadImage(multipartFile);
+        Category category = this.categoryRepository.findById(categoryId).orElse(null);
+
+        if (category != null) {
+            category.setImageId(image.getId());
+            return this.categoryRepository.save(category);
+
+        } else {
+            throw new RuntimeException("Категория для загрузки изображения отсутствует");
+        }
+    }
+
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public Category changeImage(Long categoryId, final MultipartFile multipartFile) {
+        return this.categoryRepository.findById(categoryId)
+                .filter(category -> category.getImageId() != null)
+                .map(
+                        category -> {
+                            try {
+                                this.imageService.deleteImage(category.getImageId());
+                                return this.uploadAndSetImage(category.getId(), multipartFile);
+
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                )
+                .orElseThrow(() -> new RuntimeException(CATEGORY_OR_IMAGE_UNDEFINED.getMessage()));
+    }
+
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public String deleteImage(Long categoryId) {
+        return this.categoryRepository.findById(categoryId)
+                .filter(category -> category.getImageId() != null)
+                .map(
+                        category -> {
+                            this.imageService.deleteImage(category.getImageId());
+                            return CATEGORY_IMAGE_DELETED.getMessage();
+                        }
+                )
+                .orElseThrow(() -> new RuntimeException(CATEGORY_OR_IMAGE_UNDEFINED.getMessage()));
     }
 }

@@ -18,6 +18,7 @@ public final class Streamer {
     private String lastname;
     private String patronymic;
     private String about;
+    private Long imageId;
 
     public Long getId() {
         return id;
@@ -67,6 +68,14 @@ public final class Streamer {
         this.about = about;
     }
 
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -106,6 +115,11 @@ public final class Streamer {
 
         public Builder about(String about) {
             this.streamer.about = about;
+            return this;
+        }
+
+        public Builder imageId(Long imageId) {
+            this.streamer.imageId = imageId;
             return this;
         }
 
