@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.net.URI.create;
+import static java.util.Objects.requireNonNull;
+import static org.burgas.backendserver.entity.IdentityMessage.WRONG_FILE_FORMAT;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -64,22 +66,30 @@ public class CategoryController {
     public @ResponseBody ResponseEntity<Category> uploadAndSetImage(
             @RequestPart String categoryId, @RequestPart MultipartFile file
     ) throws IOException {
-        Category category = this.categoryService.uploadAndSetImage(Long.parseLong(categoryId), file);
-        return ResponseEntity
-                .status(FOUND)
-                .location(create("http://localhost:8888/categories/by-id?categoryId=" + category.getId()))
-                .body(category);
+        if (requireNonNull(file.getContentType()).startsWith("image")) {
+            Category category = this.categoryService.uploadAndSetImage(Long.parseLong(categoryId), file);
+            return ResponseEntity
+                    .status(FOUND)
+                    .location(create("http://localhost:8888/categories/by-id?categoryId=" + category.getId()))
+                    .body(category);
+        } else {
+            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+        }
     }
 
     @PostMapping(value = "/change-set-image", consumes = MULTIPART_FORM_DATA_VALUE)
     public @ResponseBody ResponseEntity<Category> changeAndSetImage(
             @RequestPart String categoryId, @RequestPart MultipartFile file
     )  {
-        Category category = this.categoryService.changeImage(Long.valueOf(categoryId), file);
-        return ResponseEntity
-                .status(FOUND)
-                .location(create("http://localhost:8888/categories/by-id?categoryId=" + category.getId()))
-                .body(category);
+        if (requireNonNull(file.getContentType()).startsWith("image")) {
+            Category category = this.categoryService.changeImage(Long.valueOf(categoryId), file);
+            return ResponseEntity
+                    .status(FOUND)
+                    .location(create("http://localhost:8888/categories/by-id?categoryId=" + category.getId()))
+                    .body(category);
+        } else {
+            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+        }
     }
 
     @DeleteMapping(value = "/delete-image")
