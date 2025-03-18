@@ -1,11 +1,8 @@
-import { Component } from '@angular/core';
-import {StreamerCardComponent} from '../../../cards/streamer-card/streamer-card.component';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-streamer',
-    imports: [
-        StreamerCardComponent
-    ],
+    imports: [],
   templateUrl: './streamer.component.html',
   styleUrl: './streamer.component.css'
 })

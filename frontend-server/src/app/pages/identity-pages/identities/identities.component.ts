@@ -1,11 +1,8 @@
-import { Component } from '@angular/core';
-import {IdentityCardComponent} from '../../../cards/identity-card/identity-card.component';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-identities',
-    imports: [
-        IdentityCardComponent
-    ],
+    imports: [],
   templateUrl: './identities.component.html',
   styleUrl: './identities.component.css'
 })
