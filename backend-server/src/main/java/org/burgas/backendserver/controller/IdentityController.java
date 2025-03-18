@@ -15,6 +15,8 @@ import java.util.concurrent.ExecutionException;
 
 import static java.net.URI.create;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Objects.requireNonNull;
+import static org.burgas.backendserver.entity.IdentityMessage.WRONG_FILE_FORMAT;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.*;
@@ -87,22 +89,30 @@ public class IdentityController {
     public @ResponseBody ResponseEntity<IdentityResponse> uploadAndSetImage(
             @RequestPart String identityId, @RequestPart MultipartFile file
     ) throws IOException {
-        IdentityResponse identityResponse = this.identityService.uploadAndSetImage(Long.parseLong(identityId), file);
-        return ResponseEntity
-                .status(FOUND)
-                .location(create("http://localhost:8888/identities/by-id?identityId=" + identityResponse.getId()))
-                .body(identityResponse);
+        if (requireNonNull(file.getContentType()).startsWith("image")) {
+            IdentityResponse identityResponse = this.identityService.uploadAndSetImage(Long.parseLong(identityId), file);
+            return ResponseEntity
+                    .status(FOUND)
+                    .location(create("http://localhost:8888/identities/by-id?identityId=" + identityResponse.getId()))
+                    .body(identityResponse);
+        } else {
+            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+        }
     }
 
     @PostMapping(value = "/change-set-image", consumes = MULTIPART_FORM_DATA_VALUE)
     public @ResponseBody ResponseEntity<IdentityResponse> changeAndSetImage(
             @RequestPart String identityId, @RequestPart MultipartFile file
     ) {
-        IdentityResponse identityResponse = this.identityService.changeImage(Long.parseLong(identityId), file);
-        return ResponseEntity
-                .status(FOUND)
-                .location(create("http://localhost:8888/identities/by-id?identityId=" + identityResponse.getId()))
-                .body(identityResponse);
+        if (requireNonNull(file.getContentType()).startsWith("image")) {
+            IdentityResponse identityResponse = this.identityService.changeImage(Long.parseLong(identityId), file);
+            return ResponseEntity
+                    .status(FOUND)
+                    .location(create("http://localhost:8888/identities/by-id?identityId=" + identityResponse.getId()))
+                    .body(identityResponse);
+        } else {
+            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+        }
     }
 
     @DeleteMapping(value = "/delete-image")

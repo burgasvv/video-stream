@@ -77,6 +77,7 @@ public class StreamerMapper {
                                 .map(identityMapper::toIdentityResponse)
                                 .orElseGet(IdentityResponse::new)
                 )
+                .imageId(streamer.getImageId())
                 .build();
     }
 }

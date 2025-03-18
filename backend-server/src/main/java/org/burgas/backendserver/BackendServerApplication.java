@@ -19,7 +19,7 @@ import org.springframework.web.client.RestClient;
                 UpdateIdentityFilter.class,
                 UploadVideoFilter.class,
                 UpdateDeleteVideoFilter.class,
-                GetAndUpdateStreamerFilter.class,
+                GetUpdateImageTasksStreamerFilter.class,
                 CreateStreamerFilter.class,
                 IdentityImageTasksFilter.class
         }

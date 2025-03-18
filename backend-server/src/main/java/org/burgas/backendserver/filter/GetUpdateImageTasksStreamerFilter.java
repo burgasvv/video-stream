@@ -20,14 +20,18 @@ import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHO
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @WebFilter(
-        urlPatterns = {"/streamers/by-id","/streamers/update"}
+        urlPatterns = {
+                "/streamers/by-id","/streamers/update",
+                "/streamers/upload-set-image","/streamers/change-set-image",
+                "/streamers/delete-image"
+        }
 )
-public class GetAndUpdateStreamerFilter extends OncePerRequestFilter {
+public class GetUpdateImageTasksStreamerFilter extends OncePerRequestFilter {
 
     private final RestClientHandler restClientHandler;
     private final StreamerRepository streamerRepository;
 
-    public GetAndUpdateStreamerFilter(RestClientHandler restClientHandler, StreamerRepository streamerRepository) {
+    public GetUpdateImageTasksStreamerFilter(RestClientHandler restClientHandler, StreamerRepository streamerRepository) {
         this.restClientHandler = restClientHandler;
         this.streamerRepository = streamerRepository;
     }
