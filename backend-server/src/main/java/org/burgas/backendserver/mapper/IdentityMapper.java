@@ -72,6 +72,7 @@ public class IdentityMapper {
                                 .map(authorityMapper::toAuthorityResponse)
                                 .orElseGet(AuthorityResponse::new)
                 )
+                .imageId(identity.getImageId())
                 .build();
     }
 }

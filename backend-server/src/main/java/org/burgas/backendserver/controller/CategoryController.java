@@ -2,6 +2,7 @@ package org.burgas.backendserver.controller;
 
 import org.burgas.backendserver.entity.Category;
 import org.burgas.backendserver.service.CategoryService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,12 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.net.URI.create;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.burgas.backendserver.entity.IdentityMessage.WRONG_FILE_FORMAT;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+import static org.springframework.http.MediaType.*;
 
 @Controller
 @RequestMapping("/categories")
@@ -96,7 +97,7 @@ public class CategoryController {
     public @ResponseBody ResponseEntity<String> deleteImage(@RequestParam Long categoryId) {
         return ResponseEntity
                 .status(OK)
-                .contentType(APPLICATION_JSON)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
                 .body(this.categoryService.deleteImage(categoryId));
     }
 }

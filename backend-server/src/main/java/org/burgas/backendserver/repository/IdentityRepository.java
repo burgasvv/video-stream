@@ -21,4 +21,6 @@ public interface IdentityRepository extends JpaRepository<Identity, Long> {
                     """
     )
     void updateIdentitySetIdentityAuthorityId(Long identityId, Long authorityId);
+
+    Identity id(Long id);
 }

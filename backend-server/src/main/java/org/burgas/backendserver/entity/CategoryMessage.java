@@ -3,7 +3,8 @@ package org.burgas.backendserver.entity;
 public enum CategoryMessage {
 
     CATEGORY_IMAGE_DELETED("Изображение категории успешно удалено"),
-    CATEGORY_OR_IMAGE_UNDEFINED("У заданной категории отсутствует изображение, либо отсутствует сама категория");
+    CATEGORY_OR_IMAGE_UNDEFINED("У заданной категории отсутствует изображение, либо отсутствует сама категория"),
+    CATEGORY_FOR_IMAGE_NOT_FOUND("Категория для загрузки изображения отсутствует");
 
     private final String message;
 

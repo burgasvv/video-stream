@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         requests -> requests
                                 .requestMatchers(
-                                        "/authentication/principal","/images/by-id",
+                                        "/authentication/principal", "/images/by-id",
                                         "/identities/create", "/identities/by-identity-streamer-token/{token}",
                                         "/categories", "/categories/by-id",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
@@ -54,6 +54,7 @@ public class SecurityConfig {
 
                                 .requestMatchers(
                                         "/identities/by-id", "/identities/by-id/async", "/identities/update",
+                                        "/identities/upload-set-image", "/identities/change-set-image", "/identities/delete-image",
                                         "/streamers/create", "/streamers/update"
                                 )
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")

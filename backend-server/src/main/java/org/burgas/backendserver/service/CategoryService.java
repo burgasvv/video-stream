@@ -10,8 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-import static org.burgas.backendserver.entity.CategoryMessage.CATEGORY_IMAGE_DELETED;
-import static org.burgas.backendserver.entity.CategoryMessage.CATEGORY_OR_IMAGE_UNDEFINED;
+import static org.burgas.backendserver.entity.CategoryMessage.*;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -60,7 +59,7 @@ public class CategoryService {
             return this.categoryRepository.save(category);
 
         } else {
-            throw new RuntimeException("Категория для загрузки изображения отсутствует");
+            throw new RuntimeException(CATEGORY_FOR_IMAGE_NOT_FOUND.getMessage());
         }
     }
 

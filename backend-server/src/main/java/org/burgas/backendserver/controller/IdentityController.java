@@ -3,16 +3,21 @@ package org.burgas.backendserver.controller;
 import org.burgas.backendserver.dto.IdentityRequest;
 import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.service.IdentityService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static java.net.URI.create;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.*;
 
 @Controller
 @RequestMapping(value = "/identities")
@@ -76,5 +81,35 @@ public class IdentityController {
                 .status(OK)
                 .contentType(APPLICATION_JSON)
                 .body(identityService.createOrUpdate(identityRequest));
+    }
+
+    @PostMapping(value = "/upload-set-image", consumes = MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody ResponseEntity<IdentityResponse> uploadAndSetImage(
+            @RequestPart String identityId, @RequestPart MultipartFile file
+    ) throws IOException {
+        IdentityResponse identityResponse = this.identityService.uploadAndSetImage(Long.parseLong(identityId), file);
+        return ResponseEntity
+                .status(FOUND)
+                .location(create("http://localhost:8888/identities/by-id?identityId=" + identityResponse.getId()))
+                .body(identityResponse);
+    }
+
+    @PostMapping(value = "/change-set-image", consumes = MULTIPART_FORM_DATA_VALUE)
+    public @ResponseBody ResponseEntity<IdentityResponse> changeAndSetImage(
+            @RequestPart String identityId, @RequestPart MultipartFile file
+    ) {
+        IdentityResponse identityResponse = this.identityService.changeImage(Long.parseLong(identityId), file);
+        return ResponseEntity
+                .status(FOUND)
+                .location(create("http://localhost:8888/identities/by-id?identityId=" + identityResponse.getId()))
+                .body(identityResponse);
+    }
+
+    @DeleteMapping(value = "/delete-image")
+    public @ResponseBody ResponseEntity<String> deleteIdentityImage(@RequestParam Long identityId) {
+        return ResponseEntity
+                .status(OK)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(this.identityService.deleteImage(identityId));
     }
 }
