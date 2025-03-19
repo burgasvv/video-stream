@@ -31,6 +31,32 @@ services:
     command: [ "start-dev", "--http-port", "8070", "--https-port", "7443" ]
     networks:
       - local_network
+
+  database-server:
+    build:
+      context: database-server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - keycloak
+    environment:
+      SPRING_DATASOURCE-URL: jdbc:postgresql://postgres:5432/postgres
+
+  backend-server:
+    build:
+      context: backend-server
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    depends_on:
+      - postgres
+      - keycloak
+      - database-server
+    environment:
+      SPRING_DATASOURCE-URL: jdbc:postgresql://postgres:5432/postgres
+
 networks:
   local_network:
     driver: bridge

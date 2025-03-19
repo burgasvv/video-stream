@@ -1,9 +1,6 @@
 package org.burgas.backendserver.handler;
 
-import org.burgas.backendserver.exception.FileEmptyException;
-import org.burgas.backendserver.exception.IdentityNotAuthorizedException;
-import org.burgas.backendserver.exception.VideoNotFoundException;
-import org.burgas.backendserver.exception.WrongFileFormatException;
+import org.burgas.backendserver.exception.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +40,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WrongFileFormatException.class)
     public ResponseEntity<String> handleWrongFileFormatException(WrongFileFormatException exception) {
+        return ResponseEntity
+                .status(NOT_ACCEPTABLE)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(CategoryOrImageUndefinedException.class)
+    public ResponseEntity<String> handleCategoryOrImageUndefinedException(CategoryOrImageUndefinedException exception) {
         return ResponseEntity
                 .status(NOT_ACCEPTABLE)
                 .contentType(new MediaType(TEXT_PLAIN, UTF_8))

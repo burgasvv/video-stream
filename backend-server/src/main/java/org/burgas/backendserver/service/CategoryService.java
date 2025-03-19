@@ -2,6 +2,8 @@ package org.burgas.backendserver.service;
 
 import org.burgas.backendserver.entity.Category;
 import org.burgas.backendserver.entity.Image;
+import org.burgas.backendserver.exception.CategoryForImageNotFoundException;
+import org.burgas.backendserver.exception.CategoryOrImageUndefinedException;
 import org.burgas.backendserver.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +61,7 @@ public class CategoryService {
             return this.categoryRepository.save(category);
 
         } else {
-            throw new RuntimeException(CATEGORY_FOR_IMAGE_NOT_FOUND.getMessage());
+            throw new CategoryForImageNotFoundException(CATEGORY_FOR_IMAGE_NOT_FOUND.getMessage());
         }
     }
 
@@ -81,7 +83,7 @@ public class CategoryService {
                             }
                         }
                 )
-                .orElseThrow(() -> new RuntimeException(CATEGORY_OR_IMAGE_UNDEFINED.getMessage()));
+                .orElseThrow(() -> new CategoryOrImageUndefinedException(CATEGORY_OR_IMAGE_UNDEFINED.getMessage()));
     }
 
     @Transactional(
@@ -97,6 +99,6 @@ public class CategoryService {
                             return CATEGORY_IMAGE_DELETED.getMessage();
                         }
                 )
-                .orElseThrow(() -> new RuntimeException(CATEGORY_OR_IMAGE_UNDEFINED.getMessage()));
+                .orElseThrow(() -> new CategoryOrImageUndefinedException(CATEGORY_OR_IMAGE_UNDEFINED.getMessage()));
     }
 }
