@@ -1,6 +1,5 @@
-
-<app-streamer-card></app-streamer-card>
-
-<pre>
-    {{streamers | json}}
-</pre>
+@for (streamer of streamers; track streamer.id) {
+    <app-streamer-card>
+        [streamer] = "streamer";
+    </app-streamer-card>
+}

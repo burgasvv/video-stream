@@ -10,6 +10,15 @@ services:
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/data/postgresql
 
+  rtmp:
+    image: rtmpsurf/rtmp
+    ports:
+      - "1935:1935"
+      - "8090:8090"
+    environment:
+      HTTP_PORT: 8090
+      RTMP_PORT: 1935
+
   keycloak:
     image: quay.io/keycloak/keycloak
     environment:

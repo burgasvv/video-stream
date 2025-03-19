@@ -103,6 +103,8 @@
                             <artifactId>spring-boot-configuration-processor</artifactId>
                         </path>
                     </annotationProcessorPaths>
+                    <source>24</source>
+                    <target>24</target>
                 </configuration>
             </plugin>
             <plugin>

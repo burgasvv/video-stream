@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {NgOptimizedImage} from "@angular/common";
+import {Streamer} from '../../interfaces/streamer';
 
 @Component({
   selector: 'app-streamer-card',
@@ -11,4 +12,5 @@ import {NgOptimizedImage} from "@angular/common";
 })
 export class StreamerCardComponent {
 
+    @Input() streamer!: Streamer;
 }

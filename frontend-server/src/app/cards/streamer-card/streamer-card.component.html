@@ -1,27 +1,30 @@
 
-<div class="streamer-card">
-    <div class="image-name">
-        <img ngSrc="/assets/images/images.jpg" alt="image" class="streamer-card__image" height="275" width="183">
-    </div>
+@if (streamer) {
+    <div class="streamer-card">
+        <div class="image-name">
+            <img ngSrc="/assets/images/images.jpg" alt="image" class="streamer-card__image" height="275" width="183">
+        </div>
 
-    <div class="streamer-card__name">
-        <strong class="h6">Ryan Gosling</strong>
-        <span class="h7">ryan</span>
-    </div>
+        <div class="streamer-card__name">
+            <strong class="h6">{{streamer.lastname}} {{streamer.patronymic}}</strong>
+            <span class="h7">{{streamer.firstname}}</span>
+        </div>
 
-    <div class="streamer-card__description">
-        Ryan Thomas Gosling  is a Canadian actor. Prominent in both independent films and major studio features,
-        his films have grossed over $2 billion worldwide. Gosling has received various accolades, including a Golden Globe Award,
-        and nominations for three Academy Awards, two British Academy Film Awards and a Primetime Emmy Award.
-    </div>
+        <div class="streamer-card__description">
+            {{streamer.about}}
+        </div>
 
-    <div class="streamer-card__categories">
-        <div class="streamer-category">Conversation</div>
-        <div class="streamer-category">ASMR</div>
-        <div class="streamer-category">Games</div>
-    </div>
+        <div class="streamer-card__categories">
+            <div class="streamer-category">Conversation</div>
+            <div class="streamer-category">ASMR</div>
+            <div class="streamer-category">Games</div>
+        </div>
 
-    <div class="streamer-card__action-button">
-        <div class="btn">Subscribe</div>
+        <div class="streamer-card__action-button">
+            <div class="btn">Subscribe</div>
+        </div>
     </div>
-</div>
+} @else {
+    No data
+}
+

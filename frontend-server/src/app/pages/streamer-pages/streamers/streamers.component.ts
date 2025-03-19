@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {StreamerCardComponent} from '../../../cards/streamer-card/streamer-card.component';
 import {JsonPipe} from '@angular/common';
 import {StreamerService} from '../../../services/streamer/streamer.service';
+import {Streamer} from '../../../interfaces/streamer';
 
 @Component({
   selector: 'app-streamers',
@@ -15,7 +16,7 @@ import {StreamerService} from '../../../services/streamer/streamer.service';
 export class StreamersComponent {
 
     streamerService = inject(StreamerService);
-    streamers: any = [];
+    streamers: Streamer[] = [];
 
     constructor() {
         this.streamerService
