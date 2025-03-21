@@ -1,0 +1,24 @@
+
+@if (category) {
+    <div class="category-card">
+        <div class="image-name">
+            <!--suppress CheckImageSize -->
+            <img ngSrc="/assets/images/category-image.jpg" alt="image" class="streamer-card__image" height="200" width="450">
+        </div>
+
+        <div class="category-card__name">
+            <strong class="h6">{{category.name}}</strong>
+        </div>
+
+        <div class="category-card__name">
+            {{category.description}}
+        </div>
+
+        <div class="streamer-card__action-button">
+            <div class="btn">Choose</div>
+        </div>
+    </div>
+
+} @else {
+    No Data
+}

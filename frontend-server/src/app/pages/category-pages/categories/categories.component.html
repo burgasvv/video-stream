@@ -1,0 +1,6 @@
+
+<div class="categories-cards">
+    @for (category of categories; track category.id) {
+        <app-category-card [category]="category"></app-category-card>
+    }
+</div>
