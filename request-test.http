@@ -27,10 +27,10 @@ Host: localhost:8888
 Content-Type: application/json
 
 {
-  "nickname": "burgvv",
-  "password": "cg3audio",
-  "email": "burgvv@gmail.com",
-  "authorityId": 2
+    "nickname": "burgvv",
+    "password": "cg3audio",
+    "email": "burgvv@gmail.com",
+    "authorityId": 2
 }
 
 ###
@@ -40,8 +40,8 @@ Authorization: Basic burgvv@gmail.com cg3audio
 Content-Type: application/json
 
 {
-  "nickname": "burgasvv",
-  "email": "burgasvv@gmail.com"
+    "nickname": "burgasvv",
+    "email": "burgasvv@gmail.com"
 }
 
 ### Video-Service Reqiests
@@ -61,8 +61,8 @@ Authorization: Basic admin@gmail.com admin
 Content-Type: application/json
 
 {
-  "name": "New Description",
-  "description": "New Description for Category"
+    "name": "New Description",
+    "description": "New Description for Category"
 }
 
 ###
@@ -72,9 +72,9 @@ Authorization: Basic admin@gmail.com admin
 Content-Type: application/json
 
 {
-  "id": 8,
-  "name": "New Description EDITED",
-  "description": "New Description for Category EDITED"
+    "id": 8,
+    "name": "New Description EDITED",
+    "description": "New Description for Category EDITED"
 }
 
 ### Stream-Service Requests
@@ -90,11 +90,11 @@ Authorization: Basic user@gmail.com user
 Content-Type: application/json
 
 {
-  "firstname": "Иванов",
-  "lastname": "Родион",
-  "patronymic": "Сергеевич",
-  "about": "Информация о стримере",
-  "identityId": 2
+    "firstname": "Иванов",
+    "lastname": "Родион",
+    "patronymic": "Сергеевич",
+    "about": "Информация о стримере",
+    "identityId": 2
 }
 
 ###
@@ -104,10 +104,10 @@ Authorization: Basic user@gmail.com user
 Content-Type: application/json
 
 {
-  "id": 2,
-  "firstname": "Иванов EDITED",
-  "lastname": "Родион EDITED",
-  "patronymic": "Сергеевич EDITED"
+    "id": 2,
+    "firstname": "Иванов EDITED",
+    "lastname": "Родион EDITED",
+    "patronymic": "Сергеевич EDITED"
 }
 
 ###

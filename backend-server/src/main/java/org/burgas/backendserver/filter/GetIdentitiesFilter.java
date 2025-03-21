@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
+import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @WebFilter(urlPatterns = {"/identities", "/identities/async"})

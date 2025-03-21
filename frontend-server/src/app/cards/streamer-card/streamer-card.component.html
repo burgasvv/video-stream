@@ -2,7 +2,9 @@
 @if (streamer) {
     <div class="streamer-card">
         <div class="image-name">
-            <img ngSrc="/assets/images/images.jpg" alt="image" class="streamer-card__image" height="275" width="183">
+            <!--suppress AngularNgOptimizedImage -->
+            <img src="http://localhost:8888/images/by-id?imageId={{streamer.imageId}}"
+                 class="streamer-card__image"  alt="public/assets/images/images.jpg">
         </div>
 
         <div class="streamer-card__name">

@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static org.burgas.backendserver.entity.VideoMessage.VIDEO_DELETED;
-import static org.burgas.backendserver.entity.VideoMessage.VIDEO_NOT_FOUND;
+import static org.burgas.backendserver.message.VideoMessage.VIDEO_DELETED;
+import static org.burgas.backendserver.message.VideoMessage.VIDEO_NOT_FOUND;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 

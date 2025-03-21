@@ -1,6 +1,7 @@
 package org.burgas.backendserver.service;
 
 import org.burgas.backendserver.entity.Image;
+import org.burgas.backendserver.exception.FileEmptyException;
 import org.burgas.backendserver.repository.ImageRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
+import static org.burgas.backendserver.message.ImageMessage.FILE_EMPTY_OR_NOT_FOUND;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -45,7 +47,7 @@ public class ImageService {
                                     .build()
                     );
         } else {
-            throw new RuntimeException("Загруженный файл пуст или отсутствует");
+            throw new FileEmptyException(FILE_EMPTY_OR_NOT_FOUND.getMessage());
         }
     }
 

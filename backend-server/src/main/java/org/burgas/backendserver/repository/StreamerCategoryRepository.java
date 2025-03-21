@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface StreamerCategoryRepository extends JpaRepository<StreamerCategory, StreamerCategoryPK> {
 
     Boolean existsStreamerCategoryByStreamerIdAndCategoryId(Long streamerId, Long categoryId);
+
+    StreamerCategory findStreamerCategoryByStreamerIdAndCategoryId(Long streamerId, Long categoryId);
 }

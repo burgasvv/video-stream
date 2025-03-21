@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {StreamerService} from '../../../services/streamer.service';
 import {Streamer} from '../../../interfaces/streamer';
 
@@ -11,7 +11,7 @@ import {Streamer} from '../../../interfaces/streamer';
 export class StreamerComponent {
 
     streamerService = inject(StreamerService);
-    streamer!: Streamer;
+    @Input() streamer!: Streamer;
 
     constructor() {
         this.streamerService

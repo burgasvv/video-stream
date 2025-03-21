@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {CategoryService} from '../../../services/category.service';
 import {Category} from '../../../interfaces/category';
 
@@ -11,10 +11,10 @@ import {Category} from '../../../interfaces/category';
 export class CategoryComponent {
 
     categoryService = inject(CategoryService);
-    category!: Category;
+    @Input() category!: Category;
 
-    public getCategory() {
-        return this.categoryService
+    constructor() {
+        this.categoryService
             .getCategory()
             .subscribe(value => this.category = value);
     }

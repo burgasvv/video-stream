@@ -14,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.burgas.backendserver.entity.StreamerMessage.*;
+import static org.burgas.backendserver.message.StreamerMessage.*;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -84,9 +84,16 @@ public class StreamerService {
                                             StreamerCategory.builder()
                                                     .streamerId(streamerRequest.getId())
                                                     .categoryId(categoryId)
-                                                    .addedAt(LocalDate.now())
+                                                    .addedAt(LocalDateTime.now())
                                                     .build()
                                     );
+
+                                } else {
+                                    StreamerCategory streamerCategory = this.streamerCategoryRepository
+                                            .findStreamerCategoryByStreamerIdAndCategoryId(streamerRequest.getId(), categoryId);
+                                    streamerCategory.setAddedAt(LocalDateTime.now());
+                                    this.streamerCategoryRepository
+                                            .save(streamerCategory);
                                 }
                             }
                     );

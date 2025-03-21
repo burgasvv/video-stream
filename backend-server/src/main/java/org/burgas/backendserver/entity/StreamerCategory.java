@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @SuppressWarnings(value = "unused")
@@ -13,7 +14,7 @@ public class StreamerCategory {
 
     @Id private Long streamerId;
     @Id private Long categoryId;
-    private LocalDate addedAt;
+    private LocalDateTime addedAt;
 
     public Long getStreamerId() {
         return streamerId;
@@ -31,11 +32,11 @@ public class StreamerCategory {
         this.categoryId = categoryId;
     }
 
-    public LocalDate getAddedAt() {
+    public LocalDateTime getAddedAt() {
         return addedAt;
     }
 
-    public void setAddedAt(LocalDate addedAt) {
+    public void setAddedAt(LocalDateTime addedAt) {
         this.addedAt = addedAt;
     }
 
@@ -61,7 +62,7 @@ public class StreamerCategory {
             return this;
         }
 
-        public Builder addedAt(LocalDate addedAt) {
+        public Builder addedAt(LocalDateTime addedAt) {
             this.streamerCategory.addedAt = addedAt;
             return this;
         }

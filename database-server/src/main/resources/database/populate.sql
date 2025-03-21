@@ -43,7 +43,7 @@ create table if not exists category (
 create table if not exists streamer_category (
     streamer_id bigint references streamer(id) on delete cascade on update cascade ,
     category_id bigint references category(id) on delete cascade on update cascade ,
-    added_at date not null ,
+    added_at timestamp not null ,
     primary key (streamer_id, category_id)
 );
 
@@ -88,8 +88,8 @@ insert into category(name, description) VALUES ('Сон', 'Описание ка
 insert into category(name, description) VALUES ('Абстракция', 'Описание категории Абстракция');
 
 insert into streamer_category(streamer_id, category_id, added_at)
-values (1, 1, '2025-02-10');
+values (1, 1, '2025-02-10 15:20');
 insert into streamer_category(streamer_id, category_id, added_at)
-values (1, 2, '2025-02-10');
+values (1, 2, '2025-02-10 15:25');
 insert into streamer_category(streamer_id, category_id, added_at)
-values (1, 4, '2025-02-10');
+values (1, 4, '2025-02-10 16:10');

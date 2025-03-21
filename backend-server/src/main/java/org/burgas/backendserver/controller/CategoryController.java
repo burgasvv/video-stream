@@ -14,7 +14,7 @@ import java.util.List;
 import static java.net.URI.create;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.burgas.backendserver.entity.IdentityMessage.WRONG_FILE_FORMAT;
+import static org.burgas.backendserver.message.IdentityMessage.WRONG_FILE_FORMAT;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.*;

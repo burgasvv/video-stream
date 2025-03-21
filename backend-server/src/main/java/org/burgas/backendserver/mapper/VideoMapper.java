@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import static java.util.Objects.requireNonNull;
-import static org.burgas.backendserver.entity.VideoMessage.FILE_IS_EMPTY;
+import static org.burgas.backendserver.message.VideoMessage.FILE_IS_EMPTY;
 
 @Component
 public class VideoMapper {

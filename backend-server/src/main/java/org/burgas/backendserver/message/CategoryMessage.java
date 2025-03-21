@@ -1,4 +1,4 @@
-package org.burgas.backendserver.entity;
+package org.burgas.backendserver.message;
 
 public enum CategoryMessage {
 

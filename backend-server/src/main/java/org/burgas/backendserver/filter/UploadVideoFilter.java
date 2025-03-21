@@ -16,8 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHENTICATED;
-import static org.burgas.backendserver.entity.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
+import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHENTICATED;
+import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @WebFilter(
