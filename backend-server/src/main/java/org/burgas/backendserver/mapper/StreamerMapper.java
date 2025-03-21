@@ -4,6 +4,7 @@ import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.dto.StreamerRequest;
 import org.burgas.backendserver.dto.StreamerResponse;
 import org.burgas.backendserver.entity.Streamer;
+import org.burgas.backendserver.repository.CategoryRepository;
 import org.burgas.backendserver.repository.IdentityRepository;
 import org.burgas.backendserver.repository.StreamerRepository;
 import org.springframework.stereotype.Component;
@@ -13,14 +14,17 @@ public class StreamerMapper {
 
     private final StreamerRepository streamerRepository;
     private final IdentityRepository identityRepository;
+    private final CategoryRepository categoryRepository;
     private final IdentityMapper identityMapper;
 
     public StreamerMapper(
             StreamerRepository streamerRepository,
-            IdentityRepository identityRepository, IdentityMapper identityMapper
+            IdentityRepository identityRepository,
+            CategoryRepository categoryRepository, IdentityMapper identityMapper
     ) {
         this.streamerRepository = streamerRepository;
         this.identityRepository = identityRepository;
+        this.categoryRepository = categoryRepository;
         this.identityMapper = identityMapper;
     }
 
@@ -78,6 +82,7 @@ public class StreamerMapper {
                                 .orElseGet(IdentityResponse::new)
                 )
                 .imageId(streamer.getImageId())
+                .categories(categoryRepository.findCategoriesByStreamerId(streamer.getId()))
                 .build();
     }
 }

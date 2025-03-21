@@ -4,13 +4,17 @@ import org.burgas.backendserver.dto.StreamerRequest;
 import org.burgas.backendserver.dto.StreamerResponse;
 import org.burgas.backendserver.entity.Image;
 import org.burgas.backendserver.entity.Streamer;
+import org.burgas.backendserver.entity.StreamerCategory;
+import org.burgas.backendserver.exception.StreamerCategoryDataEmptyException;
 import org.burgas.backendserver.mapper.StreamerMapper;
+import org.burgas.backendserver.repository.StreamerCategoryRepository;
 import org.burgas.backendserver.repository.StreamerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.burgas.backendserver.entity.StreamerMessage.*;
@@ -24,14 +28,17 @@ public class StreamerService {
     private final StreamerRepository streamerRepository;
     private final StreamerMapper streamerMapper;
     private final ImageService imageService;
+    private final StreamerCategoryRepository streamerCategoryRepository;
 
     public StreamerService(
             StreamerRepository streamerRepository,
-            StreamerMapper streamerMapper, ImageService imageService
+            StreamerMapper streamerMapper, ImageService imageService,
+            StreamerCategoryRepository streamerCategoryRepository
     ) {
         this.streamerRepository = streamerRepository;
         this.streamerMapper = streamerMapper;
         this.imageService = imageService;
+        this.streamerCategoryRepository = streamerCategoryRepository;
     }
 
     public List<StreamerResponse> findAll() {
@@ -57,6 +64,38 @@ public class StreamerService {
         return this.streamerMapper
                 .toStreamerSave(streamerRequest)
                 .getId();
+    }
+
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public Long addCategories(final StreamerRequest streamerRequest) {
+        if (streamerRequest.getId() != null && streamerRequest.getCategoryIds() != null) {
+            streamerRequest
+                    .getCategoryIds()
+                    .forEach(
+                            categoryId -> {
+                                if (!this.streamerCategoryRepository
+                                                .existsStreamerCategoryByStreamerIdAndCategoryId(
+                                                        streamerRequest.getId(), categoryId)
+                                ) {
+                                    this.streamerCategoryRepository.save(
+                                            StreamerCategory.builder()
+                                                    .streamerId(streamerRequest.getId())
+                                                    .categoryId(categoryId)
+                                                    .addedAt(LocalDate.now())
+                                                    .build()
+                                    );
+                                }
+                            }
+                    );
+
+            return this.findById(streamerRequest.getId()).getId();
+
+        } else {
+            throw new StreamerCategoryDataEmptyException(STREAMER_CATEGORY_DATA_EMPTY.getMessage());
+        }
     }
 
     @Transactional(

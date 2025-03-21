@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {StreamerCardComponent} from '../../../cards/streamer-card/streamer-card.component';
 import {JsonPipe} from '@angular/common';
-import {StreamerService} from '../../../services/streamer/streamer.service';
+import {StreamerService} from '../../../services/streamer.service';
 import {Streamer} from '../../../interfaces/streamer';
 
 @Component({

@@ -6,20 +6,19 @@
         </div>
 
         <div class="streamer-card__name">
-            <strong class="h6">{{streamer.lastname}} {{streamer.patronymic}}</strong>
-            <span class="h7">{{streamer.firstname}}</span>
+            <strong class="h6">{{streamer.firstname}} {{streamer.lastname}} {{streamer.patronymic}}</strong>
+            <span class="h7">{{streamer.identity.nickname}}</span>
         </div>
 
         <div class="streamer-card__description">
             {{streamer.about}}
         </div>
 
-        <div class="streamer-card__categories">
-            <div class="streamer-category">Conversation</div>
-            <div class="streamer-category">ASMR</div>
-            <div class="streamer-category">Games</div>
-        </div>
-
+        @for (category of streamer.categories; track category.id) {
+            <div class="streamer-card__categories">
+                <div class="streamer-category">{{category.name}}</div>
+            </div>
+        }
         <div class="streamer-card__action-button">
             <div class="btn">Subscribe</div>
         </div>

@@ -21,6 +21,7 @@ import static org.springframework.http.MediaType.*;
 
 @Controller
 @RequestMapping("/categories")
+@CrossOrigin(value = "http://localhost:4200")
 public class CategoryController {
 
     private final CategoryService categoryService;

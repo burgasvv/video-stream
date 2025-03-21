@@ -61,7 +61,8 @@ public class SecurityConfig {
 
                                 .requestMatchers(
                                         "/videos/upload", "/videos/update", "/videos/delete", "/streamers/by-id",
-                                        "/streamers/upload-set-image", "/streamers/change-set-image", "/streamers/delete-image"
+                                        "/streamers/upload-set-image", "/streamers/change-set-image", "/streamers/delete-image",
+                                        "/streamers/add-categories"
                                 )
                                 .hasAnyAuthority("ROLE_STREAMER")
 

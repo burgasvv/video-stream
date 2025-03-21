@@ -1,3 +1,5 @@
+import {Identity} from './identity';
+import {Category} from './category';
 
 export interface Streamer {
 
@@ -8,5 +10,6 @@ export interface Streamer {
     patronymic: string;
     about: string;
     imageId: number;
-
+    identity: Identity;
+    categories: Category[];
 }

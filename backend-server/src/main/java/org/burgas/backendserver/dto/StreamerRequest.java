@@ -1,5 +1,7 @@
 package org.burgas.backendserver.dto;
 
+import java.util.List;
+
 @SuppressWarnings("unused")
 public final class StreamerRequest {
 
@@ -9,6 +11,7 @@ public final class StreamerRequest {
     private String lastname;
     private String patronymic;
     private String about;
+    private List<Long> categoryIds;
 
     public Long getId() {
         return id;
@@ -56,5 +59,26 @@ public final class StreamerRequest {
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public List<Long> getCategoryIds() {
+        return categoryIds;
+    }
+
+    public void setCategoryIds(List<Long> categoryIds) {
+        this.categoryIds = categoryIds;
+    }
+
+    @Override
+    public String toString() {
+        return "StreamerRequest{" +
+               "id=" + id +
+               ", identityId=" + identityId +
+               ", firstname='" + firstname + '\'' +
+               ", lastname='" + lastname + '\'' +
+               ", patronymic='" + patronymic + '\'' +
+               ", about='" + about + '\'' +
+               ", categoryIds=" + categoryIds +
+               '}';
     }
 }

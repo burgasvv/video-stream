@@ -1,5 +1,9 @@
 package org.burgas.backendserver.dto;
 
+import org.burgas.backendserver.entity.Category;
+
+import java.util.List;
+
 @SuppressWarnings("unused")
 public final class StreamerResponse {
 
@@ -10,6 +14,7 @@ public final class StreamerResponse {
     private String patronymic;
     private String about;
     private Long imageId;
+    private List<Category> categories;
 
     public Long getId() {
         return id;
@@ -37,6 +42,10 @@ public final class StreamerResponse {
 
     public Long getImageId() {
         return imageId;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
     }
 
     public static Builder builder() {
@@ -83,6 +92,11 @@ public final class StreamerResponse {
 
         public Builder imageId(Long imageId) {
             this.streamerResponse.imageId = imageId;
+            return this;
+        }
+
+        public Builder categories(List<Category> categories) {
+            this.streamerResponse.categories = categories;
             return this;
         }
 

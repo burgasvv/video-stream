@@ -109,3 +109,14 @@ Content-Type: application/json
   "lastname": "Родион EDITED",
   "patronymic": "Сергеевич EDITED"
 }
+
+###
+POST /streamers/add-categories?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+Content-Type: application/json
+
+{
+    "id": 1,
+    "categoryIds": [4, 5, 6]
+}

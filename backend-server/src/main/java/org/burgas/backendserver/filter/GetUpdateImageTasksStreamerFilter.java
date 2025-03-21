@@ -23,7 +23,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
         urlPatterns = {
                 "/streamers/by-id","/streamers/update",
                 "/streamers/upload-set-image","/streamers/change-set-image",
-                "/streamers/delete-image"
+                "/streamers/delete-image",
+                "/streamers/add-categories"
         }
 )
 public class GetUpdateImageTasksStreamerFilter extends OncePerRequestFilter {

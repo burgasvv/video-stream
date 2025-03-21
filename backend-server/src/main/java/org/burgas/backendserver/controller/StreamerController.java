@@ -71,6 +71,18 @@ public class StreamerController {
                 .body(id);
     }
 
+    @PostMapping(value = "/add-categories")
+    public @ResponseBody ResponseEntity<Long> addCategories(
+            @RequestBody StreamerRequest streamerRequest, @RequestParam String streamerId
+    ) {
+        streamerRequest.setId(Long.parseLong(streamerId));
+        Long redirectStreamerId = this.streamerService.addCategories(streamerRequest);
+        return ResponseEntity
+                .status(FOUND)
+                .location(create("/streamers/by-id?streamerId=" + redirectStreamerId))
+                .body(redirectStreamerId);
+    }
+
     @PostMapping(value = "/upload-set-image", consumes = MULTIPART_FORM_DATA_VALUE)
     public @ResponseBody ResponseEntity<StreamerResponse> uploadAndSetImage(
             @RequestPart String streamerId, @RequestPart MultipartFile file

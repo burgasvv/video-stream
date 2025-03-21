@@ -1,5 +1,6 @@
+
 @for (streamer of streamers; track streamer.id) {
-    <app-streamer-card>
-        [streamer] = "streamer";
+
+    <app-streamer-card [streamer]="streamer">
     </app-streamer-card>
 }

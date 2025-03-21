@@ -53,4 +53,12 @@ public class GlobalExceptionHandler {
                 .contentType(new MediaType(TEXT_PLAIN, UTF_8))
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(StreamerCategoryDataEmptyException.class)
+    public ResponseEntity<String> handleStreamerCategoryDataEmptyException(StreamerCategoryDataEmptyException exception) {
+        return ResponseEntity
+                .status(NOT_FOUND)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(exception.getMessage());
+    }
 }
