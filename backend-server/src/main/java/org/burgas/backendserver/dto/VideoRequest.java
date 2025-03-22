@@ -6,6 +6,7 @@ public final class VideoRequest {
     private Long id;
     private Long categoryId;
     private Long streamerId;
+    private Long streamId;
     private String name;
     private String description;
 
@@ -39,6 +40,14 @@ public final class VideoRequest {
 
     public void setStreamerId(Long streamerId) {
         this.streamerId = streamerId;
+    }
+
+    public Long getStreamId() {
+        return streamId;
+    }
+
+    public void setStreamId(Long streamId) {
+        this.streamId = streamId;
     }
 
     public String getName() {

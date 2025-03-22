@@ -15,6 +15,7 @@ public final class Video {
     private String name;
     private Long categoryId;
     private Long streamerId;
+    private Long streamId;
     private String description;
     private String contentType;
     private Long size;
@@ -54,6 +55,16 @@ public final class Video {
     @SuppressWarnings("unused")
     public Long getStreamerId() {
         return streamerId;
+    }
+
+    @SuppressWarnings("unused")
+    public Long getStreamId() {
+        return streamId;
+    }
+
+    @SuppressWarnings("unused")
+    public void setStreamId(Long streamId) {
+        this.streamId = streamId;
     }
 
     @SuppressWarnings("unused")
@@ -140,6 +151,11 @@ public final class Video {
 
         public Builder streamerId(Long streamerId) {
             this.video.streamerId = streamerId;
+            return this;
+        }
+
+        public Builder streamId(Long streamId) {
+            this.video.streamId = streamId;
             return this;
         }
 

@@ -1,13 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
 :root {
-    --dark-clor: #1d1d1d;
+    --dark-color: #1d1d1d;
     --light-color: #e2e2e2;
     --primary-color: #AE7AFF;
 }
 
 body {
-    background: var(--dark-clor);
+    background: var(--dark-color);
     color: var(--light-color);
 }
 
@@ -24,11 +24,19 @@ body {
 .btn {
     border: none;
     background: var(--primary-color);
-    color: var(--dark-clor);
+    color: var(--dark-color);
     padding: 10px 20px;
     font-weight: 700;
     font-size: 14px;
     line-height: 24px;
+    cursor: pointer;
+    position: relative;
+}
+
+.h1 {
+    font-size: 48px;
+    line-height: 56px;
+    font-weight: 800;
 }
 
 .h6 {
