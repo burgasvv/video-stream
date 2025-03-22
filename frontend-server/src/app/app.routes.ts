@@ -4,9 +4,11 @@ import {StreamersComponent} from './pages/streamer-pages/streamers/streamers.com
 import {StreamerComponent} from './pages/streamer-pages/streamer/streamer.component';
 import {CategoriesComponent} from './pages/category-pages/categories/categories.component';
 import {CategoryComponent} from './pages/category-pages/category/category.component';
+import {LoginComponent} from './pages/main-pages/login/login.component';
 
 export const routes: Routes = [
     {path: "", component: HomeComponent},
+    {path: "/login", component: LoginComponent},
     {path: "streamers", component: StreamersComponent},
     {path: "streamers/by-id", component: StreamerComponent},
     {path: "categories", component: CategoriesComponent},

@@ -1,6 +1,7 @@
 package org.burgas.backendserver.controller;
 
 import org.burgas.backendserver.entity.Category;
+import org.burgas.backendserver.exception.WrongFileFormatException;
 import org.burgas.backendserver.service.CategoryService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class CategoryController {
                     .location(create("http://localhost:8888/categories/by-id?categoryId=" + category.getId()))
                     .body(category);
         } else {
-            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+            throw new WrongFileFormatException(WRONG_FILE_FORMAT.getMessage());
         }
     }
 
@@ -90,7 +91,7 @@ public class CategoryController {
                     .location(create("http://localhost:8888/categories/by-id?categoryId=" + category.getId()))
                     .body(category);
         } else {
-            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+            throw new WrongFileFormatException(WRONG_FILE_FORMAT.getMessage());
         }
     }
 

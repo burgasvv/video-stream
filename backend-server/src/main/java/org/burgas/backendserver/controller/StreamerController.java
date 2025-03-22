@@ -2,6 +2,7 @@ package org.burgas.backendserver.controller;
 
 import org.burgas.backendserver.dto.StreamerRequest;
 import org.burgas.backendserver.dto.StreamerResponse;
+import org.burgas.backendserver.exception.WrongFileFormatException;
 import org.burgas.backendserver.service.StreamerService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -95,7 +96,7 @@ public class StreamerController {
                     .body(streamerResponse);
 
         } else {
-            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+            throw new WrongFileFormatException(WRONG_FILE_FORMAT.getMessage());
         }
     }
 
@@ -111,7 +112,7 @@ public class StreamerController {
                     .body(streamerResponse);
 
         } else {
-            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+            throw new WrongFileFormatException(WRONG_FILE_FORMAT.getMessage());
         }
     }
 

@@ -2,6 +2,7 @@ package org.burgas.backendserver.controller;
 
 import org.burgas.backendserver.dto.IdentityRequest;
 import org.burgas.backendserver.dto.IdentityResponse;
+import org.burgas.backendserver.exception.WrongFileFormatException;
 import org.burgas.backendserver.service.IdentityService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -96,7 +97,7 @@ public class IdentityController {
                     .location(create("http://localhost:8888/identities/by-id?identityId=" + identityResponse.getId()))
                     .body(identityResponse);
         } else {
-            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+            throw new WrongFileFormatException(WRONG_FILE_FORMAT.getMessage());
         }
     }
 
@@ -111,7 +112,7 @@ public class IdentityController {
                     .location(create("http://localhost:8888/identities/by-id?identityId=" + identityResponse.getId()))
                     .body(identityResponse);
         } else {
-            throw new RuntimeException(WRONG_FILE_FORMAT.getMessage());
+            throw new WrongFileFormatException(WRONG_FILE_FORMAT.getMessage());
         }
     }
 

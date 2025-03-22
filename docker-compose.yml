@@ -12,6 +12,7 @@ services:
 
   rtmp:
     image: rtmpsurf/rtmp
+    container_name: video_stream_rtmp
     ports:
       - "1935:1935"
       - "8090:8090"
@@ -40,6 +41,12 @@ services:
     command: [ "start-dev", "--http-port", "8070", "--https-port", "7443" ]
     networks:
       - local_network
+
+  nginx:
+    image: nginx:latest
+    container_name: video_stream_nginx
+    ports:
+      - "8050:80"
 
   database-server:
     build:
