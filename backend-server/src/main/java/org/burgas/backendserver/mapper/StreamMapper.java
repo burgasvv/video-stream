@@ -37,6 +37,7 @@ public class StreamMapper {
         return first == null || first == "" ? second : first;
     }
 
+    @SuppressWarnings("unused")
     public Stream toStream(final StreamRequest streamRequest) {
         Long streamId = getData(streamRequest.getId(), 0L);
         return this.streamRepository
