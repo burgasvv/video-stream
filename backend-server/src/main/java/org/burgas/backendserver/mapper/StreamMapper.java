@@ -37,8 +37,10 @@ public class StreamMapper {
         return first == null || first == "" ? second : first;
     }
 
-    @SuppressWarnings("unused")
     public Stream toStream(final StreamRequest streamRequest) {
+        if (streamRequest.getLive() == null)
+            streamRequest.setLive(true);
+
         Long streamId = getData(streamRequest.getId(), 0L);
         return this.streamRepository
                 .findById(streamId)
@@ -47,7 +49,7 @@ public class StreamMapper {
                                 .id(stream.getId())
                                 .name(getData(streamRequest.getName(), stream.getName()))
                                 .categoryId(getData(streamRequest.getCategoryId(), stream.getCategoryId()))
-                                .streamerId(getData(streamRequest.getStreamerId(), stream.getStreamerId()))
+                                .streamerId(stream.getStreamerId())
                                 .isLive(getData(streamRequest.getLive(), stream.getLive()))
                                 .started(stream.getStarted())
                                 .ended(!streamRequest.getLive() ? LocalDateTime.now() : stream.getEnded())
@@ -69,7 +71,7 @@ public class StreamMapper {
                 .id(stream.getId())
                 .name(stream.getName())
                 .started(stream.getStarted().format(ofPattern("dd MMMM yyyy, hh:mm")))
-                .ended(stream.getEnded().format(ofPattern("dd MMMM yyyy, hh:mm")))
+                .ended(stream.getEnded() == null ? null : stream.getEnded().format(ofPattern("dd MMMM yyyy, hh:mm")))
                 .category(
                         this.categoryRepository
                                 .findById(stream.getCategoryId())

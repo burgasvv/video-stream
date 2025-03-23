@@ -10,4 +10,6 @@ import java.util.List;
 public interface StreamRepository extends JpaRepository<Stream, Long> {
 
     List<Stream> findStreamsByStreamerId(Long streamerId);
+
+    Boolean existsStreamByStreamerIdAndIsLive(Long streamerId, Boolean isLive);
 }

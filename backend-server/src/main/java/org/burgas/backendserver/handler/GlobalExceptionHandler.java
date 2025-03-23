@@ -61,4 +61,12 @@ public class GlobalExceptionHandler {
                 .contentType(new MediaType(TEXT_PLAIN, UTF_8))
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(StreamHasAlreadyStartedException.class)
+    public ResponseEntity<String> handleStreamHasAlreadyStartedException(StreamHasAlreadyStartedException exception) {
+        return ResponseEntity
+                .status(NOT_ACCEPTABLE)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(exception.getMessage());
+    }
 }

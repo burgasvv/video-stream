@@ -7,7 +7,7 @@ public final class StreamRequest {
     private String name;
     private Long streamerId;
     private Long categoryId;
-    private Boolean isLive;
+    private Boolean live;
 
     public Long getId() {
         return id;
@@ -42,10 +42,10 @@ public final class StreamRequest {
     }
 
     public Boolean getLive() {
-        return isLive;
+        return live;
     }
 
     public void setLive(Boolean live) {
-        isLive = live;
+        this.live = live;
     }
 }

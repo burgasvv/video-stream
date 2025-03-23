@@ -53,7 +53,7 @@ create table if not exists stream (
     streamer_id bigint references streamer(id) on delete set null on update cascade ,
     category_id bigint references category(id) on delete set null on update cascade ,
     started timestamp not null ,
-    ended timestamp not null ,
+    ended timestamp ,
     is_live boolean not null
 );
 

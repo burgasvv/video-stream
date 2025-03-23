@@ -1,5 +1,5 @@
 
-### Identity-Server Requests
+### Identity Requests
 
 ###
 GET /identities
@@ -44,7 +44,7 @@ Content-Type: application/json
     "email": "burgasvv@gmail.com"
 }
 
-### Video-Service Reqiests
+### Category Reqiests
 
 ###
 GET /categories
@@ -77,7 +77,7 @@ Content-Type: application/json
     "description": "New Description for Category EDITED"
 }
 
-### Stream-Service Requests
+### Streamer Requests
 
 ###
 GET /streamers
@@ -119,4 +119,51 @@ Content-Type: application/json
 {
     "id": 1,
     "categoryIds": [4, 5, 6]
+}
+
+### Stream requests
+
+###
+GET /streams/all/by-streamer?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+Content-Type: application/json
+
+###
+GET /streams/by-id?streamId=1
+Host: localhost:8888
+Content-Type: application/json
+
+###
+POST /streams/start?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+Content-Type: application/json
+
+{
+    "name": "New stream",
+    "categoryId": 2
+}
+
+###
+POST /streams/update?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "New Stream EDITED",
+    "categoryId": 4
+}
+
+###
+POST /streams/stop?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+Content-Type: application/json
+
+{
+    "id": 1,
+    "live": false
 }
