@@ -10,6 +10,7 @@ public final class StreamResponse {
     private String started;
     private String ended;
     private Boolean isLive;
+    private Boolean isSecured;
 
     public Long getId() {
         return id;
@@ -67,6 +68,14 @@ public final class StreamResponse {
         isLive = live;
     }
 
+    public Boolean getSecured() {
+        return isSecured;
+    }
+
+    public void setSecured(Boolean secured) {
+        isSecured = secured;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -111,6 +120,11 @@ public final class StreamResponse {
 
         public Builder isLive(Boolean isLive) {
             this.streamResponse.isLive = isLive;
+            return this;
+        }
+
+        public Builder isSecured(Boolean isSecured) {
+            this.streamResponse.isSecured = isSecured;
             return this;
         }
 

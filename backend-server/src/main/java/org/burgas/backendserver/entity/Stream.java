@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -18,9 +19,11 @@ public final class Stream {
     private String name;
     private Long streamerId;
     private Long categoryId;
+    private UUID streamKey;
     private LocalDateTime started;
     private LocalDateTime ended;
     private Boolean isLive;
+    private Boolean isSecured;
 
     public Long getId() {
         return id;
@@ -54,6 +57,14 @@ public final class Stream {
         this.categoryId = categoryId;
     }
 
+    public UUID getStreamKey() {
+        return streamKey;
+    }
+
+    public void setStreamKey(UUID streamKey) {
+        this.streamKey = streamKey;
+    }
+
     public LocalDateTime getStarted() {
         return started;
     }
@@ -76,6 +87,14 @@ public final class Stream {
 
     public void setLive(Boolean alive) {
         isLive = alive;
+    }
+
+    public Boolean getSecured() {
+        return isSecured;
+    }
+
+    public void setSecured(Boolean secured) {
+        isSecured = secured;
     }
 
     public static Builder builder() {
@@ -110,6 +129,11 @@ public final class Stream {
             return this;
         }
 
+        public Builder streamKey(UUID streamKey) {
+            this.stream.streamKey = streamKey;
+            return this;
+        }
+
         public Builder started(LocalDateTime started) {
             this.stream.started = started;
             return this;
@@ -122,6 +146,11 @@ public final class Stream {
 
         public Builder isLive(Boolean isLive) {
             this.stream.isLive = isLive;
+            return this;
+        }
+
+        public Builder isSecured(Boolean isSecured) {
+            this.stream.isSecured = isSecured;
             return this;
         }
 

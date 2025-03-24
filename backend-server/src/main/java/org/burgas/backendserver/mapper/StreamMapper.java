@@ -11,6 +11,7 @@ import org.burgas.backendserver.repository.StreamerRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 
@@ -50,19 +51,27 @@ public class StreamMapper {
                                 .name(getData(streamRequest.getName(), stream.getName()))
                                 .categoryId(getData(streamRequest.getCategoryId(), stream.getCategoryId()))
                                 .streamerId(stream.getStreamerId())
+                                .streamKey(stream.getStreamKey())
                                 .isLive(getData(streamRequest.getLive(), stream.getLive()))
+                                .isSecured(getData(streamRequest.getSecured(), stream.getSecured()))
                                 .started(stream.getStarted())
                                 .ended(!streamRequest.getLive() ? LocalDateTime.now() : stream.getEnded())
                                 .build()
                 )
                 .orElseGet(
-                        () -> Stream.builder()
-                                .name(streamRequest.getName())
-                                .streamerId(streamRequest.getStreamerId())
-                                .categoryId(streamRequest.getCategoryId())
-                                .started(LocalDateTime.now())
-                                .isLive(true)
-                                .build()
+                        () -> {
+                            if (streamRequest.getSecured() == null)
+                                streamRequest.setSecured(false);
+                            return Stream.builder()
+                                    .name(streamRequest.getName())
+                                    .streamerId(streamRequest.getStreamerId())
+                                    .categoryId(streamRequest.getCategoryId())
+                                    .streamKey(streamRequest.getSecured() ? UUID.randomUUID() : null)
+                                    .started(LocalDateTime.now())
+                                    .isLive(true)
+                                    .isSecured(streamRequest.getSecured())
+                                    .build();
+                        }
                 );
     }
 
@@ -89,6 +98,7 @@ public class StreamMapper {
                                 .getNickname()
                 )
                 .isLive(stream.getLive())
+                .isSecured(stream.getSecured())
                 .build();
     }
 }

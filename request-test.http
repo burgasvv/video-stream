@@ -127,12 +127,10 @@ Content-Type: application/json
 GET /streams/all/by-streamer?streamerId=1
 Host: localhost:8888
 Authorization: Basic streamer@gmail.com streamer
-Content-Type: application/json
 
 ###
 GET /streams/by-id?streamId=1
 Host: localhost:8888
-Content-Type: application/json
 
 ###
 POST /streams/start?streamerId=1
@@ -142,7 +140,8 @@ Content-Type: application/json
 
 {
     "name": "New stream",
-    "categoryId": 2
+    "categoryId": 2,
+    "secured": true
 }
 
 ###
@@ -166,4 +165,36 @@ Content-Type: application/json
 {
     "id": 1,
     "live": false
+}
+
+### Invitations requests
+
+###
+GET /invitations/all/by-receiver?receiverId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+POST /invitations/send
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+Content-Type: application/json
+
+{
+    "streamId": 1,
+    "senderId": 1,
+    "receiverId": 2
+}
+
+###
+PUT /invitations/answer?streamKey=e54fca05-fed0-4b0b-bb10-e2237535602e
+Host: localhost:8888
+Authorization: Basic streamerSecond@gmail.com streamerSecond
+Content-Type: application/json
+
+{
+    "id": 1,
+    "streamId": 1,
+    "accept": true,
+    "decline": false
 }

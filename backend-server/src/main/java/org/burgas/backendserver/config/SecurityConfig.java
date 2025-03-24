@@ -63,7 +63,9 @@ public class SecurityConfig {
                                         "/videos/upload", "/videos/update", "/videos/delete", "/streamers/by-id",
                                         "/streamers/upload-set-image", "/streamers/change-set-image",
                                         "/streamers/delete-image", "/streamers/add-categories",
-                                        "/streams/all/by-streamer","/streams/start","/streams/update","/streams/stop"
+                                        "/streams/all/by-streamer","/streams/start","/streams/update","/streams/stop",
+                                        "/invitations/all/by-receiver", "/invitations/all/by-sender", "/invitations/send",
+                                        "/invitations/answer"
                                 )
                                 .hasAnyAuthority("ROLE_STREAMER")
 

@@ -54,6 +54,14 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(CategoryForImageNotFoundException.class)
+    public ResponseEntity<String> handleCategoryForImageNotFoundException(CategoryForImageNotFoundException exception) {
+        return ResponseEntity
+                .status(NOT_FOUND)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(exception.getMessage());
+    }
+
     @ExceptionHandler(StreamerCategoryDataEmptyException.class)
     public ResponseEntity<String> handleStreamerCategoryDataEmptyException(StreamerCategoryDataEmptyException exception) {
         return ResponseEntity
@@ -62,8 +70,40 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
+    @ExceptionHandler(StreamNotFoundException.class)
+    public ResponseEntity<String> handleStreamNotFoundException(StreamNotFoundException exception) {
+        return ResponseEntity
+                .status(NOT_FOUND)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(exception.getMessage());
+    }
+
     @ExceptionHandler(StreamHasAlreadyStartedException.class)
     public ResponseEntity<String> handleStreamHasAlreadyStartedException(StreamHasAlreadyStartedException exception) {
+        return ResponseEntity
+                .status(NOT_ACCEPTABLE)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(InvitationAlreadyHandledException.class)
+    public ResponseEntity<String> handleInvitationAlreadyHandledException(InvitationAlreadyHandledException exception) {
+        return ResponseEntity
+                .status(NOT_ACCEPTABLE)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(InvitationNotFoundException.class)
+    public ResponseEntity<String> handleInvitationNotFoundException(InvitationNotFoundException exception) {
+        return ResponseEntity
+                .status(NOT_FOUND)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(WrongInvitationAnswerException.class)
+    public ResponseEntity<String> handleWrongInvitationAnswerException(WrongInvitationAnswerException exception) {
         return ResponseEntity
                 .status(NOT_ACCEPTABLE)
                 .contentType(new MediaType(TEXT_PLAIN, UTF_8))

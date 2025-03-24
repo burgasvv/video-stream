@@ -8,6 +8,7 @@ public final class StreamRequest {
     private Long streamerId;
     private Long categoryId;
     private Boolean live;
+    private Boolean secured;
 
     public Long getId() {
         return id;
@@ -47,5 +48,13 @@ public final class StreamRequest {
 
     public void setLive(Boolean live) {
         this.live = live;
+    }
+
+    public Boolean getSecured() {
+        return secured;
+    }
+
+    public void setSecured(Boolean secured) {
+        this.secured = secured;
     }
 }

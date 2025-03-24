@@ -33,7 +33,9 @@ public class AuthenticationController {
                                 .status(OK)
                                 .contentType(APPLICATION_JSON)
                                 .body(identityPrincipalMapper
-                                                .toIdentityPrincipal((IdentityResponse) authentication.getPrincipal(), true)
+                                                .toIdentityPrincipal(
+                                                        (IdentityResponse) authentication.getPrincipal(),
+                                                        true)
                                 )
                 )
                 .orElseGet(
