@@ -1,2 +1,3 @@
 
-drop table if exists video, invitation, stream, streamer_category, category, streamer, identity, authority, image;
+drop table if exists video, invited_streamer, invitation, stream,
+    streamer_category, category, streamer, identity, authority, image;

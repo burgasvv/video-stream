@@ -53,8 +53,10 @@ public class InvitationController {
 
     @PutMapping(value = "/answer")
     public @ResponseBody ResponseEntity<String> answerInvitation(
-            @RequestParam(required = false) UUID streamKey, @RequestBody InvitationAnswer invitationAnswer
+            @RequestParam Long invitedId, @RequestParam(required = false) UUID streamKey,
+            @RequestBody InvitationAnswer invitationAnswer
     ) {
+        invitationAnswer.setInvitedId(invitedId);
         return ResponseEntity
                 .status(OK)
                 .contentType(new MediaType(TEXT_PLAIN, UTF_8))

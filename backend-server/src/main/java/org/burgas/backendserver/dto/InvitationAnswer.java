@@ -5,6 +5,7 @@ public final class InvitationAnswer {
 
     private Long id;
     private Long streamId;
+    private Long invitedId;
     private Boolean accept;
     private Boolean decline;
 
@@ -22,6 +23,14 @@ public final class InvitationAnswer {
 
     public void setStreamId(Long streamId) {
         this.streamId = streamId;
+    }
+
+    public Long getInvitedId() {
+        return invitedId;
+    }
+
+    public void setInvitedId(Long invitedId) {
+        this.invitedId = invitedId;
     }
 
     public Boolean getAccept() {

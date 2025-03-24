@@ -22,7 +22,8 @@ import org.springframework.web.client.RestClient;
                 GetUpdateImageTasksStreamerFilter.class,
                 CreateStreamerFilter.class,
                 IdentityImageTasksFilter.class,
-                HandleStreamByStreamerFilter.class
+                HandleStreamByStreamerFilter.class,
+                HandleGetInvitationsFilter.class
         }
 )
 public class BackendServerApplication {
