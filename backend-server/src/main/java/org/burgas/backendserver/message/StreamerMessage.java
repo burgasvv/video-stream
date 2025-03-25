@@ -6,7 +6,8 @@ public enum StreamerMessage {
     STREAMER_IMAGE_NOT_FOUND("У данного стримера отсутствует изображение"),
     STREAMER_IMAGE_DELETED("Изображение стримера успешно удалено"),
     WRONG_FILE_FORMAT("Неверный формат файла"),
-    STREAMER_CATEGORY_DATA_EMPTY("Данные о стримере и категориях не должны быть пустыми");
+    STREAMER_CATEGORY_DATA_EMPTY("Данные о стримере и категориях не должны быть пустыми"),
+    NO_LIVE_STREAM("В данный момент стример не ведет стрим");
 
     private final String message;
 

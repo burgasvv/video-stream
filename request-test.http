@@ -170,24 +170,28 @@ Content-Type: application/json
 ### Invitations requests
 
 ###
+GET /invitations/all/by-sender?senderId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
 GET /invitations/all/by-receiver?receiverId=1
 Host: localhost:8888
 Authorization: Basic streamer@gmail.com streamer
 
 ###
-POST /invitations/send
+POST /invitations/send?senderId=1
 Host: localhost:8888
 Authorization: Basic streamer@gmail.com streamer
 Content-Type: application/json
 
 {
     "streamId": 1,
-    "senderId": 1,
     "receiverId": 2
 }
 
 ###
-PUT /invitations/answer?invitedId=2&streamKey=c414b2a4-0425-4325-b00d-4bdc7518daad
+PUT /invitations/answer?invitedId=2&streamKey=ae0f92bd-a431-4fc2-8b1f-dfec515fdfaf
 Host: localhost:8888
 Authorization: Basic streamerSecond@gmail.com streamerSecond
 Content-Type: application/json

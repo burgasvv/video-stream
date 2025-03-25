@@ -8,7 +8,8 @@ public enum InvitationMessage {
     INVITATION_WAS_DECLINED("Приглашение было отклонено"),
     WRONG_STREAM_KEY("Неверный ключ стрима введен в приглашении"),
     INVITATION_ALREADY_HANDLED("Приглашение уже обработано"),
-    WRONG_INVITATION_ANSWER("Неверный ответ на приглашение");
+    WRONG_INVITATION_ANSWER("Неверный ответ на приглашение"),
+    HANDLE_INVITATION_ERROR("Ошибка обработки ответа стримера");
 
     private final String message;
 

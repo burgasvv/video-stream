@@ -90,11 +90,21 @@ public class InvitationService {
                         stream -> {
                             if (stream.getSecured()) {
 
-                                if (streamKey.equals(stream.getStreamKey())) {
+                                if (invitationAnswer.getAccept()) {
+                                    String testKey = streamKey == null  ? "" : streamKey.toString();
+
+                                    if (testKey.equals(stream.getStreamKey().toString())) {
+                                        return handleInvitationAnswer(invitationAnswer, stream);
+
+                                    } else {
+                                        return WRONG_STREAM_KEY.getMessage();
+                                    }
+
+                                } else if (invitationAnswer.getDecline()) {
                                     return handleInvitationAnswer(invitationAnswer, stream);
 
                                 } else {
-                                    return WRONG_STREAM_KEY.getMessage();
+                                    throw new WrongInvitationAnswerException(HANDLE_INVITATION_ERROR.getMessage());
                                 }
 
                             } else {
@@ -116,13 +126,16 @@ public class InvitationService {
                             invitation.setAccept(invitationAnswer.getAccept());
                             invitation.setDecline(invitationAnswer.getDecline());
                             invitation = this.invitationRepository.save(invitation);
-                            this.invitedStreamerRepository
-                                    .save(
-                                            InvitedStreamer.builder()
-                                                    .streamId(stream.getId())
-                                                    .streamerId(invitationAnswer.getInvitedId())
-                                                    .build()
-                                    );
+
+                            if (invitation.getAccept()) {
+                                this.invitedStreamerRepository
+                                        .save(
+                                                InvitedStreamer.builder()
+                                                        .streamId(stream.getId())
+                                                        .streamerId(invitationAnswer.getInvitedId())
+                                                        .build()
+                                        );
+                            }
 
                             return invitation.getAccept() && !invitation.getDecline() ?
                                     INVITATION_WAS_ACCEPTED.getMessage() :

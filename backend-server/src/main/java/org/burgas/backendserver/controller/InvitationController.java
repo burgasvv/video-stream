@@ -44,7 +44,10 @@ public class InvitationController {
     }
 
     @PostMapping(value = "/send")
-    public @ResponseBody ResponseEntity<String> sendInvitation(@RequestBody InvitationRequest invitationRequest) {
+    public @ResponseBody ResponseEntity<String> sendInvitation(
+            @RequestParam Long senderId, @RequestBody InvitationRequest invitationRequest
+    ) {
+        invitationRequest.setSenderId(senderId);
         return ResponseEntity
                 .status(OK)
                 .contentType(new MediaType(TEXT_PLAIN, UTF_8))
