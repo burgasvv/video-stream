@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static java.net.URI.create;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -41,6 +42,15 @@ public class CategoryController {
                 .body(this.categoryService.findAll());
     }
 
+    @GetMapping(value = "/async")
+    public @ResponseBody ResponseEntity<List<Category>> getAllCategoriesAsync()
+            throws ExecutionException, InterruptedException {
+        return ResponseEntity
+                .status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(this.categoryService.findAllAsync().get());
+    }
+
     @GetMapping(value = "/sse")
     public @ResponseBody ResponseEntity<SseEmitter> getAllCategoriesOnSse() {
         return ResponseEntity
@@ -65,12 +75,31 @@ public class CategoryController {
                 .body(this.categoryService.findById(categoryId));
     }
 
+    @GetMapping(value = "/async/by-id")
+    public @ResponseBody ResponseEntity<Category> getCategoryByIdAsync(@RequestParam final Long categoryId)
+            throws ExecutionException, InterruptedException {
+        return ResponseEntity
+                .status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(this.categoryService.findByIdAsync(categoryId).get());
+    }
+
     @PostMapping(value = "/create")
     public @ResponseBody ResponseEntity<Long> createCategory(@RequestBody Category category) {
         Long categoryId = this.categoryService.createOrUpdate(category);
         return ResponseEntity
                 .status(FOUND)
                 .location(create("/categories/by-id?categoryId=" + categoryId))
+                .body(categoryId);
+    }
+
+    @PostMapping(value = "/async/create")
+    public @ResponseBody ResponseEntity<Long> createCategoryAsync(@RequestBody final Category category)
+            throws ExecutionException, InterruptedException {
+        Long categoryId = this.categoryService.createOrUpdateAsync(category).get();
+        return ResponseEntity
+                .status(FOUND)
+                .location(create("/categories/async/by-id?categoryId=" + categoryId))
                 .body(categoryId);
     }
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AmplicodePersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit moduleName="backend-server" name="Default">
+        <packages>
+          <package value="org.burgas.backendserver" />
+        </packages>
+      </persistence-unit>
+      <persistence-unit moduleName="database-server" name="Default">
+        <packages>
+          <package value="org.burgas.databaseserver" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>

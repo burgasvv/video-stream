@@ -6,6 +6,7 @@ import org.burgas.backendserver.entity.Image;
 import org.burgas.backendserver.exception.CategoryForImageNotFoundException;
 import org.burgas.backendserver.exception.CategoryOrImageUndefinedException;
 import org.burgas.backendserver.repository.CategoryRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,10 +15,12 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static java.lang.String.valueOf;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.CompletableFuture.runAsync;
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.CategoryMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -39,6 +42,11 @@ public class CategoryService {
 
     public List<Category> findAll() {
         return this.categoryRepository.findAll();
+    }
+
+    @Async
+    public CompletableFuture<List<Category>> findAllAsync() {
+        return supplyAsync(this.categoryRepository::findAll);
     }
 
     public SseEmitter findAllInSse() {
@@ -96,6 +104,12 @@ public class CategoryService {
                 .orElseGet(Category::new);
     }
 
+    @Async
+    public CompletableFuture<Category> findByIdAsync(final Long categoryId) {
+        return supplyAsync(() -> this.categoryRepository.findById(categoryId))
+                .thenApplyAsync(category -> category.orElseGet(Category::new));
+    }
+
     @Transactional(
             isolation = SERIALIZABLE, propagation = REQUIRED,
             rollbackFor = Exception.class
@@ -104,6 +118,15 @@ public class CategoryService {
         return this.categoryRepository
                 .save(category)
                 .getId();
+    }
+
+    @Async
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public CompletableFuture<Long> createOrUpdateAsync(final Category category) {
+        return supplyAsync(() -> this.categoryRepository.save(category).getId());
     }
 
     @Transactional(

@@ -45,7 +45,8 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/images/by-id",
                                         "/identities/create",
-                                        "/categories", "/categories/by-id", "/categories/sse", "/categories/stream",
+                                        "/categories", "/categories/by-id", "/categories/async/by-id",
+                                        "/categories/sse", "/categories/stream", "/categories/async",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
                                         "/videos/stream/by-id", "/videos/stream/by-name",
                                         "/streamers", "/streamers/by-id",
@@ -64,7 +65,7 @@ public class SecurityConfig {
                                         "/videos/upload", "/videos/update", "/videos/delete",
                                         "/streamers/upload-set-image", "/streamers/change-set-image",
                                         "/streamers/delete-image", "/streamers/add-categories",
-                                        "/streams/all/by-streamer","/streams/start","/streams/update","/streams/stop",
+                                        "/streams/all/by-streamer", "/streams/start", "/streams/update", "/streams/stop",
                                         "/invitations/all/by-receiver", "/invitations/all/by-sender", "/invitations/send",
                                         "/invitations/answer"
                                 )
@@ -72,7 +73,7 @@ public class SecurityConfig {
 
                                 .requestMatchers(
                                         "/identities", "/identities/async",
-                                        "/categories/create", "/categories/update",
+                                        "/categories/create", "/categories/async/create", "/categories/update",
                                         "/categories/upload-set-image", "/categories/change-set-image",
                                         "/categories/delete-image"
                                 )
