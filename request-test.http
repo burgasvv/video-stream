@@ -51,6 +51,10 @@ GET /categories
 Host: localhost:8888
 
 ###
+GET /categories/sse
+Host: localhost:8888
+
+###
 GET /categories/by-id?categoryId=5
 Host: localhost:8888
 

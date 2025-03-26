@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 import java.util.List;
@@ -46,6 +47,14 @@ public class CategoryController {
                 .status(OK)
                 .contentType(new MediaType(TEXT_EVENT_STREAM, UTF_8))
                 .body(this.categoryService.findAllInSse());
+    }
+
+    @GetMapping(value = "/stream")
+    public @ResponseBody ResponseEntity<StreamingResponseBody> getAllCategoriesStream() {
+        return ResponseEntity
+                .status(OK)
+                .contentType(new MediaType(TEXT_EVENT_STREAM, UTF_8))
+                .body(this.categoryService.findAllInStream());
     }
 
     @GetMapping(value = "/by-id")

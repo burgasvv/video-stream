@@ -1,5 +1,6 @@
 package org.burgas.backendserver.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.burgas.backendserver.entity.Category;
 import org.burgas.backendserver.entity.Image;
 import org.burgas.backendserver.exception.CategoryForImageNotFoundException;
@@ -9,18 +10,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 import java.util.List;
 
 import static java.lang.String.valueOf;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.CategoryMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
-import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.*;
+import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event;
 
 @Service
 @Transactional(readOnly = true, propagation = REQUIRED)
@@ -65,6 +68,26 @@ public class CategoryService {
                     }
                 );
         return sseEmitter;
+    }
+
+    public StreamingResponseBody findAllInStream() {
+        return outputStream ->
+                this.categoryRepository
+                        .findAll()
+                        .forEach(
+                                category -> {
+                                    try {
+                                        ObjectMapper objectMapper = new ObjectMapper();
+                                        String categoryString = objectMapper.writeValueAsString(category) + "\n";
+                                        outputStream.write(categoryString.getBytes(UTF_8));
+                                        outputStream.flush();
+                                        SECONDS.sleep(1);
+
+                                    } catch (IOException | InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                        );
     }
 
     public Category findById(Long categoryId) {

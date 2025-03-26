@@ -43,9 +43,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         requests -> requests
                                 .requestMatchers(
-                                        "/authentication/principal", "/images/by-id",
-                                        "/identities/create", "/identities/by-identity-streamer-token/{token}",
-                                        "/categories", "/categories/by-id", "/categories/sse",
+                                        "/images/by-id",
+                                        "/identities/create",
+                                        "/categories", "/categories/by-id", "/categories/sse", "/categories/stream",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
                                         "/videos/stream/by-id", "/videos/stream/by-name",
                                         "/streamers", "/streamers/by-id",

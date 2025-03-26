@@ -1,5 +1,6 @@
 package org.burgas.backendserver.dto;
 
+@SuppressWarnings(value = "unused")
 public final class IdentityRequest {
 
     private Long id;
@@ -17,12 +18,10 @@ public final class IdentityRequest {
         this.id = id;
     }
 
-    @SuppressWarnings("unused")
     public String getNickname() {
         return nickname;
     }
 
-    @SuppressWarnings("unused")
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -35,32 +34,26 @@ public final class IdentityRequest {
         this.password = password;
     }
 
-    @SuppressWarnings("unused")
     public String getEmail() {
         return email;
     }
 
-    @SuppressWarnings("unused")
     public void setEmail(String email) {
         this.email = email;
     }
 
-    @SuppressWarnings("unused")
     public Boolean getEnabled() {
         return enabled;
     }
 
-    @SuppressWarnings("unused")
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
-    @SuppressWarnings("unused")
     public Long getAuthorityId() {
         return authorityId;
     }
 
-    @SuppressWarnings("unused")
     public void setAuthorityId(Long authorityId) {
         this.authorityId = authorityId;
     }
