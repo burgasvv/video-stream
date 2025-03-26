@@ -19,6 +19,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 
 @Controller
 @RequestMapping(value = "/invitations")
+@CrossOrigin(value = "http://localhost:4200")
 public class InvitationController {
 
     private final InvitationService invitationService;

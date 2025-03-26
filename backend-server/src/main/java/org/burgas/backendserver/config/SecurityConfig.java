@@ -45,10 +45,11 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/authentication/principal", "/images/by-id",
                                         "/identities/create", "/identities/by-identity-streamer-token/{token}",
-                                        "/categories", "/categories/by-id",
+                                        "/categories", "/categories/by-id", "/categories/sse",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
                                         "/videos/stream/by-id", "/videos/stream/by-name",
-                                        "/streamers", "/streams/by-id"
+                                        "/streamers", "/streamers/by-id",
+                                        "/streams/by-id"
                                 )
                                 .permitAll()
 
@@ -60,7 +61,7 @@ public class SecurityConfig {
                                 .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")
 
                                 .requestMatchers(
-                                        "/videos/upload", "/videos/update", "/videos/delete", "/streamers/by-id",
+                                        "/videos/upload", "/videos/update", "/videos/delete",
                                         "/streamers/upload-set-image", "/streamers/change-set-image",
                                         "/streamers/delete-image", "/streamers/add-categories",
                                         "/streams/all/by-streamer","/streams/start","/streams/update","/streams/stop",

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +12,17 @@ import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 })
 export class LoginComponent {
 
+    authService = inject(AuthService);
+
     form = new FormGroup({
         username: new FormControl(null),
         password: new FormControl(null)
     })
 
     public onSubmit() {
-        console.log(this.form.value);
+        if (this.form.valid) {
+            // @ts-ignore
+            this.authService.login(this.form.value)
+        }
     }
 }

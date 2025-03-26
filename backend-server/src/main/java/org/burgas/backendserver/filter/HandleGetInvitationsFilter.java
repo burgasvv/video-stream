@@ -5,19 +5,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.burgas.backendserver.dto.IdentityPrincipal;
+import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.entity.Streamer;
 import org.burgas.backendserver.exception.IdentityNotAuthorizedException;
-import org.burgas.backendserver.handler.RestClientHandler;
 import org.burgas.backendserver.repository.StreamerRepository;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHENTICATED;
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @WebFilter(
         urlPatterns = {
@@ -27,11 +26,9 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 )
 public class HandleGetInvitationsFilter extends OncePerRequestFilter {
 
-    private final RestClientHandler restClientHandler;
     private final StreamerRepository streamerRepository;
 
-    public HandleGetInvitationsFilter(RestClientHandler restClientHandler, StreamerRepository streamerRepository) {
-        this.restClientHandler = restClientHandler;
+    public HandleGetInvitationsFilter(StreamerRepository streamerRepository) {
         this.streamerRepository = streamerRepository;
     }
 
@@ -48,14 +45,13 @@ public class HandleGetInvitationsFilter extends OncePerRequestFilter {
             String senderIdParam = request.getParameter("receiverId");
             streamerId = Long.parseLong(senderIdParam == null || senderIdParam.isBlank() ? "0" : senderIdParam);
         }
+        Authentication authentication = (Authentication) request.getUserPrincipal();
 
-        String authentication = request.getHeader(AUTHORIZATION);
-        IdentityPrincipal identityPrincipal = this.restClientHandler.getIdentityPrincipal(authentication).getBody();
-
-        if (identityPrincipal != null && identityPrincipal.getAuthenticated()) {
+        if (authentication.isAuthenticated()) {
+            IdentityResponse identityResponse = (IdentityResponse) authentication.getPrincipal();
             Streamer streamer = this.streamerRepository.findById(streamerId).orElse(null);
 
-            if (streamer != null && streamer.getIdentityId().equals(identityPrincipal.getId())) {
+            if (streamer != null && streamer.getIdentityId().equals(identityResponse.getId())) {
                 filterChain.doFilter(request,response);
 
             } else {

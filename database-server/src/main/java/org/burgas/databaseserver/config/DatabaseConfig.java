@@ -1,5 +1,6 @@
 package org.burgas.databaseserver.config;
 
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -23,10 +24,20 @@ public class DatabaseConfig {
     }
 
     @Bean
-    public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
+    public DataSource dataSource() {
+        return DataSourceBuilder.create()
+                .driverClassName("org.postgresql.Driver")
+                .url("jdbc:postgresql://localhost:5432/postgres")
+                .username("postgres")
+                .password("postgres")
+                .build();
+    }
+
+    @Bean
+    public DataSourceInitializer dataSourceInitializer() {
         DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
         dataSourceInitializer.setDatabasePopulator(compositeDatabasePopulator());
-        dataSourceInitializer.setDataSource(dataSource);
+        dataSourceInitializer.setDataSource(dataSource());
         return dataSourceInitializer;
     }
 }

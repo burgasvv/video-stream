@@ -78,6 +78,19 @@ public final class IdentityResponse implements UserDetails {
         return imageId;
     }
 
+    @Override
+    public String toString() {
+        return "IdentityResponse{" +
+               "id=" + id +
+               ", nickname='" + nickname + '\'' +
+               ", password='" + password + '\'' +
+               ", email='" + email + '\'' +
+               ", enabled=" + enabled +
+               ", authority=" + authority +
+               ", imageId=" + imageId +
+               '}';
+    }
+
     public static Builder builder() {
         return new Builder();
     }

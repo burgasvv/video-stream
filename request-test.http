@@ -34,7 +34,7 @@ Content-Type: application/json
 }
 
 ###
-PUT /identities/update?identityId=4
+PUT /identities/update?identityId=5
 Host: localhost:8888
 Authorization: Basic burgvv@gmail.com cg3audio
 Content-Type: application/json
@@ -84,6 +84,10 @@ GET /streamers
 Host: localhost:8888
 
 ###
+GET /streamers/by-id?streamerId=3
+Host: localhost:8888
+
+###
 POST /streamers/create?identityId=2
 Host: localhost:8888
 Authorization: Basic user@gmail.com user
@@ -93,18 +97,17 @@ Content-Type: application/json
     "firstname": "Иванов",
     "lastname": "Родион",
     "patronymic": "Сергеевич",
-    "about": "Информация о стримере",
-    "identityId": 2
+    "about": "Информация о стримере user"
 }
 
 ###
-POST /streamers/update?streamerId=2
+POST /streamers/update?streamerId=3
 Host: localhost:8888
 Authorization: Basic user@gmail.com user
 Content-Type: application/json
 
 {
-    "id": 2,
+    "id": 3,
     "firstname": "Иванов EDITED",
     "lastname": "Родион EDITED",
     "patronymic": "Сергеевич EDITED"

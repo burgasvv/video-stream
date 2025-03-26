@@ -5,39 +5,32 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.burgas.backendserver.dto.IdentityPrincipal;
+import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.exception.IdentityNotAuthorizedException;
-import org.burgas.backendserver.handler.RestClientHandler;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @WebFilter(urlPatterns = {"/identities", "/identities/async"})
 public class GetIdentitiesFilter extends OncePerRequestFilter {
-
-    private final RestClientHandler restClientHandler;
-
-    public GetIdentitiesFilter(RestClientHandler restClientHandler) {
-        this.restClientHandler = restClientHandler;
-    }
 
     @Override
     protected void doFilterInternal(
             @NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String authentication = request.getHeader(AUTHORIZATION);
-        IdentityPrincipal identityPrincipal = restClientHandler.getIdentityPrincipal(authentication).getBody();
+        Authentication authentication = (Authentication) request.getUserPrincipal();
+        IdentityResponse identityResponse = (IdentityResponse) authentication.getPrincipal();
 
         if (
-                identityPrincipal != null &&
-                identityPrincipal.getAuthenticated() &&
-                identityPrincipal.getAuthority().equalsIgnoreCase("ROLE_ADMIN")
+                authentication.isAuthenticated() &&
+                identityResponse.getAuthority().getName().equalsIgnoreCase("ROLE_ADMIN")
         ) {
+
             filterChain.doFilter(request, response);
 
         } else {

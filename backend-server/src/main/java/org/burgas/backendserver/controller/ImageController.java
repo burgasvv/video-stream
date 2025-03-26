@@ -6,10 +6,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 
@@ -18,6 +15,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 
 @Controller
 @RequestMapping(value = "/images")
+@CrossOrigin(value = "http://localhost:4200")
 public class ImageController {
 
     private final ImageService imageService;

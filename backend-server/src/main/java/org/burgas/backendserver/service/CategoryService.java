@@ -8,13 +8,19 @@ import org.burgas.backendserver.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
 
+import static java.lang.String.valueOf;
+import static java.util.concurrent.CompletableFuture.runAsync;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.CategoryMessage.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
+import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.*;
 
 @Service
 @Transactional(readOnly = true, propagation = REQUIRED)
@@ -30,6 +36,35 @@ public class CategoryService {
 
     public List<Category> findAll() {
         return this.categoryRepository.findAll();
+    }
+
+    public SseEmitter findAllInSse() {
+        SseEmitter sseEmitter = new SseEmitter();
+        runAsync(
+                () -> {
+                        this.categoryRepository
+                                .findAll()
+                                .forEach(
+                                        category -> {
+                                            try {
+                                                SECONDS.sleep(1);
+                                                sseEmitter.send(
+                                                        event()
+                                                                .id(valueOf(category.getId()))
+                                                                .name(category.getName())
+                                                                .comment("new comment for: " + category.getName())
+                                                                .data(category, APPLICATION_JSON)
+                                                                .build()
+                                                );
+                                            } catch (IOException | InterruptedException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }
+                                );
+                        sseEmitter.complete();
+                    }
+                );
+        return sseEmitter;
     }
 
     public Category findById(Long categoryId) {

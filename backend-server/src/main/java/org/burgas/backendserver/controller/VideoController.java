@@ -27,6 +27,7 @@ import static org.springframework.http.MediaTypeFactory.getMediaType;
 
 @Controller
 @RequestMapping("/videos")
+@CrossOrigin(value = "http://localhost:4200")
 public class VideoController {
 
     private final VideoService videoService;
