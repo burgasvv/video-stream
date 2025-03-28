@@ -85,7 +85,7 @@ public class IdentityService {
     }
 
     public StreamingResponseBody findAllByStream() {
-        return outputStream -> {
+        return outputStream ->
             this.identityRepository
                     .findAll()
                     .forEach(
@@ -98,7 +98,6 @@ public class IdentityService {
                                 }
                             }
                     );
-        };
     }
 
     private static void writeIdentityInStream(OutputStream outputStream, Identity identity)

@@ -91,7 +91,7 @@ public class StreamerService {
     }
 
     public StreamingResponseBody findAllInStream() {
-        return outputStream -> {
+        return outputStream ->
             this.streamerRepository
                     .findAll()
                     .forEach(
@@ -104,7 +104,6 @@ public class StreamerService {
                                 }
                             }
                     );
-        };
     }
 
     private static void writeStream(OutputStream outputStream, Streamer streamer)
