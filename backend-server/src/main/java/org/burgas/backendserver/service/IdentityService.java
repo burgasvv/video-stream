@@ -1,5 +1,6 @@
 package org.burgas.backendserver.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.burgas.backendserver.dto.IdentityRequest;
 import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.entity.Identity;
@@ -10,13 +11,20 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static java.lang.Thread.ofVirtual;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.IdentityMessage.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -43,6 +51,63 @@ public class IdentityService {
                 .stream()
                 .map(identityMapper::toIdentityResponse)
                 .toList();
+    }
+
+    public SseEmitter findAllSse() {
+        SseEmitter sseEmitter = new SseEmitter();
+        ofVirtual()
+                .start(
+                        () ->{
+                            this.identityRepository
+                                    .findAll()
+                                    .forEach(
+                                            identity ->
+                                            {
+                                                try {
+                                                    SECONDS.sleep(1);
+                                                    sseEmitter.send(
+                                                            SseEmitter.event()
+                                                                    .id(String.valueOf(identity.getId()))
+                                                                    .name(identity.getNickname())
+                                                                    .comment("New comment for: " + identity.getNickname())
+                                                                    .data(identity, APPLICATION_JSON)
+                                                                    .build()
+                                                    );
+                                                } catch (IOException | InterruptedException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
+                                    );
+                            sseEmitter.complete();
+                        }
+                );
+        return sseEmitter;
+    }
+
+    public StreamingResponseBody findAllByStream() {
+        return outputStream -> {
+            this.identityRepository
+                    .findAll()
+                    .forEach(
+                            identity -> {
+                                try {
+                                    writeIdentityInStream(outputStream, identity);
+
+                                } catch (IOException | InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                    );
+        };
+    }
+
+    private static void writeIdentityInStream(OutputStream outputStream, Identity identity)
+            throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String identityString = objectMapper.writeValueAsString(identity) + "\n";
+        outputStream.write(identityString.getBytes(UTF_8));
+        outputStream.flush();
+        SECONDS.sleep(1);
     }
 
     @Async
@@ -86,6 +151,20 @@ public class IdentityService {
                 .toIdentityResponse(
                         identityRepository.save(identityMapper.toIdentity(identityRequest))
                 );
+    }
+
+    @Async
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public CompletableFuture<IdentityResponse> createOrUpdateAsync(final IdentityRequest identityRequest) {
+        return supplyAsync(
+                        () -> this.identityRepository.save(
+                                this.identityMapper.toIdentity(identityRequest)
+                        )
+                )
+                .thenApplyAsync(this.identityMapper::toIdentityResponse);
     }
 
     @Transactional(

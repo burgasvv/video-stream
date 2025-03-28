@@ -1,5 +1,6 @@
 package org.burgas.backendserver.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.burgas.backendserver.dto.StreamerRequest;
 import org.burgas.backendserver.dto.StreamerResponse;
 import org.burgas.backendserver.entity.Image;
@@ -9,15 +10,25 @@ import org.burgas.backendserver.exception.StreamerCategoryDataEmptyException;
 import org.burgas.backendserver.mapper.StreamerMapper;
 import org.burgas.backendserver.repository.StreamerCategoryRepository;
 import org.burgas.backendserver.repository.StreamerRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.concurrent.CompletableFuture.*;
+import static java.util.concurrent.CompletableFuture.runAsync;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.StreamerMessage.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -49,11 +60,89 @@ public class StreamerService {
                 .toList();
     }
 
+    public SseEmitter findAllSse() {
+        SseEmitter sseEmitter = new SseEmitter();
+        runAsync(
+                () -> {
+                    this.streamerRepository
+                            .findAll()
+                            .forEach(
+                                    streamer ->
+                                    {
+                                        try {
+                                            SECONDS.sleep(1);
+                                            sseEmitter.send(
+                                                    SseEmitter.event()
+                                                            .id(String.valueOf(streamer.getId()))
+                                                            .name(streamer.getFirstname() + " " + streamer.getLastname())
+                                                            .comment("New Comment")
+                                                            .data(streamer, APPLICATION_JSON)
+                                                            .build()
+                                            );
+                                        } catch (IOException | InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
+                    sseEmitter.complete();
+                }
+        );
+        return sseEmitter;
+    }
+
+    public StreamingResponseBody findAllInStream() {
+        return outputStream -> {
+            this.streamerRepository
+                    .findAll()
+                    .forEach(
+                            streamer -> {
+                                try {
+                                    writeStream(outputStream, streamer);
+
+                                } catch (IOException | InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                    );
+        };
+    }
+
+    private static void writeStream(OutputStream outputStream, Streamer streamer)
+            throws IOException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String streamerString = objectMapper.writeValueAsString(streamer) + "\n";
+        outputStream.write(streamerString.getBytes(UTF_8));
+        outputStream.flush();
+        SECONDS.sleep(1);
+    }
+
+    @Async
+    public CompletableFuture<List<StreamerResponse>> findAllAsync() {
+        return supplyAsync(this.streamerRepository::findAll)
+                .thenApplyAsync(
+                        streamers -> streamers
+                                .stream()
+                                .map(streamerMapper::toStreamerResponse)
+                                .toList()
+                );
+    }
+
     public StreamerResponse findById(Long streamId) {
         return this.streamerRepository
                 .findById(streamId)
                 .map(streamerMapper::toStreamerResponse)
                 .orElseGet(StreamerResponse::new);
+    }
+
+    @Async
+    public CompletableFuture<StreamerResponse> findByIdAsync(final Long streamerId) {
+        return supplyAsync(() -> this.streamerRepository.findById(streamerId))
+                .thenApplyAsync(
+                        streamer -> streamer.map(streamerMapper::toStreamerResponse)
+                )
+                .thenApplyAsync(
+                        streamerResponse -> streamerResponse.orElseGet(StreamerResponse::new)
+                );
     }
 
     @Transactional(
@@ -64,6 +153,15 @@ public class StreamerService {
         return this.streamerMapper
                 .toStreamerSave(streamerRequest)
                 .getId();
+    }
+
+    @Async
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public CompletableFuture<Long> createOrUpdateAsync(final StreamerRequest streamerRequest) {
+        return supplyAsync(() -> this.streamerMapper.toStreamerSave(streamerRequest).getId());
     }
 
     @Transactional(
@@ -103,6 +201,15 @@ public class StreamerService {
         } else {
             throw new StreamerCategoryDataEmptyException(STREAMER_CATEGORY_DATA_EMPTY.getMessage());
         }
+    }
+
+    @Async
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public CompletableFuture<Long> addCategoriesAsync(final StreamerRequest streamerRequest) {
+        return supplyAsync(() -> this.addCategories(streamerRequest));
     }
 
     @Transactional(

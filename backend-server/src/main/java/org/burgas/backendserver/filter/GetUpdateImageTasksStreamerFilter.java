@@ -20,10 +20,10 @@ import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTH
 
 @WebFilter(
         urlPatterns = {
-                "/streamers/by-id","/streamers/update",
+                "/streamers/by-id","/streamers/update", "/streamers/async/update",
                 "/streamers/upload-set-image","/streamers/change-set-image",
                 "/streamers/delete-image",
-                "/streamers/add-categories"
+                "/streamers/add-categories", "/streamers/async/add-categories"
         }
 )
 public class GetUpdateImageTasksStreamerFilter extends OncePerRequestFilter {

@@ -18,7 +18,7 @@ import java.io.IOException;
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHENTICATED;
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 
-@WebFilter(urlPatterns = "/identities/update")
+@WebFilter(urlPatterns = {"/identities/update", "/identities/async/update"})
 public class UpdateIdentityFilter extends OncePerRequestFilter {
 
     private final IdentityRepository identityRepository;

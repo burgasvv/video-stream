@@ -16,7 +16,9 @@ import java.io.IOException;
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 
 @WebFilter(
-        urlPatterns = {"/streamers/create"}
+        urlPatterns = {
+                "/streamers/create", "/streamers/async/create"
+        }
 )
 public class CreateStreamerFilter extends OncePerRequestFilter {
 

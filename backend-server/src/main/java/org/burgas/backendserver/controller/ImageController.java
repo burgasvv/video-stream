@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
+import java.util.concurrent.ExecutionException;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.parseMediaType;
@@ -27,6 +28,18 @@ public class ImageController {
     @GetMapping(value = "/by-id")
     public @ResponseBody ResponseEntity<Resource> getImageById(@RequestParam Long imageId) {
         Image image = this.imageService.findById(imageId);
+        return ResponseEntity
+                .status(OK)
+                .contentType(parseMediaType(image.getContentType()))
+                .body(new InputStreamResource(
+                        new ByteArrayInputStream(image.getData()))
+                );
+    }
+
+    @GetMapping(value = "/async/by-id")
+    public @ResponseBody ResponseEntity<Resource> getImageByIdAsync(@RequestParam final Long imageId)
+            throws ExecutionException, InterruptedException {
+        Image image = this.imageService.findByIdAsync(imageId).get();
         return ResponseEntity
                 .status(OK)
                 .contentType(parseMediaType(image.getContentType()))

@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +43,22 @@ public class IdentityController {
                 .body(identityService.findAll());
     }
 
+    @GetMapping(value = "/sse")
+    public @ResponseBody ResponseEntity<SseEmitter> getAllIdentitiesSse() {
+        return ResponseEntity
+                .status(OK)
+                .contentType(new MediaType(TEXT_EVENT_STREAM, UTF_8))
+                .body(this.identityService.findAllSse());
+    }
+
+    @GetMapping(value = "/stream")
+    public @ResponseBody ResponseEntity<StreamingResponseBody> getAllIdentitiesAsStream() {
+        return ResponseEntity
+                .status(OK)
+                .contentType(new MediaType(TEXT_EVENT_STREAM, UTF_8))
+                .body(this.identityService.findAllByStream());
+    }
+
     @GetMapping(value = "/async")
     public @ResponseBody ResponseEntity<List<IdentityResponse>> getAllIdentitiesAsync()
             throws ExecutionException, InterruptedException {
@@ -58,7 +76,7 @@ public class IdentityController {
                 .body(identityService.findById(identityId));
     }
 
-    @GetMapping(value = "/by-id/async")
+    @GetMapping(value = "/async/by-id")
     public @ResponseBody ResponseEntity<IdentityResponse> getIdentityByIdAsync(@RequestParam Long identityId)
             throws ExecutionException, InterruptedException {
         return ResponseEntity
@@ -75,6 +93,16 @@ public class IdentityController {
                 .body(identityService.createOrUpdate(identityRequest));
     }
 
+    @PostMapping(value = "/async/create")
+    public @ResponseBody ResponseEntity<IdentityResponse> createIdentityAsync(
+            @RequestBody final IdentityRequest identityRequest
+    ) throws ExecutionException, InterruptedException {
+        return ResponseEntity
+                .status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(this.identityService.createOrUpdateAsync(identityRequest).get());
+    }
+
     @PutMapping(value = "/update")
     public @ResponseBody ResponseEntity<IdentityResponse> updateIdentity(
             @RequestBody IdentityRequest identityRequest, @RequestParam Long identityId
@@ -84,6 +112,17 @@ public class IdentityController {
                 .status(OK)
                 .contentType(APPLICATION_JSON)
                 .body(identityService.createOrUpdate(identityRequest));
+    }
+
+    @PutMapping(value = "/async/update")
+    public @ResponseBody ResponseEntity<IdentityResponse> updateIdentityAsync(
+            @RequestBody final IdentityRequest identityRequest, @RequestParam final Long identityId
+    ) throws ExecutionException, InterruptedException {
+        identityRequest.setId(identityId);
+        return ResponseEntity
+                .status(OK)
+                .contentType(APPLICATION_JSON)
+                .body(this.identityService.createOrUpdateAsync(identityRequest).get());
     }
 
     @PostMapping(value = "/upload-set-image", consumes = MULTIPART_FORM_DATA_VALUE)

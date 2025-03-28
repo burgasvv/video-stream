@@ -16,7 +16,7 @@ import java.io.IOException;
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 
 @WebFilter(
-        urlPatterns = {"/identities/by-id", "/identities/by-id/async"}
+        urlPatterns = {"/identities/by-id", "/identities/async/by-id"}
 )
 public class GetIdentityByIdFilter extends OncePerRequestFilter {
 

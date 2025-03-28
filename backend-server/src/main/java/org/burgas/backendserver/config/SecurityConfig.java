@@ -21,6 +21,10 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String ADMIN = "ROLE_ADMIN";
+    private static final String USER = "ROLE_USER";
+    private static final String STREAMER = "ROLE_STREAMER";
+
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
 
@@ -43,41 +47,43 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         requests -> requests
                                 .requestMatchers(
-                                        "/images/by-id",
-                                        "/identities/create",
+                                        "/images/by-id", "/images/async/by-id",
+                                        "/identities/create", "/identities/async/create",
                                         "/categories", "/categories/by-id", "/categories/async/by-id",
                                         "/categories/sse", "/categories/stream", "/categories/async",
                                         "/videos", "/videos/by-category", "/videos/by-id", "/videos/by-name",
                                         "/videos/stream/by-id", "/videos/stream/by-name",
-                                        "/streamers", "/streamers/by-id",
+                                        "/streamers", "/streamers/sse", "/streamers/stream", "/streamers/async",
+                                        "/streamers/by-id", "/streamers/async/by-id",
                                         "/streams/by-id"
                                 )
                                 .permitAll()
 
                                 .requestMatchers(
-                                        "/identities/by-id", "/identities/by-id/async", "/identities/update",
+                                        "/identities/by-id", "/identities/async/by-id",
+                                        "/identities/update", "/identities/async/update",
                                         "/identities/upload-set-image", "/identities/change-set-image", "/identities/delete-image",
-                                        "/streamers/create", "/streamers/update"
+                                        "/streamers/create", "/streamers/update", "/streamers/async/create", "/streamers/async/update"
                                 )
-                                .hasAnyAuthority("ROLE_ADMIN", "ROLE_USER", "ROLE_STREAMER")
+                                .hasAnyAuthority(ADMIN, USER, STREAMER)
 
                                 .requestMatchers(
                                         "/videos/upload", "/videos/update", "/videos/delete",
                                         "/streamers/upload-set-image", "/streamers/change-set-image",
-                                        "/streamers/delete-image", "/streamers/add-categories",
+                                        "/streamers/delete-image", "/streamers/add-categories", "/streamers/async/add-categories",
                                         "/streams/all/by-streamer", "/streams/start", "/streams/update", "/streams/stop",
                                         "/invitations/all/by-receiver", "/invitations/all/by-sender", "/invitations/send",
                                         "/invitations/answer"
                                 )
-                                .hasAnyAuthority("ROLE_STREAMER")
+                                .hasAnyAuthority(STREAMER)
 
                                 .requestMatchers(
-                                        "/identities", "/identities/async",
+                                        "/identities", "/identities/sse", "/identities/stream", "/identities/async",
                                         "/categories/create", "/categories/async/create", "/categories/update",
                                         "/categories/upload-set-image", "/categories/change-set-image",
                                         "/categories/delete-image"
                                 )
-                                .hasAnyAuthority("ROLE_ADMIN")
+                                .hasAnyAuthority(ADMIN)
                 )
                 .build();
     }
