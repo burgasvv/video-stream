@@ -10,10 +10,13 @@ import org.burgas.backendserver.exception.StreamerCategoryDataEmptyException;
 import org.burgas.backendserver.mapper.StreamerMapper;
 import org.burgas.backendserver.repository.StreamerCategoryRepository;
 import org.burgas.backendserver.repository.StreamerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
@@ -21,11 +24,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
+import static java.lang.Thread.ofVirtual;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.concurrent.CompletableFuture.*;
 import static java.util.concurrent.CompletableFuture.runAsync;
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.StreamerMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -36,6 +41,7 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 @Transactional(readOnly = true, propagation = REQUIRED)
 public class StreamerService {
 
+    private static final Logger log = LoggerFactory.getLogger(StreamerService.class);
     private final StreamerRepository streamerRepository;
     private final StreamerMapper streamerMapper;
     private final ImageService imageService;
@@ -71,14 +77,8 @@ public class StreamerService {
                                     {
                                         try {
                                             SECONDS.sleep(1);
-                                            sseEmitter.send(
-                                                    SseEmitter.event()
-                                                            .id(String.valueOf(streamer.getId()))
-                                                            .name(streamer.getFirstname() + " " + streamer.getLastname())
-                                                            .comment("New Comment")
-                                                            .data(streamer, APPLICATION_JSON)
-                                                            .build()
-                                            );
+                                            sendEventAboutStreamer(streamer, sseEmitter);
+
                                         } catch (IOException | InterruptedException e) {
                                             throw new RuntimeException(e);
                                         }
@@ -88,6 +88,17 @@ public class StreamerService {
                 }
         );
         return sseEmitter;
+    }
+
+    private static void sendEventAboutStreamer(Streamer streamer, SseEmitter sseEmitter) throws IOException {
+        sseEmitter.send(
+                SseEmitter.event()
+                        .id(String.valueOf(streamer.getId()))
+                        .name(streamer.getFirstname() + " " + streamer.getLastname())
+                        .comment("New Comment")
+                        .data(streamer, APPLICATION_JSON)
+                        .build()
+        );
     }
 
     public StreamingResponseBody findAllInStream() {
@@ -124,6 +135,69 @@ public class StreamerService {
                                 .map(streamerMapper::toStreamerResponse)
                                 .toList()
                 );
+    }
+
+    public List<StreamerResponse> findStreamersByFollowerId(final Long followerId) {
+        return this.streamerRepository
+                .findStreamersByFollowerId(followerId)
+                .stream()
+                .peek(streamer -> log.info("Find streamer by follower Id: {}", streamer))
+                .map(streamerMapper::toStreamerResponse)
+                .toList();
+    }
+
+    public SseEmitter findStreamersByFollowerIdSse(final Long followerId) {
+        SseEmitter sseEmitter = new SseEmitter();
+        ofVirtual()
+                .start(
+                        () -> {
+                            this.streamerRepository
+                                    .findStreamersByFollowerId(followerId)
+                                    .stream()
+                                    .peek(streamer -> log.info("Find streamer by follower Id in sse: {}", streamer))
+                                    .map(streamerMapper::toStreamerResponse)
+                                    .forEach(
+                                            streamerResponse -> {
+                                                try {
+                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                            .data(streamerResponse, APPLICATION_JSON)
+                                                            .build();
+                                                    sseEmitter.send(data);
+                                                    log.info("Follower data was sent by server: {}", data);
+                                                    SECONDS.sleep(1);
+
+                                                } catch (IOException | InterruptedException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
+                                    );
+
+                            sseEmitter.complete();
+                        }
+                );
+        return sseEmitter;
+    }
+
+    public StreamingResponseBody findStreamersByFollowerIdStream(final Long followerId) {
+        return outputStream ->
+                this.streamerRepository
+                        .findStreamersByFollowerId(followerId)
+                        .stream()
+                        .peek(streamer -> log.info("Find streamer by follower Id in stream: {}", streamer))
+                        .map(streamerMapper::toStreamerResponse)
+                        .forEach(
+                                streamerResponse -> {
+                                    try {
+                                        outputStream.write((streamerResponse.toString() + "\n").getBytes(UTF_8));
+                                        outputStream.flush();
+                                        log.info("Write streamer object to stream");
+                                        SECONDS.sleep(1);
+
+                                    } catch (IOException | InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                        );
     }
 
     public StreamerResponse findById(Long streamId) {

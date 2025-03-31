@@ -48,6 +48,20 @@ public final class StreamerResponse {
         return categories;
     }
 
+    @Override
+    public String toString() {
+        return "StreamerResponse{" +
+               "id=" + id +
+               ", identity=" + identity +
+               ", firstname='" + firstname + '\'' +
+               ", lastname='" + lastname + '\'' +
+               ", patronymic='" + patronymic + '\'' +
+               ", about='" + about + '\'' +
+               ", imageId=" + imageId +
+               ", categories=" + categories +
+               '}';
+    }
+
     public static Builder builder() {
         return new Builder();
     }

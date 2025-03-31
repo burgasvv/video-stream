@@ -63,7 +63,15 @@ public class SecurityConfig {
                                         "/identities/by-id", "/identities/async/by-id",
                                         "/identities/update", "/identities/async/update",
                                         "/identities/upload-set-image", "/identities/change-set-image", "/identities/delete-image",
-                                        "/streamers/create", "/streamers/update", "/streamers/async/create", "/streamers/async/update"
+                                        "/streamers/create", "/streamers/update", "/streamers/async/create", "/streamers/async/update",
+
+                                        "/follows/by-streamer/secured", "/follows/by-follower/secured", "/follows/follow", "/follows/unfollow",
+                                        "/follows/by-streamer/sse/secured", "/follows/by-follower/sse/secured",
+                                        "/follows/by-streamer/stream/secured", "/follows/by-follower/stream/secured",
+
+                                        "/follows/by-streamer", "/follows/by-follower",
+                                        "/follows/by-streamer/sse", "/follows/by-follower/sse",
+                                        "/follows/by-streamer/stream", "/follows/by-follower/stream"
                                 )
                                 .hasAnyAuthority(ADMIN, USER, STREAMER)
 

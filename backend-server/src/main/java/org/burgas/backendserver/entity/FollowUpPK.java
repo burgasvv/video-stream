@@ -5,29 +5,29 @@ import jakarta.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-@SuppressWarnings("unused")
-public final class StreamerCategoryPK {
+@SuppressWarnings(value = "unused")
+public final class FollowUpPK {
 
     private Long streamerId;
-    private Long categoryId;
+    private Long followerId;
 
     public Long getStreamerId() {
         return streamerId;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Long getFollowerId() {
+        return followerId;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        StreamerCategoryPK that = (StreamerCategoryPK) o;
-        return Objects.equals(streamerId, that.streamerId) && Objects.equals(categoryId, that.categoryId);
+        FollowUpPK that = (FollowUpPK) o;
+        return Objects.equals(streamerId, that.streamerId) && Objects.equals(followerId, that.followerId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(streamerId, categoryId);
+        return Objects.hash(streamerId, followerId);
     }
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @SuppressWarnings(value = "unused")
 @IdClass(value = StreamerCategoryPK.class)
-public class StreamerCategory {
+public final class StreamerCategory {
 
     @Id private Long streamerId;
     @Id private Long categoryId;

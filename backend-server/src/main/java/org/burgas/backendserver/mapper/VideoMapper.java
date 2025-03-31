@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 import static org.burgas.backendserver.message.VideoMessage.FILE_IS_EMPTY;
 
 @Component
-public class VideoMapper {
+public final class VideoMapper {
 
     private final VideoRepository videoRepository;
     private final CategoryRepository categoryRepository;

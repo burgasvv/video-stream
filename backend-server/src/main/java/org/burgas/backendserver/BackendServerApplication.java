@@ -25,7 +25,10 @@ import org.springframework.web.client.RestClient;
                 HandleStreamByStreamerFilter.class,
                 HandleGetInvitationsFilter.class,
                 SendInvitationFilter.class,
-                AnswerInvitationFilter.class
+                AnswerInvitationFilter.class,
+                FollowUpByStreamerFilter.class,
+                FollowUpByFollowerFilter.class,
+                FollowUpOnFollowFilter.class
         }
 )
 public class BackendServerApplication {

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import static org.burgas.backendserver.message.StreamMessage.STREAM_NOT_FOUND;
 
 @Component
-public class InvitationMapper {
+public final class InvitationMapper {
 
     private final StreamerRepository streamerRepository;
     private final StreamerMapper streamerMapper;

@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IdentityMapper {
+public final class IdentityMapper {
 
     private final IdentityRepository identityRepository;
     private final AuthorityRepository authorityRepository;

@@ -6,28 +6,28 @@ import java.util.Objects;
 
 @Embeddable
 @SuppressWarnings("unused")
-public final class StreamerCategoryPK {
+public final class SubscriptionPK {
 
     private Long streamerId;
-    private Long categoryId;
+    private Long subscriberId;
 
     public Long getStreamerId() {
         return streamerId;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Long getSubscriberId() {
+        return subscriberId;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        StreamerCategoryPK that = (StreamerCategoryPK) o;
-        return Objects.equals(streamerId, that.streamerId) && Objects.equals(categoryId, that.categoryId);
+        SubscriptionPK that = (SubscriptionPK) o;
+        return Objects.equals(streamerId, that.streamerId) && Objects.equals(subscriberId, that.subscriberId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(streamerId, categoryId);
+        return Objects.hash(streamerId, subscriberId);
     }
 }

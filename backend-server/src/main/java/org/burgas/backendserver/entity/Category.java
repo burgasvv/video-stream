@@ -3,11 +3,13 @@ package org.burgas.backendserver.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import org.springframework.stereotype.Component;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @SuppressWarnings("unused")
+@Component
 public final class Category {
 
     @Id

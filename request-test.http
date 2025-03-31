@@ -268,3 +268,75 @@ Content-Type: application/json
     "accept": true,
     "decline": false
 }
+
+### Follows Requests
+
+###
+GET /follows/by-streamer?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /follows/by-streamer/sse?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /follows/by-streamer/stream?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /follows/by-streamer/secured?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /follows/by-streamer/sse/secured?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /follows/by-streamer/stream/secured?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /follows/by-follower?followerId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /follows/by-follower/sse?followerId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /follows/by-follower/stream?followerId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /follows/by-follower/secured?followerId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /follows/by-follower/sse/secured?followerId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /follows/by-follower/stream/secured?followerId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+POST /follows/follow?streamerId=2&followerId=1
+Host: localhost:8888
+Authorization: Basic admin@gmail.com admin
+
+###
+DELETE /follows/unfollow?streamerId=2&followerId=1
+Host: localhost:8888
+Authorization: Basic admin@gmail.com admin

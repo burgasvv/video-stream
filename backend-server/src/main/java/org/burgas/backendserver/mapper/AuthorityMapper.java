@@ -5,7 +5,7 @@ import org.burgas.backendserver.entity.Authority;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthorityMapper {
+public final class AuthorityMapper {
 
     public AuthorityResponse toAuthorityResponse(Authority authority) {
         return AuthorityResponse.builder()

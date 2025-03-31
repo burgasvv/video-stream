@@ -16,7 +16,7 @@ import java.util.UUID;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Component
-public class StreamMapper {
+public final class StreamMapper {
 
     private final StreamRepository streamRepository;
     private final CategoryRepository categoryRepository;

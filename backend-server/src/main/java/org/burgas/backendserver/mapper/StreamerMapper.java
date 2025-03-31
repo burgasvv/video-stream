@@ -10,7 +10,7 @@ import org.burgas.backendserver.repository.StreamerRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StreamerMapper {
+public final class StreamerMapper {
 
     private final StreamerRepository streamerRepository;
     private final IdentityRepository identityRepository;

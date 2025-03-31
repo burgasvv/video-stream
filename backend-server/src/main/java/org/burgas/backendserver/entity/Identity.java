@@ -72,6 +72,19 @@ public final class Identity {
         return imageId;
     }
 
+    @Override
+    public String toString() {
+        return "Identity{" +
+               "id=" + id +
+               ", nickname='" + nickname + '\'' +
+               ", password='" + password + '\'' +
+               ", email='" + email + '\'' +
+               ", enabled=" + enabled +
+               ", authorityId=" + authorityId +
+               ", imageId=" + imageId +
+               '}';
+    }
+
     public void setImageId(Long imageId) {
         this.imageId = imageId;
     }

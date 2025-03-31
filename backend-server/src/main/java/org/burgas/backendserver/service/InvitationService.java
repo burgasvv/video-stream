@@ -3,16 +3,19 @@ package org.burgas.backendserver.service;
 import org.burgas.backendserver.dto.InvitationAnswer;
 import org.burgas.backendserver.dto.InvitationRequest;
 import org.burgas.backendserver.dto.InvitationResponse;
+import org.burgas.backendserver.entity.Invitation;
 import org.burgas.backendserver.entity.InvitedStreamer;
 import org.burgas.backendserver.entity.Stream;
 import org.burgas.backendserver.exception.InvitationAlreadyHandledException;
 import org.burgas.backendserver.exception.InvitationNotFoundException;
 import org.burgas.backendserver.exception.StreamNotFoundException;
 import org.burgas.backendserver.exception.WrongInvitationAnswerException;
+import org.burgas.backendserver.listener.InvitationEvent;
 import org.burgas.backendserver.mapper.InvitationMapper;
 import org.burgas.backendserver.repository.InvitationRepository;
 import org.burgas.backendserver.repository.InvitedStreamerRepository;
 import org.burgas.backendserver.repository.StreamRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,16 +36,18 @@ public class InvitationService {
     private final InvitationMapper invitationMapper;
     private final StreamRepository streamRepository;
     private final InvitedStreamerRepository invitedStreamerRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public InvitationService(
             InvitationRepository invitationRepository,
             InvitationMapper invitationMapper, StreamRepository streamRepository,
-            InvitedStreamerRepository invitedStreamerRepository
+            InvitedStreamerRepository invitedStreamerRepository, ApplicationEventPublisher applicationEventPublisher
     ) {
         this.invitationRepository = invitationRepository;
         this.invitationMapper = invitationMapper;
         this.streamRepository = streamRepository;
         this.invitedStreamerRepository = invitedStreamerRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public List<InvitationResponse> findBySenderId(final Long senderId) {
@@ -66,8 +71,9 @@ public class InvitationService {
             rollbackFor = Exception.class
     )
     public String sendInvitation(final InvitationRequest invitationRequest) {
-        this.invitationRepository
+        Invitation saved = this.invitationRepository
                 .save(this.invitationMapper.toInvitation(invitationRequest));
+        this.applicationEventPublisher.publishEvent(new InvitationEvent(saved));
         return INVITATION_WAS_SEND.getMessage();
     }
 
@@ -136,6 +142,7 @@ public class InvitationService {
                                                         .build()
                                         );
                             }
+                            this.applicationEventPublisher.publishEvent(new InvitationEvent(invitation));
 
                             return invitation.getAccept() && !invitation.getDecline() ?
                                     INVITATION_WAS_ACCEPTED.getMessage() :
