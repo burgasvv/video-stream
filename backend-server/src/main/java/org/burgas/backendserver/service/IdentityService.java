@@ -196,6 +196,68 @@ public class IdentityService {
                         );
     }
 
+    public List<IdentityResponse> findSubscribersByStreamerId(final Long streamerId) {
+        return this.identityRepository
+                .findSubscribersByStreamerId(streamerId)
+                .stream()
+                .peek(identity -> log.info("Find subscriber by streamerId: {}", identity))
+                .map(identityMapper::toIdentityResponse)
+                .toList();
+    }
+
+    public SseEmitter findSubscribersByStreamerIdSse(final Long streamerId) {
+        SseEmitter sseEmitter = new SseEmitter();
+        ofVirtual()
+                .start(
+                        () -> {
+                            this.identityRepository
+                                    .findSubscribersByStreamerId(streamerId)
+                                    .stream()
+                                    .peek(identity -> log.info("Find subscriber by streamerId sse: {}", identity))
+                                    .map(identityMapper::toIdentityResponse)
+                                    .forEach(
+                                            identityResponse -> {
+                                                try {
+                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                            .data(identityResponse, APPLICATION_JSON)
+                                                            .build();
+                                                    sseEmitter.send(data);
+                                                    log.info("Subscriber data was send");
+                                                    SECONDS.sleep(1);
+
+                                                } catch (IOException | InterruptedException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
+                                    );
+                            sseEmitter.complete();
+                        }
+                );
+        return sseEmitter;
+    }
+
+    public StreamingResponseBody findSubscriberByStreamerIdStream(final Long streamerId) {
+        return outputStream ->
+                this.identityRepository
+                        .findSubscribersByStreamerId(streamerId)
+                        .stream()
+                        .peek(identity -> log.info("Find subscriber by streamerId in stream: {}", identity))
+                        .map(identityMapper::toIdentityResponse)
+                        .forEach(
+                                identityResponse -> {
+                                    try {
+                                        outputStream.write((identityResponse.toString() + "\n").getBytes(UTF_8));
+                                        outputStream.flush();
+                                        log.info("Subscriber data was written in stream");
+                                        SECONDS.sleep(1);
+
+                                    } catch (IOException | InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                        );
+    }
+
     public IdentityResponse findById(Long identityId) {
         return this.identityRepository
                 .findById(identityId)

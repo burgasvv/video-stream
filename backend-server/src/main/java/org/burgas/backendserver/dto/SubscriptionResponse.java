@@ -26,6 +26,16 @@ public final class SubscriptionResponse {
         return subscribedAt;
     }
 
+    @Override
+    public String toString() {
+        return "SubscriptionResponse{" +
+               "streamer=" + streamer +
+               ", subscriber=" + subscriber +
+               ", tariff=" + tariff +
+               ", subscribedAt='" + subscribedAt + '\'' +
+               '}';
+    }
+
     public static Builder builder() {
         return new Builder();
     }

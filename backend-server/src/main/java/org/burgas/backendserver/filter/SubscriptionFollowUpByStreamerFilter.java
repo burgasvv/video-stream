@@ -26,14 +26,21 @@ import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTH
                 "/follows/by-streamer/secured",
                 "/follows/by-streamer/sse/secured",
                 "/follows/by-streamer/stream/secured",
+
+                "/subscriptions/by-streamer",
+                "/subscriptions/by-streamer/sse",
+                "/subscriptions/by-streamer/stream",
+                "/subscriptions/by-streamer/secured",
+                "/subscriptions/by-streamer/sse/secured",
+                "/subscriptions/by-streamer/stream/secured",
         },
         asyncSupported = true
 )
-public class FollowUpByStreamerFilter extends OncePerRequestFilter {
+public class SubscriptionFollowUpByStreamerFilter extends OncePerRequestFilter {
 
     private final StreamerRepository streamerRepository;
 
-    public FollowUpByStreamerFilter(StreamerRepository streamerRepository) {
+    public SubscriptionFollowUpByStreamerFilter(StreamerRepository streamerRepository) {
         this.streamerRepository = streamerRepository;
     }
 

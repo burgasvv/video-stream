@@ -62,6 +62,7 @@ public class StreamerService {
         return this.streamerRepository
                 .findAll()
                 .stream()
+                .peek(streamer -> log.info("Find streamer by id: {}", streamer))
                 .map(streamerMapper::toStreamerResponse)
                 .toList();
     }
@@ -72,12 +73,16 @@ public class StreamerService {
                 () -> {
                     this.streamerRepository
                             .findAll()
+                            .stream()
+                            .peek(streamer -> log.info("Find streamer by id sse: {}", streamer))
+                            .map(streamerMapper::toStreamerResponse)
                             .forEach(
-                                    streamer ->
+                                    streamerResponse ->
                                     {
                                         try {
                                             SECONDS.sleep(1);
-                                            sendEventAboutStreamer(streamer, sseEmitter);
+                                            sendEventAboutStreamer(streamerResponse, sseEmitter);
+                                            log.info("Streamer data was written in sse");
 
                                         } catch (IOException | InterruptedException e) {
                                             throw new RuntimeException(e);
@@ -90,13 +95,14 @@ public class StreamerService {
         return sseEmitter;
     }
 
-    private static void sendEventAboutStreamer(Streamer streamer, SseEmitter sseEmitter) throws IOException {
+    private static void sendEventAboutStreamer(StreamerResponse streamerResponse, SseEmitter sseEmitter)
+            throws IOException {
         sseEmitter.send(
                 SseEmitter.event()
-                        .id(String.valueOf(streamer.getId()))
-                        .name(streamer.getFirstname() + " " + streamer.getLastname())
+                        .id(String.valueOf(streamerResponse.getId()))
+                        .name(streamerResponse.getFirstname() + " " + streamerResponse.getLastname())
                         .comment("New Comment")
-                        .data(streamer, APPLICATION_JSON)
+                        .data(streamerResponse, APPLICATION_JSON)
                         .build()
         );
     }
@@ -105,10 +111,14 @@ public class StreamerService {
         return outputStream ->
             this.streamerRepository
                     .findAll()
+                    .stream()
+                    .peek(streamer -> log.info("Find streamer by id in stream: {}", streamer))
+                    .map(streamerMapper::toStreamerResponse)
                     .forEach(
-                            streamer -> {
+                            streamerResponse -> {
                                 try {
-                                    writeStream(outputStream, streamer);
+                                    writeStream(outputStream, streamerResponse);
+                                    log.info("Streamer data was written in stream");
 
                                 } catch (IOException | InterruptedException e) {
                                     throw new RuntimeException(e);
@@ -117,10 +127,10 @@ public class StreamerService {
                     );
     }
 
-    private static void writeStream(OutputStream outputStream, Streamer streamer)
+    private static void writeStream(OutputStream outputStream, StreamerResponse streamerResponse)
             throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String streamerString = objectMapper.writeValueAsString(streamer) + "\n";
+        String streamerString = objectMapper.writeValueAsString(streamerResponse) + "\n";
         outputStream.write(streamerString.getBytes(UTF_8));
         outputStream.flush();
         SECONDS.sleep(1);
@@ -191,6 +201,67 @@ public class StreamerService {
                                         outputStream.write((streamerResponse.toString() + "\n").getBytes(UTF_8));
                                         outputStream.flush();
                                         log.info("Write streamer object to stream");
+                                        SECONDS.sleep(1);
+
+                                    } catch (IOException | InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }
+                        );
+    }
+
+    public List<StreamerResponse> findStreamersBySubscriberId(final Long subscriberId) {
+        return this.streamerRepository
+                .findStreamersBySubscriberId(subscriberId)
+                .stream()
+                .peek(streamer -> log.info("Find streamer by subscriberId: {}", streamer))
+                .map(streamerMapper::toStreamerResponse)
+                .toList();
+    }
+
+    public SseEmitter findStreamersBySubscriberIdSse(final Long subscriberId) {
+        SseEmitter sseEmitter = new SseEmitter();
+        ofVirtual()
+                .start(
+                        () -> {
+                            this.streamerRepository
+                                    .findStreamersBySubscriberId(subscriberId)
+                                    .stream()
+                                    .peek(streamer -> log.info("Find streamer by subscriberId sse: {}", streamer))
+                                    .map(streamerMapper::toStreamerResponse)
+                                    .forEach(
+                                            streamerResponse -> {
+                                                try {
+                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                            .data(streamerResponse, APPLICATION_JSON)
+                                                            .build();
+                                                    sseEmitter.send(data);
+                                                    log.info("Streamer data was send in sse");
+                                                    SECONDS.sleep(1);
+
+                                                } catch (IOException | InterruptedException e) {
+                                                    throw new RuntimeException(e);
+                                                }
+                                            }
+                                    );
+                            sseEmitter.complete();
+                        }
+                );
+        return sseEmitter;
+    }
+
+    public StreamingResponseBody findStreamersBySubscriberIdStream(final Long subscriberId) {
+        return outputStream ->
+                this.streamerRepository
+                        .findStreamersBySubscriberId(subscriberId)
+                        .stream()
+                        .peek(streamer -> log.info("Find streamer by subscriberId in stream: {}", streamer))
+                        .map(streamerMapper::toStreamerResponse)
+                        .forEach(
+                                streamerResponse -> {
+                                    try {
+                                        outputStream.write((streamerResponse.toString() + "\n").getBytes(UTF_8));
+                                        outputStream.flush();
                                         SECONDS.sleep(1);
 
                                     } catch (IOException | InterruptedException e) {

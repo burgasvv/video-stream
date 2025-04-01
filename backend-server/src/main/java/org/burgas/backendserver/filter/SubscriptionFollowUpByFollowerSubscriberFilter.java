@@ -24,22 +24,36 @@ import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTH
                 "/follows/by-follower/secured",
                 "/follows/by-follower/sse/secured",
                 "/follows/by-follower/stream/secured",
+
+                "/subscriptions/by-subscriber",
+                "/subscriptions/by-subscriber/sse",
+                "/subscriptions/by-subscriber/stream",
+                "/subscriptions/by-subscriber/secured",
+                "/subscriptions/by-subscriber/sse/secured",
+                "/subscriptions/by-subscriber/stream/secured",
         },
         asyncSupported = true
 )
-public class FollowUpByFollowerFilter extends OncePerRequestFilter {
+public class SubscriptionFollowUpByFollowerSubscriberFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
             @NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String followerIdParam = request.getParameter("followerId");
+        String identityId;
+        if (request.getRequestURI().startsWith("/subscriptions/by-subscriber")) {
+            identityId = request.getParameter("subscriberId");
+
+        } else {
+            identityId = request.getParameter("followerId");
+        }
+
         Authentication authentication = (Authentication) request.getUserPrincipal();
 
         if (authentication.isAuthenticated()) {
             IdentityResponse identityResponse = (IdentityResponse) authentication.getPrincipal();
-            Long followerId = Long.parseLong(followerIdParam == null || followerIdParam.isBlank() ? "0" : followerIdParam);
+            Long followerId = Long.parseLong(identityId == null || identityId.isBlank() ? "0" : identityId);
 
             if (identityResponse.getId().equals(followerId)) {
                 filterChain.doFilter(request, response);

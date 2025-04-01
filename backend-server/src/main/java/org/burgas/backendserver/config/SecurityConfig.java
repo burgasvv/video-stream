@@ -71,7 +71,15 @@ public class SecurityConfig {
 
                                         "/follows/by-streamer", "/follows/by-follower",
                                         "/follows/by-streamer/sse", "/follows/by-follower/sse",
-                                        "/follows/by-streamer/stream", "/follows/by-follower/stream"
+                                        "/follows/by-streamer/stream", "/follows/by-follower/stream",
+
+                                        "/subscriptions/by-streamer", "/subscriptions/by-subscriber",
+                                        "/subscriptions/by-streamer/sse", "/subscriptions/by-subscriber/sse",
+                                        "/subscriptions/by-streamer/stream", "/subscriptions/by-subscriber/stream",
+
+                                        "/subscriptions/by-streamer/secured", "/subscriptions/by-subscriber/secured",
+                                        "/subscriptions/by-streamer/sse/secured", "/subscriptions/by-subscriber/sse/secured",
+                                        "/subscriptions/by-streamer/stream/secured","/subscriptions/by-subscriber/stream/secured"
                                 )
                                 .hasAnyAuthority(ADMIN, USER, STREAMER)
 

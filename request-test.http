@@ -340,3 +340,65 @@ Authorization: Basic admin@gmail.com admin
 DELETE /follows/unfollow?streamerId=2&followerId=1
 Host: localhost:8888
 Authorization: Basic admin@gmail.com admin
+
+### Subscribtion Requests
+
+###
+GET /subscriptions/by-streamer?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /subscriptions/by-streamer/sse?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /subscriptions/by-streamer/stream?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /subscriptions/by-subscriber?subscriberId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /subscriptions/by-subscriber/sse?subscriberId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /subscriptions/by-subscriber/stream?subscriberId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /subscriptions/by-streamer/secured?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /subscriptions/by-streamer/sse/secured?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /subscriptions/by-streamer/stream/secured?streamerId=1
+Host: localhost:8888
+Authorization: Basic streamer@gmail.com streamer
+
+###
+GET /subscriptions/by-subscriber/secured?subscriberId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /subscriptions/by-subscriber/sse/secured?subscriberId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
+
+###
+GET /subscriptions/by-subscriber/stream/secured?subscriberId=2
+Host: localhost:8888
+Authorization: Basic user@gmail.com user
