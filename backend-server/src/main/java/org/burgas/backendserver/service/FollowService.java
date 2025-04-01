@@ -62,11 +62,11 @@ public class FollowService {
                                     .stream()
                                     .map(followMapper::toFollowResponse)
                                     .forEach(
-                                            followUp -> {
+                                            followResponse -> {
                                                 try {
-                                                    log.info("Follow up was found by streamer: {}", followUp);
+                                                    log.info("Follow up was found by streamer: {}", followResponse);
 
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = getDataWithMediaTypes(followUp);
+                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = getDataWithMediaTypes(followResponse);
                                                     sseEmitter.send(data);
 
                                                     log.info("Follow Up by streamer was send by emitter: {}", data);
@@ -87,6 +87,9 @@ public class FollowService {
         return outputStream ->
                 this.followRepository
                         .findFollowsByStreamerId(streamerId)
+                        .stream()
+                        .peek(follow -> log.info("Find follow by streamerId on stream: {}", follow))
+                        .map(followMapper::toFollowResponse)
                         .forEach(
                                 follow -> {
                                     try {
@@ -154,6 +157,9 @@ public class FollowService {
         return outputStream ->
                 this.followRepository
                         .findFollowsByFollowerId(followerId)
+                        .stream()
+                        .peek(follow -> log.info("Find follow by followerId on stream: {}", follow))
+                        .map(followMapper::toFollowResponse)
                         .forEach(
                                 follow -> {
                                     try {
@@ -172,8 +178,8 @@ public class FollowService {
                         );
     }
 
-    private static void writeFollowUpStream(OutputStream outputStream, Follow follow) throws IOException {
-        outputStream.write((follow.toString() + "\n").getBytes(UTF_8));
+    private static void writeFollowUpStream(OutputStream outputStream, FollowResponse followResponse) throws IOException {
+        outputStream.write((followResponse.toString() + "\n").getBytes(UTF_8));
         outputStream.flush();
     }
 
