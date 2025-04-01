@@ -402,3 +402,18 @@ Authorization: Basic user@gmail.com user
 GET /subscriptions/by-subscriber/stream/secured?subscriberId=2
 Host: localhost:8888
 Authorization: Basic user@gmail.com user
+
+###
+POST /subscriptions/subscribe?streamerId=1&subscriberId=1
+Host: localhost:8888
+Authorization: Basic admin@gmail.com admin
+Content-Type: application/json
+
+{
+    "tariffId": 2
+}
+
+###
+DELETE /subscriptions/unsubscribe?streamerId=1&subscriberId=1
+Host: localhost:8888
+Authorization: Basic admin@gmail.com admin

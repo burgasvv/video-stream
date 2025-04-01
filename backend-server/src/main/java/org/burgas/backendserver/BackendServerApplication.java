@@ -28,7 +28,8 @@ import org.springframework.web.client.RestClient;
                 AnswerInvitationFilter.class,
                 SubscriptionFollowUpByStreamerFilter.class,
                 SubscriptionFollowUpByFollowerSubscriberFilter.class,
-                FollowUpOnFollowFilter.class
+                FollowUpOnFollowFilter.class,
+                SubscribeUnsubscribeFilter.class
         }
 )
 public class BackendServerApplication {

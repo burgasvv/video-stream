@@ -1,6 +1,9 @@
 package org.burgas.backendserver.service;
 
+import org.burgas.backendserver.dto.SubscriptionRequest;
 import org.burgas.backendserver.dto.SubscriptionResponse;
+import org.burgas.backendserver.entity.Subscription;
+import org.burgas.backendserver.exception.SubscriptionNotFoundException;
 import org.burgas.backendserver.mapper.SubscriptionMapper;
 import org.burgas.backendserver.repository.SubscriptionRepository;
 import org.slf4j.Logger;
@@ -18,7 +21,10 @@ import java.util.Set;
 import static java.lang.Thread.ofVirtual;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.burgas.backendserver.message.SubscriptionMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
 @Service
@@ -107,7 +113,7 @@ public class SubscriptionService {
 
     public SseEmitter findSubscriptionsByStreamerIdSse(final Long streamerId) {
         SseEmitter sseEmitter = new SseEmitter();
-        Thread.ofVirtual()
+        ofVirtual()
                 .start(
                         () -> {
                             this.subscriptionRepository
@@ -155,5 +161,41 @@ public class SubscriptionService {
                                     }
                                 }
                         );
+    }
+
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public String subscribeOrUpdate(final SubscriptionRequest subscriptionRequest) {
+        Subscription saved = this.subscriptionRepository.save(
+                this.subscriptionMapper.toSubscription(subscriptionRequest)
+        );
+        log.info("Subscriber successfully subscribed/update on subscription: {}", saved);
+        return SUBSCRIPTION_SAVED.getMessage();
+    }
+
+    @Transactional(
+            isolation = SERIALIZABLE, propagation = REQUIRED,
+            rollbackFor = Exception.class
+    )
+    public String unsubscribeAndDelete(final Long streamerId, final Long subscriberId) {
+        return this.subscriptionRepository
+                .findSubscriptionByStreamerIdAndSubscriberId(streamerId, subscriberId)
+                .map(
+                        subscription -> {
+                            this.subscriptionRepository.deleteSubscriptionByStreamerIdAndSubscriberId(
+                                    subscription.getStreamerId(), subscription.getSubscriberId()
+                            );
+                            log.info("Subscription successfully deleted");
+                            return SUBSCRIPTION_DELETED.getMessage();
+                        }
+                )
+                .orElseThrow(
+                        () -> {
+                            log.error("Subscription not found");
+                            return new SubscriptionNotFoundException(SUBSCRIPTION_NOT_FOUND.getMessage());
+                        }
+                );
     }
 }

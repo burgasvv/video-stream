@@ -2,6 +2,7 @@ package org.burgas.backendserver.controller;
 
 import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.dto.StreamerResponse;
+import org.burgas.backendserver.dto.SubscriptionRequest;
 import org.burgas.backendserver.dto.SubscriptionResponse;
 import org.burgas.backendserver.service.IdentityService;
 import org.burgas.backendserver.service.StreamerService;
@@ -9,10 +10,7 @@ import org.burgas.backendserver.service.SubscriptionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
@@ -20,8 +18,7 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
+import static org.springframework.http.MediaType.*;
 
 @Controller
 @RequestMapping(value = "/subscriptions")
@@ -158,5 +155,28 @@ public class SubscriptionController {
                 .status(OK)
                 .contentType(new MediaType(APPLICATION_STREAM_JSON, UTF_8))
                 .body(this.subscriptionService.findSubscriptionsBySubscriberIdStream(subscriberId));
+    }
+
+    @PostMapping(value = "/subscribe")
+    public @ResponseBody ResponseEntity<String> subscribeOrUpdateOnStreamer(
+            @RequestBody final SubscriptionRequest subscriptionRequest,
+            @RequestParam final Long streamerId, @RequestParam final Long subscriberId
+    ) {
+        subscriptionRequest.setStreamerId(streamerId);
+        subscriptionRequest.setSubscriberId(subscriberId);
+        return ResponseEntity
+                .status(OK)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(this.subscriptionService.subscribeOrUpdate(subscriptionRequest));
+    }
+
+    @DeleteMapping(value = "/unsubscribe")
+    public @ResponseBody ResponseEntity<String> unsubscribeOnStreamer(
+            @RequestParam final Long streamerId, @RequestParam final Long subscriberId
+    ) {
+        return ResponseEntity
+                .status(OK)
+                .contentType(new MediaType(TEXT_PLAIN, UTF_8))
+                .body(this.subscriptionService.unsubscribeAndDelete(streamerId, subscriberId));
     }
 }
