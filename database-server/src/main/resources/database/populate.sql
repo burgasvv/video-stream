@@ -88,7 +88,7 @@ create table if not exists video (
     data bytea not null
 );
 
-create table if not exists follow_up (
+create table if not exists follow (
     streamer_id bigint references streamer(id) on delete cascade on update cascade ,
     follower_id bigint references identity(id) on delete cascade on update cascade ,
     followed_at timestamp not null ,
@@ -158,8 +158,8 @@ values (2, 5, '2025-03-20 18:25');
 insert into tariff(plan, price) values ('Monthly', 130);
 insert into tariff(plan, price) values ('Annual', 1600);
 
-insert into follow_up(streamer_id, follower_id, followed_at) values (1, 2, '2025-01-15 18:16:13');
-insert into follow_up(streamer_id, follower_id, followed_at) values (2, 2, '2025-01-15 18:21:43');
+insert into follow(streamer_id, follower_id, followed_at) values (1, 2, '2025-01-15 18:16:13');
+insert into follow(streamer_id, follower_id, followed_at) values (2, 2, '2025-01-15 18:21:43');
 
 insert into subscription(streamer_id, subscriber_id, tariff_id, subscribed_at)
 values (1, 2, 1, '2025-02-12 15:46:23');

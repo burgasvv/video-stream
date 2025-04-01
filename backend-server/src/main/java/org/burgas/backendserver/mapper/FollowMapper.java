@@ -1,9 +1,9 @@
 package org.burgas.backendserver.mapper;
 
-import org.burgas.backendserver.dto.FollowUpResponse;
+import org.burgas.backendserver.dto.FollowResponse;
 import org.burgas.backendserver.dto.FollowedStreamer;
 import org.burgas.backendserver.dto.Follower;
-import org.burgas.backendserver.entity.FollowUp;
+import org.burgas.backendserver.entity.Follow;
 import org.burgas.backendserver.entity.Identity;
 import org.burgas.backendserver.entity.Streamer;
 import org.burgas.backendserver.repository.IdentityRepository;
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 import static java.time.format.DateTimeFormatter.ofPattern;
 
 @Component
-public final class FollowUpMapper {
+public final class FollowMapper {
 
     private final StreamerRepository streamerRepository;
     private final StreamerMapper streamerMapper;
     private final IdentityRepository identityRepository;
 
-    public FollowUpMapper(
+    public FollowMapper(
             StreamerRepository streamerRepository, StreamerMapper streamerMapper, IdentityRepository identityRepository
     ) {
         this.streamerRepository = streamerRepository;
@@ -27,11 +27,11 @@ public final class FollowUpMapper {
         this.identityRepository = identityRepository;
     }
 
-    public FollowUpResponse toFollowUpResponse(final FollowUp followUp) {
-        Streamer streamer = this.streamerRepository.findById(followUp.getStreamerId()).orElseGet(Streamer::new);
+    public FollowResponse toFollowResponse(final Follow follow) {
+        Streamer streamer = this.streamerRepository.findById(follow.getStreamerId()).orElseGet(Streamer::new);
         Identity streamerIdentity = this.identityRepository.findById(streamer.getIdentityId()).orElseGet(Identity::new);
-        Identity follower = this.identityRepository.findById(followUp.getFollowerId()).orElseGet(Identity::new);
-        return FollowUpResponse.builder()
+        Identity follower = this.identityRepository.findById(follow.getFollowerId()).orElseGet(Identity::new);
+        return FollowResponse.builder()
                 .streamer(
                         FollowedStreamer.builder()
                                 .id(streamer.getId())
@@ -47,7 +47,7 @@ public final class FollowUpMapper {
                                 .imageId(follower.getImageId())
                                 .build()
                 )
-                .followedAt(followUp.getFollowedAt().format(ofPattern("dd.MM.hh, hh:mm")))
+                .followedAt(follow.getFollowedAt().format(ofPattern("dd.MM.hh, hh:mm")))
                 .build();
     }
 }

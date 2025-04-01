@@ -1,18 +1,18 @@
 package org.burgas.backendserver.repository;
 
-import org.burgas.backendserver.entity.FollowUp;
-import org.burgas.backendserver.entity.FollowUpPK;
+import org.burgas.backendserver.entity.Follow;
+import org.burgas.backendserver.entity.FollowPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface FollowUpRepository extends JpaRepository<FollowUp, FollowUpPK> {
+public interface FollowRepository extends JpaRepository<Follow, FollowPK> {
 
-    List<FollowUp> findFollowUpsByStreamerId(Long streamerId);
+    List<Follow> findFollowsByStreamerId(Long streamerId);
 
-    List<FollowUp> findFollowUpsByFollowerId(Long followerId);
+    List<Follow> findFollowsByFollowerId(Long followerId);
 
     Boolean existsByStreamerIdAndFollowerId(Long streamerId, Long followerId);
 

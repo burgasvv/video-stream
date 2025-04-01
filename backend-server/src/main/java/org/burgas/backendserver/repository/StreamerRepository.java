@@ -13,7 +13,7 @@ public interface StreamerRepository extends JpaRepository<Streamer, Long> {
     @Query(
             nativeQuery = true,
             value = """
-                    select s.* from streamer s join follow_up fu on s.id = fu.streamer_id
+                    select s.* from streamer s join follow fu on s.id = fu.streamer_id
                                         where fu.follower_id = :followerId
                     """
     )

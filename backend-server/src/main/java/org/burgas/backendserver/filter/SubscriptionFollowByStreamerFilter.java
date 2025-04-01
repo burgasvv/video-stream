@@ -18,12 +18,29 @@ import java.io.IOException;
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHENTICATED;
 import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTHORIZED;
 
-@WebFilter(urlPatterns = {"/follows/follow", "/follows/unfollow"})
-public class FollowUpOnFollowFilter extends OncePerRequestFilter {
+@WebFilter(
+        urlPatterns = {
+                "/follows/by-streamer",
+                "/follows/by-streamer/sse",
+                "/follows/by-streamer/stream",
+                "/follows/by-streamer/secured",
+                "/follows/by-streamer/sse/secured",
+                "/follows/by-streamer/stream/secured",
+
+                "/subscriptions/by-streamer",
+                "/subscriptions/by-streamer/sse",
+                "/subscriptions/by-streamer/stream",
+                "/subscriptions/by-streamer/secured",
+                "/subscriptions/by-streamer/sse/secured",
+                "/subscriptions/by-streamer/stream/secured",
+        },
+        asyncSupported = true
+)
+public class SubscriptionFollowByStreamerFilter extends OncePerRequestFilter {
 
     private final StreamerRepository streamerRepository;
 
-    public FollowUpOnFollowFilter(StreamerRepository streamerRepository) {
+    public SubscriptionFollowByStreamerFilter(StreamerRepository streamerRepository) {
         this.streamerRepository = streamerRepository;
     }
 
@@ -33,16 +50,14 @@ public class FollowUpOnFollowFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String streamerIdParam = request.getParameter("streamerId");
-        String followerIdParam = request.getParameter("followerId");
         Authentication authentication = (Authentication) request.getUserPrincipal();
 
         if (authentication.isAuthenticated()) {
-            Long streamerId = Long.parseLong(streamerIdParam == null || streamerIdParam.isBlank() ? "0" : streamerIdParam);
-            Long followerId = Long.parseLong(followerIdParam == null || followerIdParam.isBlank() ? "0" : followerIdParam);
-            Streamer streamer = this.streamerRepository.findById(streamerId).orElse(null);
             IdentityResponse identityResponse = (IdentityResponse) authentication.getPrincipal();
+            Long streamerId = Long.parseLong(streamerIdParam == null || streamerIdParam.isBlank() ? "0" : streamerIdParam);
+            Streamer streamer = this.streamerRepository.findById(streamerId).orElse(null);
 
-            if (streamer != null && identityResponse.getId().equals(followerId)) {
+            if (streamer != null && identityResponse.getId().equals(streamer.getIdentityId())) {
                 filterChain.doFilter(request, response);
 
             } else {

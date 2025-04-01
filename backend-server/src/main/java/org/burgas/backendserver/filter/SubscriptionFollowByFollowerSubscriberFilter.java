@@ -34,7 +34,7 @@ import static org.burgas.backendserver.message.IdentityMessage.IDENTITY_NOT_AUTH
         },
         asyncSupported = true
 )
-public class SubscriptionFollowUpByFollowerSubscriberFilter extends OncePerRequestFilter {
+public class SubscriptionFollowByFollowerSubscriberFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(

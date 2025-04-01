@@ -7,9 +7,9 @@ import jakarta.persistence.IdClass;
 import java.time.LocalDateTime;
 
 @Entity
-@IdClass(value = FollowUpPK.class)
+@IdClass(value = FollowPK.class)
 @SuppressWarnings(value = "unused")
-public final class FollowUp {
+public final class Follow {
 
     @Id private Long streamerId;
     @Id private Long followerId;
@@ -54,29 +54,29 @@ public final class FollowUp {
 
     public static final class Builder {
 
-        private final FollowUp followUp;
+        private final Follow follow;
 
         public Builder() {
-            followUp = new FollowUp();
+            follow = new Follow();
         }
 
         public Builder streamerId(Long streamerId) {
-            this.followUp.streamerId = streamerId;
+            this.follow.streamerId = streamerId;
             return this;
         }
 
         public Builder followerId(Long followerId) {
-            this.followUp.followerId = followerId;
+            this.follow.followerId = followerId;
             return this;
         }
 
         public Builder followedAt(LocalDateTime followedAt) {
-            this.followUp.followedAt = followedAt;
+            this.follow.followedAt = followedAt;
             return this;
         }
 
-        public FollowUp build() {
-            return followUp;
+        public Follow build() {
+            return follow;
         }
     }
 }

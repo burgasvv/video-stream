@@ -1,7 +1,7 @@
 package org.burgas.backendserver.dto;
 
 @SuppressWarnings("unused")
-public final class FollowUpResponse {
+public final class FollowResponse {
 
     private FollowedStreamer streamer;
     private Follower follower;
@@ -25,29 +25,29 @@ public final class FollowUpResponse {
 
     public static final class Builder {
 
-        private final FollowUpResponse followUpResponse;
+        private final FollowResponse followResponse;
 
         public Builder() {
-            followUpResponse = new FollowUpResponse();
+            followResponse = new FollowResponse();
         }
 
         public Builder streamer(FollowedStreamer streamer) {
-            this.followUpResponse.streamer = streamer;
+            this.followResponse.streamer = streamer;
             return this;
         }
 
         public Builder follower(Follower follower) {
-            this.followUpResponse.follower = follower;
+            this.followResponse.follower = follower;
             return this;
         }
 
         public Builder followedAt(String followedAt) {
-            this.followUpResponse.followedAt = followedAt;
+            this.followResponse.followedAt = followedAt;
             return this;
         }
 
-        public FollowUpResponse build() {
-            return followUpResponse;
+        public FollowResponse build() {
+            return followResponse;
         }
     }
 }

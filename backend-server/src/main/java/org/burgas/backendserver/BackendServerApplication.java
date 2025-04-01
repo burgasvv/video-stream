@@ -26,9 +26,9 @@ import org.springframework.web.client.RestClient;
                 HandleGetInvitationsFilter.class,
                 SendInvitationFilter.class,
                 AnswerInvitationFilter.class,
-                SubscriptionFollowUpByStreamerFilter.class,
-                SubscriptionFollowUpByFollowerSubscriberFilter.class,
-                FollowUpOnFollowFilter.class,
+                SubscriptionFollowByStreamerFilter.class,
+                SubscriptionFollowByFollowerSubscriberFilter.class,
+                FollowUnfollowFilter.class,
                 SubscribeUnsubscribeFilter.class
         }
 )

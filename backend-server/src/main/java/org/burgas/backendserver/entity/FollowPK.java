@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Embeddable
 @SuppressWarnings(value = "unused")
-public final class FollowUpPK {
+public final class FollowPK {
 
     private Long streamerId;
     private Long followerId;
@@ -22,7 +22,7 @@ public final class FollowUpPK {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        FollowUpPK that = (FollowUpPK) o;
+        FollowPK that = (FollowPK) o;
         return Objects.equals(streamerId, that.streamerId) && Objects.equals(followerId, that.followerId);
     }
 

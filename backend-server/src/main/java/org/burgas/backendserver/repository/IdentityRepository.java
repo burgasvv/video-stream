@@ -26,7 +26,7 @@ public interface IdentityRepository extends JpaRepository<Identity, Long> {
     @Query(
             nativeQuery = true,
             value = """
-                    select i.* from identity i join follow_up fu on i.id = fu.follower_id
+                    select i.* from identity i join follow fu on i.id = fu.follower_id
                                         where fu.streamer_id = :streamerId
                     """
     )

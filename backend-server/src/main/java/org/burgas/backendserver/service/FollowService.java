@@ -1,11 +1,11 @@
 package org.burgas.backendserver.service;
 
-import org.burgas.backendserver.dto.FollowUpResponse;
-import org.burgas.backendserver.entity.FollowUp;
+import org.burgas.backendserver.dto.FollowResponse;
+import org.burgas.backendserver.entity.Follow;
 import org.burgas.backendserver.exception.AlreadyFollowException;
 import org.burgas.backendserver.exception.StillNotFollowException;
-import org.burgas.backendserver.mapper.FollowUpMapper;
-import org.burgas.backendserver.repository.FollowUpRepository;
+import org.burgas.backendserver.mapper.FollowMapper;
+import org.burgas.backendserver.repository.FollowRepository;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,23 +32,23 @@ import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
 @Service
 @Transactional(readOnly = true, propagation = SUPPORTS)
-public class FollowUpService {
+public class FollowService {
 
-    private static final Logger log = LoggerFactory.getLogger(FollowUpService.class);
-    private final FollowUpRepository followUpRepository;
-    private final FollowUpMapper followUpMapper;
+    private static final Logger log = LoggerFactory.getLogger(FollowService.class);
+    private final FollowRepository followRepository;
+    private final FollowMapper followMapper;
 
-    public FollowUpService(FollowUpRepository followUpRepository, FollowUpMapper followUpMapper) {
-        this.followUpRepository = followUpRepository;
-        this.followUpMapper = followUpMapper;
+    public FollowService(FollowRepository followRepository, FollowMapper followMapper) {
+        this.followRepository = followRepository;
+        this.followMapper = followMapper;
     }
 
-    public List<FollowUpResponse> findAllByStreamerId(final Long streamerId) {
-        return this.followUpRepository
-                .findFollowUpsByStreamerId(streamerId)
+    public List<FollowResponse> findAllByStreamerId(final Long streamerId) {
+        return this.followRepository
+                .findFollowsByStreamerId(streamerId)
                 .stream()
-                .peek(followUp -> log.info("Find follower by streamer: {}", followUp))
-                .map(followUpMapper::toFollowUpResponse)
+                .peek(follow -> log.info("Find follower by streamer: {}", follow))
+                .map(followMapper::toFollowResponse)
                 .toList();
     }
 
@@ -57,10 +57,10 @@ public class FollowUpService {
         ofVirtual()
                 .start(
                         () -> {
-                            this.followUpRepository
-                                    .findFollowUpsByStreamerId(streamerId)
+                            this.followRepository
+                                    .findFollowsByStreamerId(streamerId)
                                     .stream()
-                                    .map(followUpMapper::toFollowUpResponse)
+                                    .map(followMapper::toFollowResponse)
                                     .forEach(
                                             followUp -> {
                                                 try {
@@ -85,14 +85,14 @@ public class FollowUpService {
 
     public StreamingResponseBody findAllByStreamerIdStream(final Long streamerId) {
         return outputStream ->
-                this.followUpRepository
-                        .findFollowUpsByStreamerId(streamerId)
+                this.followRepository
+                        .findFollowsByStreamerId(streamerId)
                         .forEach(
-                                followUp -> {
+                                follow -> {
                                     try {
-                                        log.info("Follow up by streamer Id was found: {}", followUp);
+                                        log.info("Follow up by streamer Id was found: {}", follow);
 
-                                        writeFollowUpStream(outputStream, followUp);
+                                        writeFollowUpStream(outputStream, follow);
 
                                         log.info("Follow up by streamer Id was written");
                                         SECONDS.sleep(1);
@@ -104,12 +104,12 @@ public class FollowUpService {
                         );
     }
 
-    public List<FollowUpResponse> findAllByFollowerId(final Long followerId) {
-        return this.followUpRepository
-                .findFollowUpsByFollowerId(followerId)
+    public List<FollowResponse> findAllByFollowerId(final Long followerId) {
+        return this.followRepository
+                .findFollowsByFollowerId(followerId)
                 .stream()
-                .peek(followUp -> log.info("Find streamer by follower: {}", followUp))
-                .map(followUpMapper::toFollowUpResponse)
+                .peek(follow -> log.info("Find streamer by follower: {}", follow))
+                .map(followMapper::toFollowResponse)
                 .toList();
     }
 
@@ -117,10 +117,10 @@ public class FollowUpService {
         SseEmitter sseEmitter = new SseEmitter();
         ofVirtual().start(
                 () -> {
-                    this.followUpRepository
-                            .findFollowUpsByFollowerId(followerId)
+                    this.followRepository
+                            .findFollowsByFollowerId(followerId)
                             .stream()
-                            .map(followUpMapper::toFollowUpResponse)
+                            .map(followMapper::toFollowResponse)
                             .forEach(
                                     followUp -> {
                                         try {
@@ -143,7 +143,7 @@ public class FollowUpService {
         return sseEmitter;
     }
 
-    private static @NotNull Set<ResponseBodyEmitter.DataWithMediaType> getDataWithMediaTypes(FollowUpResponse followUp) {
+    private static @NotNull Set<ResponseBodyEmitter.DataWithMediaType> getDataWithMediaTypes(FollowResponse followUp) {
         return SseEmitter.event()
                 .comment("New Comment")
                 .data(followUp, APPLICATION_JSON)
@@ -152,14 +152,14 @@ public class FollowUpService {
 
     public StreamingResponseBody findAllByFollowerIdStream(final Long followerId) {
         return outputStream ->
-                this.followUpRepository
-                        .findFollowUpsByFollowerId(followerId)
+                this.followRepository
+                        .findFollowsByFollowerId(followerId)
                         .forEach(
-                                followUp -> {
+                                follow -> {
                                     try {
-                                        log.info("Find follow up by follower Id: {}", followUp);
+                                        log.info("Find follow up by follower Id: {}", follow);
 
-                                        writeFollowUpStream(outputStream, followUp);
+                                        writeFollowUpStream(outputStream, follow);
 
                                         log.info("Follow up by follower Id was written");
                                         SECONDS.sleep(1);
@@ -172,8 +172,8 @@ public class FollowUpService {
                         );
     }
 
-    private static void writeFollowUpStream(OutputStream outputStream, FollowUp followUp) throws IOException {
-        outputStream.write((followUp.toString() + "\n").getBytes(UTF_8));
+    private static void writeFollowUpStream(OutputStream outputStream, Follow follow) throws IOException {
+        outputStream.write((follow.toString() + "\n").getBytes(UTF_8));
         outputStream.flush();
     }
 
@@ -182,9 +182,9 @@ public class FollowUpService {
             rollbackFor = Exception.class
     )
     public String followOnStreamer(final Long streamerId, final Long followerId) {
-        if (!this.followUpRepository.existsByStreamerIdAndFollowerId(streamerId, followerId)) {
-            FollowUp saved = this.followUpRepository.save(
-                    FollowUp.builder()
+        if (!this.followRepository.existsByStreamerIdAndFollowerId(streamerId, followerId)) {
+            Follow saved = this.followRepository.save(
+                    Follow.builder()
                             .streamerId(streamerId)
                             .followerId(followerId)
                             .followedAt(now())
@@ -204,8 +204,8 @@ public class FollowUpService {
             rollbackFor = Exception.class
     )
     public String unfollowOnStreamer(final Long streamerId, final Long followerId) {
-        if (this.followUpRepository.existsByStreamerIdAndFollowerId(streamerId, followerId)) {
-            this.followUpRepository.deleteFollowUpByStreamerIdAndFollowerId(streamerId, followerId);
+        if (this.followRepository.existsByStreamerIdAndFollowerId(streamerId, followerId)) {
+            this.followRepository.deleteFollowUpByStreamerIdAndFollowerId(streamerId, followerId);
             log.info("FollowUp successfully deleted");
             return SUCCESSFULLY_UNFOLLOW.getMessage();
 

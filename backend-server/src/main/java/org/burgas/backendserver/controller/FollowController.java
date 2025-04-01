@@ -1,9 +1,9 @@
 package org.burgas.backendserver.controller;
 
-import org.burgas.backendserver.dto.FollowUpResponse;
+import org.burgas.backendserver.dto.FollowResponse;
 import org.burgas.backendserver.dto.IdentityResponse;
 import org.burgas.backendserver.dto.StreamerResponse;
-import org.burgas.backendserver.service.FollowUpService;
+import org.burgas.backendserver.service.FollowService;
 import org.burgas.backendserver.service.IdentityService;
 import org.burgas.backendserver.service.StreamerService;
 import org.springframework.http.MediaType;
@@ -21,17 +21,17 @@ import static org.springframework.http.MediaType.*;
 
 @Controller
 @RequestMapping(value = "/follows")
-public class FollowUpController {
+public class FollowController {
 
-    private final FollowUpService followUpService;
+    private final FollowService followService;
     private final IdentityService identityService;
     private final StreamerService streamerService;
 
-    public FollowUpController(
-            FollowUpService followUpService,
+    public FollowController(
+            FollowService followService,
             IdentityService identityService, StreamerService streamerService
     ) {
-        this.followUpService = followUpService;
+        this.followService = followService;
         this.identityService = identityService;
         this.streamerService = streamerService;
     }
@@ -101,13 +101,13 @@ public class FollowUpController {
     }
 
     @GetMapping(value = "/by-streamer/secured")
-    public @ResponseBody ResponseEntity<List<FollowUpResponse>> getFollowersByStreamerSecured(
+    public @ResponseBody ResponseEntity<List<FollowResponse>> getFollowersByStreamerSecured(
             @RequestParam final Long streamerId
     ) {
         return ResponseEntity
                 .status(OK)
                 .contentType(APPLICATION_JSON)
-                .body(this.followUpService.findAllByStreamerId(streamerId));
+                .body(this.followService.findAllByStreamerId(streamerId));
     }
 
     @GetMapping(value = "/by-streamer/sse/secured")
@@ -118,7 +118,7 @@ public class FollowUpController {
         return ResponseEntity
                 .status(OK)
                 .contentType(new MediaType(APPLICATION_STREAM_JSON, UTF_8))
-                .body(this.followUpService.findAllByStreamerIdSse(streamerId));
+                .body(this.followService.findAllByStreamerIdSse(streamerId));
     }
 
     @GetMapping(value = "/by-streamer/stream/secured")
@@ -129,17 +129,17 @@ public class FollowUpController {
         return ResponseEntity
                 .status(OK)
                 .contentType(new MediaType(APPLICATION_STREAM_JSON, UTF_8))
-                .body(this.followUpService.findAllByStreamerIdStream(streamerId));
+                .body(this.followService.findAllByStreamerIdStream(streamerId));
     }
 
     @GetMapping(value = "/by-follower/secured")
-    public @ResponseBody ResponseEntity<List<FollowUpResponse>> getAllStreamersByFollower(
+    public @ResponseBody ResponseEntity<List<FollowResponse>> getAllStreamersByFollower(
             @RequestParam final Long followerId
     ) {
         return ResponseEntity
                 .status(OK)
                 .contentType(APPLICATION_JSON)
-                .body(this.followUpService.findAllByFollowerId(followerId));
+                .body(this.followService.findAllByFollowerId(followerId));
     }
 
     @GetMapping(value = "/by-follower/sse/secured")
@@ -150,7 +150,7 @@ public class FollowUpController {
         return ResponseEntity
                 .status(OK)
                 .contentType(new MediaType(APPLICATION_STREAM_JSON, UTF_8))
-                .body(this.followUpService.findAllByFollowerIdSse(followerId));
+                .body(this.followService.findAllByFollowerIdSse(followerId));
     }
 
     @GetMapping(value = "/by-follower/stream/secured")
@@ -161,7 +161,7 @@ public class FollowUpController {
         return ResponseEntity
                 .status(OK)
                 .contentType(new MediaType(APPLICATION_STREAM_JSON, UTF_8))
-                .body(this.followUpService.findAllByFollowerIdStream(followerId));
+                .body(this.followService.findAllByFollowerIdStream(followerId));
     }
 
     @PostMapping(value = "/follow")
@@ -171,7 +171,7 @@ public class FollowUpController {
         return ResponseEntity
                 .status(OK)
                 .contentType(new MediaType(TEXT_PLAIN, UTF_8))
-                .body(this.followUpService.followOnStreamer(streamerId, followerId));
+                .body(this.followService.followOnStreamer(streamerId, followerId));
     }
 
     @DeleteMapping(value = "/unfollow")
@@ -181,6 +181,6 @@ public class FollowUpController {
         return ResponseEntity
                 .status(OK)
                 .contentType(new MediaType(TEXT_PLAIN, UTF_8))
-                .body(this.followUpService.unfollowOnStreamer(streamerId, followerId));
+                .body(this.followService.unfollowOnStreamer(streamerId, followerId));
     }
 }
