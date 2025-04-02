@@ -12,8 +12,6 @@ import org.burgas.backendserver.repository.SubscriptionRepository;
 import org.burgas.backendserver.repository.TariffRepository;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
 

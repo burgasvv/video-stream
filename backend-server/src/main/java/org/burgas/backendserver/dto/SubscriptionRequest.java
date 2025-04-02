@@ -1,7 +1,5 @@
 package org.burgas.backendserver.dto;
 
-import java.time.LocalDateTime;
-
 @SuppressWarnings("unused")
 public final class SubscriptionRequest {
 
