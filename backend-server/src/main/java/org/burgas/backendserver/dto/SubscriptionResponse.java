@@ -5,10 +5,15 @@ import org.burgas.backendserver.entity.Tariff;
 @SuppressWarnings("unused")
 public final class SubscriptionResponse {
 
+    private Long id;
     private StreamerResponse streamer;
     private IdentityResponse subscriber;
     private Tariff tariff;
     private String subscribedAt;
+
+    public Long getId() {
+        return id;
+    }
 
     public StreamerResponse getStreamer() {
         return streamer;
@@ -29,7 +34,8 @@ public final class SubscriptionResponse {
     @Override
     public String toString() {
         return "SubscriptionResponse{" +
-               "streamer=" + streamer +
+               "id=" + id +
+               ", streamer=" + streamer +
                ", subscriber=" + subscriber +
                ", tariff=" + tariff +
                ", subscribedAt='" + subscribedAt + '\'' +
@@ -46,6 +52,11 @@ public final class SubscriptionResponse {
 
         public Builder() {
             subscriptionResponse = new SubscriptionResponse();
+        }
+
+        public Builder id(Long id) {
+            this.subscriptionResponse.id = id;
+            return this;
         }
 
         public Builder streamer(StreamerResponse streamer) {

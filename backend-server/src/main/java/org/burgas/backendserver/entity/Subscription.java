@@ -1,20 +1,30 @@
 package org.burgas.backendserver.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.GenerationType.*;
+
 @Entity
-@IdClass(value = SubscriptionPK.class)
 @SuppressWarnings("unused")
 public final class Subscription {
 
-    @Id private Long streamerId;
-    @Id private Long subscriberId;
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long id;
+    private Long streamerId;
+    private Long subscriberId;
     private Long tariffId;
     private LocalDateTime subscribedAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getStreamerId() {
         return streamerId;
@@ -58,6 +68,11 @@ public final class Subscription {
 
         public Builder() {
             subscription = new Subscription();
+        }
+
+        public Builder id(Long id) {
+            this.subscription.id = id;
+            return this;
         }
 
         public Builder streamerId(Long streamerId) {
