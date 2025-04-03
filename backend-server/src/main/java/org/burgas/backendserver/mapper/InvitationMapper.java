@@ -83,6 +83,7 @@ public final class InvitationMapper {
                 )
                 .streamKey(invitation.getStreamKey())
                 .accept(invitation.getAccept())
+                .decline(invitation.getDecline())
                 .build();
     }
 }

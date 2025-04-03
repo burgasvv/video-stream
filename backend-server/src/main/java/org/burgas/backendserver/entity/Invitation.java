@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -76,6 +77,33 @@ public final class Invitation {
 
     public void setDecline(Boolean decline) {
         this.decline = decline;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Invitation that = (Invitation) o;
+        return Objects.equals(id, that.id) && Objects.equals(streamId, that.streamId) &&
+               Objects.equals(senderId, that.senderId) && Objects.equals(receiverId, that.receiverId) &&
+               Objects.equals(streamKey, that.streamKey) && Objects.equals(accept, that.accept) && Objects.equals(decline, that.decline);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, streamId, senderId, receiverId, streamKey, accept, decline);
+    }
+
+    @Override
+    public String toString() {
+        return "Invitation{" +
+               "id=" + id +
+               ", streamId=" + streamId +
+               ", senderId=" + senderId +
+               ", receiverId=" + receiverId +
+               ", streamKey=" + streamKey +
+               ", accept=" + accept +
+               ", decline=" + decline +
+               '}';
     }
 
     public static Builder builder() {

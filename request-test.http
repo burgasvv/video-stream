@@ -257,7 +257,7 @@ Content-Type: application/json
 }
 
 ###
-PUT /invitations/answer?invitedId=2&streamKey=ae0f92bd-a431-4fc2-8b1f-dfec515fdfaf
+PUT /invitations/answer?invitedId=2&streamKey=71826978-2518-4bc4-b427-ae77ed67dc77
 Host: localhost:8888
 Authorization: Basic streamerSecond@gmail.com streamerSecond
 Content-Type: application/json

@@ -4,6 +4,8 @@ import org.burgas.backendserver.dto.VideoRequest;
 import org.burgas.backendserver.dto.VideoResponse;
 import org.burgas.backendserver.exception.WrongFileFormatException;
 import org.burgas.backendserver.service.VideoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -30,6 +32,7 @@ import static org.springframework.http.MediaTypeFactory.getMediaType;
 @CrossOrigin(value = "http://localhost:4200")
 public class VideoController {
 
+    private static final Logger log = LoggerFactory.getLogger(VideoController.class);
     private final VideoService videoService;
 
     public VideoController(VideoService videoService) {
@@ -61,7 +64,10 @@ public class VideoController {
     }
 
     @GetMapping(value = "/stream/by-id")
-    public @ResponseBody ResponseEntity<Resource> getVideoStreamById(@RequestParam Long videoId) {
+    public @ResponseBody ResponseEntity<Resource> getVideoStreamById(
+            @RequestParam Long videoId, @RequestHeader(required = false, value = "Range") String range
+    ) {
+        log.info("Header range: {}", range);
         VideoResponse videoResponse = videoService.findById(videoId);
         InputStreamResource inputStreamResource = new InputStreamResource(
                 new ByteArrayInputStream(videoResponse.getData())
@@ -99,7 +105,8 @@ public class VideoController {
     @PostMapping(value = "/upload", consumes = MULTIPART_FORM_DATA_VALUE)
     public @ResponseBody ResponseEntity<Long> uploadVideo(
             @RequestPart MultipartFile file, @RequestPart(required = false) String name,
-            @RequestPart String streamerId, @RequestPart String categoryId, @RequestPart String description
+            @RequestPart String streamerId, @RequestPart(required = false) String streamId,
+            @RequestPart String categoryId, @RequestPart String description
     ) {
         if (
                 file != null && !file.isEmpty() &&
@@ -107,7 +114,10 @@ public class VideoController {
                         .split("/")[0]
                         .equalsIgnoreCase("video")
         ) {
-            VideoRequest videoRequest = new VideoRequest(null, Long.valueOf(categoryId), Long.valueOf(streamerId), name, description);
+            Long strId = streamId == null ? null : Long.valueOf(streamId);
+            VideoRequest videoRequest = new VideoRequest(
+                    null, Long.valueOf(categoryId), Long.valueOf(streamerId), strId, name, description
+            );
             Long videoId = videoService.uploadOrUpdate(videoRequest, file);
             return ResponseEntity
                     .status(FOUND)

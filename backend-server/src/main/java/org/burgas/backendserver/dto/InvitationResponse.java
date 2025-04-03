@@ -1,10 +1,8 @@
 package org.burgas.backendserver.dto;
 
-import org.springframework.stereotype.Component;
-
+import java.util.Objects;
 import java.util.UUID;
 
-@Component
 @SuppressWarnings(value = "unused")
 public final class InvitationResponse {
 
@@ -70,6 +68,34 @@ public final class InvitationResponse {
 
     public void setDecline(Boolean decline) {
         this.decline = decline;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        InvitationResponse that = (InvitationResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(stream, that.stream)
+               && Objects.equals(sender, that.sender) && Objects.equals(receiver, that.receiver)
+               && Objects.equals(streamKey, that.streamKey) && Objects.equals(accept, that.accept)
+               && Objects.equals(decline, that.decline);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, stream, sender, receiver, streamKey, accept, decline);
+    }
+
+    @Override
+    public String toString() {
+        return "InvitationResponse{" +
+               "id=" + id +
+               ", stream='" + stream + '\'' +
+               ", sender='" + sender + '\'' +
+               ", receiver='" + receiver + '\'' +
+               ", streamKey=" + streamKey +
+               ", accept=" + accept +
+               ", decline=" + decline +
+               '}';
     }
 
     public static Builder builder() {

@@ -10,6 +10,12 @@ services:
       POSTGRES_PASSWORD: postgres
       PGDATA: /var/lib/data/postgresql
 
+  nginx:
+    image: nginx:latest
+    container_name: video_stream_nginx
+    ports:
+      - "8050:80"
+
   rtmp:
     image: rtmpsurf/rtmp
     container_name: video_stream_rtmp
@@ -19,6 +25,31 @@ services:
     environment:
       HTTP_PORT: 8090
       RTMP_PORT: 1935
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: video_stream_zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: video_stream_kafka
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_ZOOKEEPER_CONNECT: video_stream_zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
 
   keycloak:
     image: quay.io/keycloak/keycloak
@@ -41,12 +72,6 @@ services:
     command: [ "start-dev", "--http-port", "8070", "--https-port", "7443" ]
     networks:
       - local_network
-
-  nginx:
-    image: nginx:latest
-    container_name: video_stream_nginx
-    ports:
-      - "8050:80"
 
   database-server:
     build:

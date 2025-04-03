@@ -10,6 +10,7 @@ import org.burgas.backendserver.exception.InvitationAlreadyHandledException;
 import org.burgas.backendserver.exception.InvitationNotFoundException;
 import org.burgas.backendserver.exception.StreamNotFoundException;
 import org.burgas.backendserver.exception.WrongInvitationAnswerException;
+import org.burgas.backendserver.kafka.KafkaProducer;
 import org.burgas.backendserver.listener.InvitationEvent;
 import org.burgas.backendserver.mapper.InvitationMapper;
 import org.burgas.backendserver.repository.InvitationRepository;
@@ -37,17 +38,20 @@ public class InvitationService {
     private final StreamRepository streamRepository;
     private final InvitedStreamerRepository invitedStreamerRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final KafkaProducer kafkaProducer;
 
     public InvitationService(
             InvitationRepository invitationRepository,
             InvitationMapper invitationMapper, StreamRepository streamRepository,
-            InvitedStreamerRepository invitedStreamerRepository, ApplicationEventPublisher applicationEventPublisher
+            InvitedStreamerRepository invitedStreamerRepository,
+            ApplicationEventPublisher applicationEventPublisher, KafkaProducer kafkaProducer
     ) {
         this.invitationRepository = invitationRepository;
         this.invitationMapper = invitationMapper;
         this.streamRepository = streamRepository;
         this.invitedStreamerRepository = invitedStreamerRepository;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.kafkaProducer = kafkaProducer;
     }
 
     public List<InvitationResponse> findBySenderId(final Long senderId) {
@@ -73,6 +77,8 @@ public class InvitationService {
     public String sendInvitation(final InvitationRequest invitationRequest) {
         Invitation saved = this.invitationRepository
                 .save(this.invitationMapper.toInvitation(invitationRequest));
+        InvitationResponse invitationResponse = this.invitationMapper.toInvitationResponse(saved);
+        this.kafkaProducer.sendInvitationResponse(invitationResponse);
         this.applicationEventPublisher.publishEvent(new InvitationEvent(saved));
         return INVITATION_WAS_SEND.getMessage();
     }
@@ -142,6 +148,8 @@ public class InvitationService {
                                                         .build()
                                         );
                             }
+                            InvitationResponse invitationResponse = this.invitationMapper.toInvitationResponse(invitation);
+                            this.kafkaProducer.sendInvitationResponse(invitationResponse);
                             this.applicationEventPublisher.publishEvent(new InvitationEvent(invitation));
 
                             return invitation.getAccept() && !invitation.getDecline() ?

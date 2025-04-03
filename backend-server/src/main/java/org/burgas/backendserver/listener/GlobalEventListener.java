@@ -9,12 +9,12 @@ public final class GlobalEventListener {
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GlobalEventListener.class);
 
-    @EventListener
+    @EventListener(value = CategoryEvent.class)
     public void listenCategoryEvent(CategoryEvent categoryEvent) {
         log.info("Listen to category event: {}", categoryEvent.getSource());
     }
 
-    @EventListener
+    @EventListener(value = InvitationEvent.class)
     public void listenInvitationEvent(InvitationEvent invitationEvent) {
         log.info("Listen to invitation: {}", invitationEvent.getSource());
     }

@@ -10,10 +10,11 @@ public final class VideoRequest {
     private String name;
     private String description;
 
-    public VideoRequest(Long id, Long categoryId, Long streamerId, String name, String description) {
+    public VideoRequest(Long id, Long categoryId, Long streamerId, Long streamId, String name, String description) {
         this.id = id;
         this.categoryId = categoryId;
         this.streamerId = streamerId;
+        this.streamId = streamId;
         this.name = name;
         this.description = description;
     }
