@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         requests -> requests
                                 .requestMatchers(
+                                        "/messages/new-message",
                                         "/images/by-id", "/images/async/by-id",
                                         "/identities/create", "/identities/async/create",
                                         "/categories", "/categories/by-id", "/categories/async/by-id",
@@ -79,7 +80,7 @@ public class SecurityConfig {
 
                                         "/subscriptions/by-streamer/secured", "/subscriptions/by-subscriber/secured",
                                         "/subscriptions/by-streamer/sse/secured", "/subscriptions/by-subscriber/sse/secured",
-                                        "/subscriptions/by-streamer/stream/secured","/subscriptions/by-subscriber/stream/secured",
+                                        "/subscriptions/by-streamer/stream/secured", "/subscriptions/by-subscriber/stream/secured",
                                         "/subscriptions/subscribe", "/subscriptions/unsubscribe"
                                 )
                                 .hasAnyAuthority(ADMIN, USER, STREAMER)

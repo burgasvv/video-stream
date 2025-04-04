@@ -1,3 +1,8 @@
+### Message Requests
+
+###
+POST /messages/new-message?message=Hello, this is a new message
+Host: localhost:8888
 
 ### Identity Requests
 
@@ -257,7 +262,7 @@ Content-Type: application/json
 }
 
 ###
-PUT /invitations/answer?invitedId=2&streamKey=71826978-2518-4bc4-b427-ae77ed67dc77
+PUT /invitations/answer?invitedId=2&streamKey=9820ac8c-c78b-45b5-b278-7481c57f1aa8
 Host: localhost:8888
 Authorization: Basic streamerSecond@gmail.com streamerSecond
 Content-Type: application/json

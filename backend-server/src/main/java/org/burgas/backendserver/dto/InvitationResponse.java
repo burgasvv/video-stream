@@ -1,8 +1,11 @@
 package org.burgas.backendserver.dto;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Objects;
 import java.util.UUID;
 
+@Component
 @SuppressWarnings(value = "unused")
 public final class InvitationResponse {
 
