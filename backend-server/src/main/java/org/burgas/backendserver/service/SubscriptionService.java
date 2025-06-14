@@ -18,12 +18,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Thread.ofVirtual;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.SubscriptionMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -51,32 +51,31 @@ public class SubscriptionService {
 
     public SseEmitter findSubscriptionsBySubscriberIdSse(final Long subscriberId) {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual()
-                .start(
-                        () -> {
-                            this.subscriptionRepository
-                                    .findSubscriptionsBySubscriberId(subscriberId)
-                                    .stream()
-                                    .peek(subscription -> log.info("Find subscription by subscriberId by sse: {}", subscription))
-                                    .map(subscriptionMapper::toSubscriptionResponse)
-                                    .forEach(
-                                            subscriptionResponse -> {
-                                                try {
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
-                                                            .data(subscriptionResponse, APPLICATION_JSON)
-                                                            .build();
-                                                    sseEmitter.send(data);
-                                                    log.info("Subscription data was send by sse");
-                                                    SECONDS.sleep(1);
+        runAsync(
+                () -> {
+                    this.subscriptionRepository
+                            .findSubscriptionsBySubscriberId(subscriberId)
+                            .stream()
+                            .peek(subscription -> log.info("Find subscription by subscriberId by sse: {}", subscription))
+                            .map(subscriptionMapper::toSubscriptionResponse)
+                            .forEach(
+                                    subscriptionResponse -> {
+                                        try {
+                                            Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                    .data(subscriptionResponse, APPLICATION_JSON)
+                                                    .build();
+                                            sseEmitter.send(data);
+                                            log.info("Subscription data was send by sse");
+                                            SECONDS.sleep(1);
 
-                                                } catch (IOException | InterruptedException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                    );
-                            sseEmitter.complete();
-                        }
-                );
+                                        } catch (IOException | InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
+                    sseEmitter.complete();
+                }
+        );
         return sseEmitter;
     }
 
@@ -113,32 +112,31 @@ public class SubscriptionService {
 
     public SseEmitter findSubscriptionsByStreamerIdSse(final Long streamerId) {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual()
-                .start(
-                        () -> {
-                            this.subscriptionRepository
-                                    .findSubscriptionsByStreamerId(streamerId)
-                                    .stream()
-                                    .peek(subscription -> log.info("Find subscription by streamerId by sse: {}", subscription))
-                                    .map(subscriptionMapper::toSubscriptionResponse)
-                                    .forEach(
-                                            subscriptionResponse -> {
-                                                try {
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
-                                                            .data(subscriptionResponse, APPLICATION_JSON)
-                                                            .build();
-                                                    sseEmitter.send(data);
-                                                    log.info("Subscription data was written by sse");
-                                                    SECONDS.sleep(1);
+        runAsync(
+                () -> {
+                    this.subscriptionRepository
+                            .findSubscriptionsByStreamerId(streamerId)
+                            .stream()
+                            .peek(subscription -> log.info("Find subscription by streamerId by sse: {}", subscription))
+                            .map(subscriptionMapper::toSubscriptionResponse)
+                            .forEach(
+                                    subscriptionResponse -> {
+                                        try {
+                                            Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                    .data(subscriptionResponse, APPLICATION_JSON)
+                                                    .build();
+                                            sseEmitter.send(data);
+                                            log.info("Subscription data was written by sse");
+                                            SECONDS.sleep(1);
 
-                                                } catch (IOException | InterruptedException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                    );
-                            sseEmitter.complete();
-                        }
-                );
+                                        } catch (IOException | InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
+                    sseEmitter.complete();
+                }
+        );
         return sseEmitter;
     }
 
@@ -164,7 +162,7 @@ public class SubscriptionService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String subscribeOrUpdate(final SubscriptionRequest subscriptionRequest) {
@@ -176,7 +174,7 @@ public class SubscriptionService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String unsubscribeAndDelete(final Long streamerId, final Long subscriberId) {

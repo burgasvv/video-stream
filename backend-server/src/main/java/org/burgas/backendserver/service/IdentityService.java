@@ -23,13 +23,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import static java.lang.Thread.ofVirtual;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.IdentityMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.*;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 @Service
@@ -61,34 +60,34 @@ public class IdentityService {
 
     public SseEmitter findAllSse() {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual()
-                .start(
-                        () ->{
-                            this.identityRepository
-                                    .findAll()
-                                    .forEach(
-                                            identity ->
-                                            {
-                                                try {
-                                                    SECONDS.sleep(1);
-                                                    log.info("Find identity in sse: {}", identity);
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
-                                                            .id(String.valueOf(identity.getId()))
-                                                            .name(identity.getNickname())
-                                                            .comment("New comment for: " + identity.getNickname())
-                                                            .data(identity, APPLICATION_JSON)
-                                                            .build();
-                                                    sseEmitter.send(data);
-                                                    log.info("Event was send: {}", data);
+        Thread thread = new Thread(
+                () -> {
+                    this.identityRepository
+                            .findAll()
+                            .forEach(
+                                    identity ->
+                                    {
+                                        try {
+                                            SECONDS.sleep(1);
+                                            log.info("Find identity in sse: {}", identity);
+                                            Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                    .id(String.valueOf(identity.getId()))
+                                                    .name(identity.getNickname())
+                                                    .comment("New comment for: " + identity.getNickname())
+                                                    .data(identity, APPLICATION_JSON)
+                                                    .build();
+                                            sseEmitter.send(data);
+                                            log.info("Event was send: {}", data);
 
-                                                } catch (IOException | InterruptedException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                    );
-                            sseEmitter.complete();
-                        }
-                );
+                                        } catch (IOException | InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
+                    sseEmitter.complete();
+                }
+        );
+        thread.start();
         return sseEmitter;
     }
 
@@ -108,8 +107,6 @@ public class IdentityService {
                             }
                     );
     }
-
-
 
     private static void writeIdentityInStream(OutputStream outputStream, Identity identity)
             throws IOException, InterruptedException {
@@ -144,33 +141,33 @@ public class IdentityService {
 
     public SseEmitter findFollowersByStreamerIdSse(final Long streamerId) {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual()
-                .start(
-                        () -> {
-                            this.identityRepository
-                                    .findFollowersByStreamerId(streamerId)
-                                    .stream()
-                                    .peek(identity -> log.info("Find follower by streamer: {}", identity))
-                                    .map(identityMapper::toIdentityResponse)
-                                    .forEach(
-                                            identityResponse -> {
-                                                try {
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
-                                                            .data(identityResponse, APPLICATION_JSON)
-                                                            .build();
-                                                    sseEmitter.send(data);
+        Thread thread = new Thread(
+                () -> {
+                    this.identityRepository
+                            .findFollowersByStreamerId(streamerId)
+                            .stream()
+                            .peek(identity -> log.info("Find follower by streamer: {}", identity))
+                            .map(identityMapper::toIdentityResponse)
+                            .forEach(
+                                    identityResponse -> {
+                                        try {
+                                            Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                    .data(identityResponse, APPLICATION_JSON)
+                                                    .build();
+                                            sseEmitter.send(data);
 
-                                                    log.info("Follower data send as event: {}", data);
-                                                    SECONDS.sleep(1);
+                                            log.info("Follower data send as event: {}", data);
+                                            SECONDS.sleep(1);
 
-                                                } catch (IOException | InterruptedException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                    );
-                            sseEmitter.complete();
-                        }
-                );
+                                        } catch (IOException | InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
+                    sseEmitter.complete();
+                }
+        );
+        thread.start();
         return sseEmitter;
     }
 
@@ -207,32 +204,32 @@ public class IdentityService {
 
     public SseEmitter findSubscribersByStreamerIdSse(final Long streamerId) {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual()
-                .start(
-                        () -> {
-                            this.identityRepository
-                                    .findSubscribersByStreamerId(streamerId)
-                                    .stream()
-                                    .peek(identity -> log.info("Find subscriber by streamerId sse: {}", identity))
-                                    .map(identityMapper::toIdentityResponse)
-                                    .forEach(
-                                            identityResponse -> {
-                                                try {
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
-                                                            .data(identityResponse, APPLICATION_JSON)
-                                                            .build();
-                                                    sseEmitter.send(data);
-                                                    log.info("Subscriber data was send");
-                                                    SECONDS.sleep(1);
+        Thread thread = new Thread(
+                () -> {
+                    this.identityRepository
+                            .findSubscribersByStreamerId(streamerId)
+                            .stream()
+                            .peek(identity -> log.info("Find subscriber by streamerId sse: {}", identity))
+                            .map(identityMapper::toIdentityResponse)
+                            .forEach(
+                                    identityResponse -> {
+                                        try {
+                                            Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                    .data(identityResponse, APPLICATION_JSON)
+                                                    .build();
+                                            sseEmitter.send(data);
+                                            log.info("Subscriber data was send");
+                                            SECONDS.sleep(1);
 
-                                                } catch (IOException | InterruptedException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                    );
-                            sseEmitter.complete();
-                        }
-                );
+                                        } catch (IOException | InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
+                    sseEmitter.complete();
+                }
+        );
+        thread.start();
         return sseEmitter;
     }
 
@@ -296,7 +293,7 @@ public class IdentityService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public IdentityResponse createOrUpdate(IdentityRequest identityRequest) {
@@ -307,7 +304,7 @@ public class IdentityService {
 
     @Async
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public CompletableFuture<IdentityResponse> createOrUpdateAsync(final IdentityRequest identityRequest) {
@@ -323,7 +320,7 @@ public class IdentityService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public IdentityResponse uploadAndSetImage(Long identityId, final MultipartFile multipartFile) throws IOException {
@@ -343,7 +340,7 @@ public class IdentityService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public IdentityResponse changeImage(Long identityId, final MultipartFile multipartFile) {
@@ -370,7 +367,7 @@ public class IdentityService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String deleteImage(Long identityId) {

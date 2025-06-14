@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.CompletableFuture.*;
 import static org.burgas.backendserver.message.ImageMessage.FILE_EMPTY_OR_NOT_FOUND;
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.*;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 @Service
@@ -40,7 +40,7 @@ public class ImageService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public Image uploadImage(final MultipartFile multipartFile) throws IOException {
@@ -61,7 +61,7 @@ public class ImageService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public void deleteImage(Long imageId) {

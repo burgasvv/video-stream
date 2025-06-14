@@ -25,7 +25,7 @@ import java.util.UUID;
 
 import static org.burgas.backendserver.message.InvitationMessage.*;
 import static org.burgas.backendserver.message.StreamMessage.STREAM_NOT_FOUND;
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -71,7 +71,7 @@ public class InvitationService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String sendInvitation(final InvitationRequest invitationRequest) {
@@ -84,7 +84,7 @@ public class InvitationService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String acceptOrDeclineInvitation(

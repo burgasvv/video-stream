@@ -20,13 +20,12 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Thread.ofVirtual;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.LocalDateTime.now;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.FollowUpMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 
@@ -54,32 +53,32 @@ public class FollowService {
 
     public SseEmitter findAllByStreamerIdSse(final Long streamerId) {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual()
-                .start(
-                        () -> {
-                            this.followRepository
-                                    .findFollowsByStreamerId(streamerId)
-                                    .stream()
-                                    .map(followMapper::toFollowResponse)
-                                    .forEach(
-                                            followResponse -> {
-                                                try {
-                                                    log.info("Follow up was found by streamer: {}", followResponse);
+        Thread thread = new Thread(
+                () -> {
+                    this.followRepository
+                            .findFollowsByStreamerId(streamerId)
+                            .stream()
+                            .map(followMapper::toFollowResponse)
+                            .forEach(
+                                    followResponse -> {
+                                        try {
+                                            log.info("Follow up was found by streamer: {}", followResponse);
 
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = getDataWithMediaTypes(followResponse);
-                                                    sseEmitter.send(data);
+                                            Set<ResponseBodyEmitter.DataWithMediaType> data = getDataWithMediaTypes(followResponse);
+                                            sseEmitter.send(data);
 
-                                                    log.info("Follow Up by streamer was send by emitter: {}", data);
-                                                    SECONDS.sleep(1);
+                                            log.info("Follow Up by streamer was send by emitter: {}", data);
+                                            SECONDS.sleep(1);
 
-                                                } catch (InterruptedException | IOException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                    );
-                            sseEmitter.complete();
-                        }
-                );
+                                        } catch (InterruptedException | IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
+                    sseEmitter.complete();
+                }
+        );
+        thread.start();
         return sseEmitter;
     }
 
@@ -118,7 +117,7 @@ public class FollowService {
 
     public SseEmitter findAllByFollowerIdSse(final Long followerId) {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual().start(
+        Thread thread = new Thread(
                 () -> {
                     this.followRepository
                             .findFollowsByFollowerId(followerId)
@@ -143,6 +142,7 @@ public class FollowService {
                     sseEmitter.complete();
                 }
         );
+        thread.start();
         return sseEmitter;
     }
 
@@ -184,7 +184,7 @@ public class FollowService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String followOnStreamer(final Long streamerId, final Long followerId) {
@@ -206,7 +206,7 @@ public class FollowService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String unfollowOnStreamer(final Long streamerId, final Long followerId) {

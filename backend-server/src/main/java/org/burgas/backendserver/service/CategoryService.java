@@ -30,12 +30,13 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.CategoryMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
+import static org.springframework.transaction.annotation.Propagation.SUPPORTS;
 import static org.springframework.web.servlet.mvc.method.annotation.SseEmitter.event;
 
 @Service
-@Transactional(readOnly = true, propagation = REQUIRED)
+@Transactional(readOnly = true, propagation = SUPPORTS)
 public class CategoryService {
 
     private static final Logger log = LoggerFactory.getLogger(CategoryService.class);
@@ -178,7 +179,7 @@ public class CategoryService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public Long createOrUpdate(Category category) {
@@ -189,7 +190,7 @@ public class CategoryService {
 
     @Async
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public CompletableFuture<Long> createOrUpdateAsync(final Category category) {
@@ -197,7 +198,7 @@ public class CategoryService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public Category uploadAndSetImage(Long categoryId, final MultipartFile multipartFile) throws IOException {
@@ -218,7 +219,7 @@ public class CategoryService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public Category changeImage(Long categoryId, final MultipartFile multipartFile) {
@@ -244,7 +245,7 @@ public class CategoryService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String deleteImage(Long categoryId) {

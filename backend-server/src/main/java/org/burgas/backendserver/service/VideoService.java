@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.burgas.backendserver.message.VideoMessage.VIDEO_DELETED;
 import static org.burgas.backendserver.message.VideoMessage.VIDEO_NOT_FOUND;
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 @Service
@@ -59,7 +59,7 @@ public class VideoService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public Long uploadOrUpdate(final VideoRequest videoRequest, final MultipartFile multipartFile) {
@@ -79,7 +79,7 @@ public class VideoService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String deleteById(Long videoId) {

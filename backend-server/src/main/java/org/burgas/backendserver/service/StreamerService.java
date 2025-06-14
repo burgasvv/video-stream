@@ -27,14 +27,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-import static java.lang.Thread.ofVirtual;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.CompletableFuture.runAsync;
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.burgas.backendserver.message.StreamerMessage.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.transaction.annotation.Isolation.SERIALIZABLE;
+import static org.springframework.transaction.annotation.Isolation.READ_COMMITTED;
+import static org.springframework.transaction.annotation.Isolation.REPEATABLE_READ;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 @Service
@@ -158,33 +158,32 @@ public class StreamerService {
 
     public SseEmitter findStreamersByFollowerIdSse(final Long followerId) {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual()
-                .start(
-                        () -> {
-                            this.streamerRepository
-                                    .findStreamersByFollowerId(followerId)
-                                    .stream()
-                                    .peek(streamer -> log.info("Find streamer by follower Id in sse: {}", streamer))
-                                    .map(streamerMapper::toStreamerResponse)
-                                    .forEach(
-                                            streamerResponse -> {
-                                                try {
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
-                                                            .data(streamerResponse, APPLICATION_JSON)
-                                                            .build();
-                                                    sseEmitter.send(data);
-                                                    log.info("Follower data was sent by server: {}", data);
-                                                    SECONDS.sleep(1);
+        runAsync(
+                () -> {
+                    this.streamerRepository
+                            .findStreamersByFollowerId(followerId)
+                            .stream()
+                            .peek(streamer -> log.info("Find streamer by follower Id in sse: {}", streamer))
+                            .map(streamerMapper::toStreamerResponse)
+                            .forEach(
+                                    streamerResponse -> {
+                                        try {
+                                            Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                    .data(streamerResponse, APPLICATION_JSON)
+                                                    .build();
+                                            sseEmitter.send(data);
+                                            log.info("Follower data was sent by server: {}", data);
+                                            SECONDS.sleep(1);
 
-                                                } catch (IOException | InterruptedException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                    );
+                                        } catch (IOException | InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
 
-                            sseEmitter.complete();
-                        }
-                );
+                    sseEmitter.complete();
+                }
+        );
         return sseEmitter;
     }
 
@@ -221,32 +220,31 @@ public class StreamerService {
 
     public SseEmitter findStreamersBySubscriberIdSse(final Long subscriberId) {
         SseEmitter sseEmitter = new SseEmitter();
-        ofVirtual()
-                .start(
-                        () -> {
-                            this.streamerRepository
-                                    .findStreamersBySubscriberId(subscriberId)
-                                    .stream()
-                                    .peek(streamer -> log.info("Find streamer by subscriberId sse: {}", streamer))
-                                    .map(streamerMapper::toStreamerResponse)
-                                    .forEach(
-                                            streamerResponse -> {
-                                                try {
-                                                    Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
-                                                            .data(streamerResponse, APPLICATION_JSON)
-                                                            .build();
-                                                    sseEmitter.send(data);
-                                                    log.info("Streamer data was send in sse");
-                                                    SECONDS.sleep(1);
+        runAsync(
+                () -> {
+                    this.streamerRepository
+                            .findStreamersBySubscriberId(subscriberId)
+                            .stream()
+                            .peek(streamer -> log.info("Find streamer by subscriberId sse: {}", streamer))
+                            .map(streamerMapper::toStreamerResponse)
+                            .forEach(
+                                    streamerResponse -> {
+                                        try {
+                                            Set<ResponseBodyEmitter.DataWithMediaType> data = SseEmitter.event()
+                                                    .data(streamerResponse, APPLICATION_JSON)
+                                                    .build();
+                                            sseEmitter.send(data);
+                                            log.info("Streamer data was send in sse");
+                                            SECONDS.sleep(1);
 
-                                                } catch (IOException | InterruptedException e) {
-                                                    throw new RuntimeException(e);
-                                                }
-                                            }
-                                    );
-                            sseEmitter.complete();
-                        }
-                );
+                                        } catch (IOException | InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                            );
+                    sseEmitter.complete();
+                }
+        );
         return sseEmitter;
     }
 
@@ -290,7 +288,7 @@ public class StreamerService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public Long createOrUpdate(final StreamerRequest streamerRequest) {
@@ -301,7 +299,7 @@ public class StreamerService {
 
     @Async
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public CompletableFuture<Long> createOrUpdateAsync(final StreamerRequest streamerRequest) {
@@ -309,7 +307,7 @@ public class StreamerService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public Long addCategories(final StreamerRequest streamerRequest) {
@@ -349,7 +347,7 @@ public class StreamerService {
 
     @Async
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public CompletableFuture<Long> addCategoriesAsync(final StreamerRequest streamerRequest) {
@@ -357,7 +355,7 @@ public class StreamerService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = READ_COMMITTED, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public StreamerResponse uploadAndSetImage(Long streamerId, final MultipartFile multipartFile) throws IOException {
@@ -376,7 +374,7 @@ public class StreamerService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public StreamerResponse changeAndSetImage(final Long streamerId, final MultipartFile multipartFile) {
@@ -398,7 +396,7 @@ public class StreamerService {
     }
 
     @Transactional(
-            isolation = SERIALIZABLE, propagation = REQUIRED,
+            isolation = REPEATABLE_READ, propagation = REQUIRED,
             rollbackFor = Exception.class
     )
     public String deleteImage(final Long streamerId) {
